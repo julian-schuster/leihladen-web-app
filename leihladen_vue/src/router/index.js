@@ -4,6 +4,7 @@ import {
 } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProductView from '../views/ProductView.vue'
+import CategoryView from '../views/CategoryView.vue'
 
 const routes = [{
     path: '/',
@@ -19,9 +20,14 @@ const routes = [{
     component: () => import( /* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/:category_slug/:product_slug/',
+    path: '/:category_slug/:product_slug',
     name: 'Product',
     component: ProductView
+  },
+  {
+    path: '/:category_slug',
+    name: 'Category',
+    component: CategoryView
   }
 ]
 
