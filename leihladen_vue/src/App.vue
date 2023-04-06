@@ -31,8 +31,8 @@
                 >Log in</router-link
               >
               <router-link to="/wunschliste" class="button is-success">
-                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
-                <span>Wunschliste</span>
+                <span class="icon"><i class="fas fa-list"></i></span>
+                <span>Wunschliste ({{ wishlistTotalLength }})</span>
               </router-link>
             </div>
           </div>
@@ -54,7 +54,27 @@ export default {
   data() {
     return {
       showMobileMenu: false,
+      wishlist: {
+        items: [],
+      },
     };
+  },
+  beforeCreate() {
+    this.$store.commit("initializeStore");
+  },
+  mounted() {
+    this.wishlist = this.$store.state.wishlist;
+  },
+  computed: {
+    wishlistTotalLength() {
+      let totalLength = 0;
+
+      for (let i = 0; i < this.wishlist.items.length; i++) {
+        totalLength += this.wishlist.items[i].quantity;
+      }
+
+      return totalLength;
+    },
   },
 };
 </script>

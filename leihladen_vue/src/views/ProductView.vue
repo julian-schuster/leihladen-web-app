@@ -15,7 +15,12 @@
 
       <div class="field has-addons mt-6">
         <div class="control">
-          <a class="button is-dark"> Zur Wunschliste hinzufügen</a>
+          <input type="number" class="input" min="1" v-model="quantity" />
+        </div>
+        <div class="control">
+          <a class="button is-dark" @click="addToWishlist">
+            Zur Wunschliste hinzufügen</a
+          >
         </div>
       </div>
     </div>
@@ -24,12 +29,14 @@
 
 <script>
 import axios from "axios";
+import { toast } from "bulma-toast";
 
 export default {
   name: "Product",
   data() {
     return {
       product: {},
+      quantity: 1,
     };
   },
   mounted() {
@@ -48,6 +55,27 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    addToWishlist() {
+      if (isNaN(this.quantity) || this.quantity < 1) {
+        this.quantity = 1;
+      }
+
+      const item = {
+        product: this.product,
+        quantity: this.quantity,
+      };
+
+      this.$store.commit("addToWishlist", item);
+
+      toast({
+        message: "Der Artikel wurde zur Wunschliste hinzugefügt",
+        type: "is-success",
+        dismissible: true,
+        pauseOnHover: true,
+        duration: 2000,
+        position: "bottom-right",
+      });
     },
   },
 };
