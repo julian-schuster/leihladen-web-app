@@ -1,7 +1,7 @@
 <template>
   <div class="page-product">
     <div class="column is-9">
-      <figure class="image mb-6">
+      <figure class="image mb-6 ">
         <img v-bind:src="product.get_image" />
       </figure>
 
@@ -19,8 +19,7 @@
         </div>
         <div class="control">
           <a class="button is-dark" @click="addToWishlist">
-            Zur Wunschliste hinzufügen</a
-          >
+            Zur Wunschliste hinzufügen</a>
         </div>
       </div>
     </div>

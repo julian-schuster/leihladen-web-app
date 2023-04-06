@@ -18,7 +18,6 @@
                 <div class="control">
                   <input type="text" class="input" placeholder="Nach Artikel suchen" name="query">
                 </div>
-
                 <div class="control">
                   <button class="button is-success">
                     <span class="icon">
@@ -36,7 +35,7 @@
           <div class="navbar-item">
             <div class="buttons">
               <router-link to="/log-in" class="button is-light">Log in</router-link>
-              <router-link to="/wunschliste" class="button is-success">
+              <router-link to="/wishlist" class="button is-success">
                 <span class="icon"><i class="fas fa-list"></i></span>
                 <span>Wunschliste ({{ wishlistTotalLength }})</span>
               </router-link>
