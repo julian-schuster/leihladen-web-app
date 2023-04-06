@@ -30,6 +30,9 @@ export default createStore({
       }
 
       localStorage.setItem('wishlist', JSON.stringify(state.wishlist))
+    },
+    setIsLoading(state, status) {
+      state.isLoading = status
     }
   },
   actions: {},
