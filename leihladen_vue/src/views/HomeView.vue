@@ -24,7 +24,12 @@
 
           <h3 class="is-size-4">{{ product.name }}</h3>
 
-          View details
+          <router-link
+            v-bind:to="product.get_absolute_url"
+            class="button is-dark mt-4"
+          >
+            Genauer ansehen</router-link
+          >
         </div>
       </div>
     </div>
