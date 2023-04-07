@@ -19,6 +19,14 @@ export default createStore({
       } else {
         localStorage.setItem('wishlist', JSON.stringify(state.wishlist))
       }
+
+      if (localStorage.getItem('token')) {
+        state.token = localStorage.getItem('token')
+        state.isAuthenticated = true
+      } else {
+        state.token = ''
+        state.isAuthenticated = false
+      }
     },
     addToWishlist(state, item) {
       const exists = state.wishlist.items.filter(i => i.product.id === item.product.id)
@@ -33,6 +41,14 @@ export default createStore({
     },
     setIsLoading(state, status) {
       state.isLoading = status
+    },
+    setToken(state, token) {
+      state.token = token
+      state.isAuthenticated = true
+    },
+    removeToken(state) {
+      state.token = ''
+      state.isAuthenticated = false
     }
   },
   actions: {},

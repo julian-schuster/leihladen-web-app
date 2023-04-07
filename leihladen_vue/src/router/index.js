@@ -2,11 +2,16 @@ import {
   createRouter,
   createWebHistory
 } from 'vue-router'
+
+import store from '../store'
+
 import HomeView from '../views/HomeView.vue'
 import ProductView from '../views/ProductView.vue'
 import CategoryView from '../views/CategoryView.vue'
 import SearchView from '../views/SearchView.vue'
 import WishlistView from '../views/WishlistView.vue'
+import AdminLoginView from '../views/AdminLoginView.vue'
+import AdminpanelView from '../views/AdminpanelView.vue'
 
 const routes = [{
     path: '/',
@@ -32,6 +37,19 @@ const routes = [{
     component: WishlistView
   },
   {
+    path: '/login',
+    name: 'AdminLogin',
+    component: AdminLoginView
+  },
+  {
+    path: '/adminpanel',
+    name: 'Adminpanel',
+    component: AdminpanelView,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
     path: '/:category_slug/:product_slug',
     name: 'Product',
     component: ProductView
@@ -47,6 +65,19 @@ const routes = [{
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) {
+    next({
+      name: 'AdminLogin',
+      query: {
+        to: to.path
+      }
+    })
+  } else {
+    next()
+  }
 })
 
 export default router

@@ -34,7 +34,14 @@
           <router-link to="/winter" class="navbar-item">Winter</router-link>
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/log-in" class="button is-light">Log in</router-link>
+              <template v-if="$store.state.isAuthenticated">
+                <router-link to="/adminpanel" class="button is-light">Adminpanel</router-link>
+              </template>
+
+              <template v-else>
+                <router-link to="/login" class="button is-light">Login</router-link>
+              </template>
+
               <router-link to="/wishlist" class="button is-success">
                 <span class="icon"><i class="fas fa-list"></i></span>
                 <span>Wunschliste ({{ wishlistTotalLength }})</span>
@@ -60,6 +67,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -71,6 +80,14 @@ export default {
   },
   beforeCreate() {
     this.$store.commit("initializeStore");
+
+    const token = this.$store.state.token
+
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = "Token " + token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ""
+    }
   },
   mounted() {
     this.wishlist = this.$store.state.wishlist;
