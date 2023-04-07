@@ -17,12 +17,12 @@
                     </thead>
 
                     <tbody>
-                        <WishlistItem v-for="item in wishlist.items" v-bind:key="item.product.id"
-                            v-bind:initialItem="item" />
+                        <WishlistItem v-for="item in wishlist.items" v-bind:key="item.product.id" v-bind:initialItem="item"
+                            v-on:removeFromWishlist="removeFromWishlist" />
                     </tbody>
                 </table>
 
-                <p v-else> Es befindet sich kein Artikel in der Wunschliste</p>
+                <p v-else> Es befindet sich zurzeit kein Artikel in der Wunschliste</p>
 
                 <div class="column is-12 box">
                     <h2 class="subtitle">Zusammenfassung</h2>
@@ -53,6 +53,11 @@ export default {
     },
     mounted() {
         this.wishlist = this.$store.state.wishlist
+    },
+    methods: {
+        removeFromWishlist(item) {
+            this.wishlist.items = this.wishlist.items.filter(i => i.product.id !== item.product.id)
+        }
     },
     computed: {
         wishlistTotalLength() {
