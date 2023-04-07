@@ -31,6 +31,7 @@
             </div>
             <div class="column is-12 box">
                 <h2 class="subtitle">QR-Code</h2>
+                <canvas ref="qrcode"></canvas>
                 <p class="has-text-grey mb-4">Bitte zeigen Sie diesen QR-Code entweder ausgedruckt oder auf Ihrem Smartphone
                     im Leihladen vor.</p>
             </div>
@@ -40,9 +41,13 @@
 
 <script>
 import axios from 'axios'
+import QRCode from 'qrcode'
 
 export default {
     name: 'Checkout',
+    components: {
+        QRCode
+    },
     data() {
         return {
             wishlist: {
@@ -55,11 +60,27 @@ export default {
         document.title = 'Wunschliste Abschluss | Leihladen'
 
         this.wishlist = this.$store.state.wishlist
+
+        this.createWishlist(this.wishlist)
     },
     methods: {
         getItemQuantity(item) {
             return item.quantity
-        }
+        },
+        createWishlist(wishlist) {
+            const qrCodeText = JSON.stringify(wishlist)
+            QRCode.toCanvas(this.$refs.qrcode, qrCodeText, function (error) {
+                if (error) console.error(error)
+            })
+
+            axios.post('/api/v1/wishlist/', { qr_code_text: qrCodeText })
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        },
     },
     computed: {
         wishlistTotalLength() {

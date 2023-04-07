@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Product
+from .models import Category, Product, Wishlist
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,4 +24,13 @@ class CategorySerializer(serializers.ModelSerializer):
             "name",
             "get_absolute_url",
             "products"
+        )
+
+class WishlistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wishlist
+        fields = (
+            "id",
+            "qr_code_text",
+            "date_added",
         )

@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
+from .models import Product, Category, Wishlist
+from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
 
 class LatestProductsList(APIView):
     def get(self, request, format=None):
@@ -48,3 +48,10 @@ def search(request):
         return Response(serializer.data)
     else:
         return Response({"products": []})
+    
+class WishlistDetails(APIView):
+    def post(self, request, *args, **kwargs):
+        qr_code_text = request.data.get('qr_code_text')
+        wishlist = Wishlist.objects.create(qr_code_text=qr_code_text)
+        return Response({'status': 'success', 'wishlist_id': wishlist.id})
+    

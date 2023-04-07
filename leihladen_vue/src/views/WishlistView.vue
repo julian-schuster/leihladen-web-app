@@ -28,7 +28,8 @@
                     <h2 class="subtitle">Zusammenfassung</h2>
                     <strong>{{ wishlistTotalLength }} Artikel</strong>
                     <hr>
-                    <router-link to="/wishlist/checkout" class="button is-dark">Wunschliste fertigstellen</router-link>
+                    <router-link to="/wishlist/checkout" class="button is-dark">Wunschliste
+                        abschließen</router-link>
                 </div>
             </div>
         </div>
@@ -57,7 +58,7 @@ export default {
     methods: {
         removeFromWishlist(item) {
             this.wishlist.items = this.wishlist.items.filter(i => i.product.id !== item.product.id)
-        }
+        },
     },
     computed: {
         wishlistTotalLength() {

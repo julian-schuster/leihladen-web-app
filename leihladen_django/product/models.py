@@ -63,3 +63,11 @@ class Product(models.Model):
         thumbnail = File(thumb_io, name=image.name)
 
         return thumbnail
+
+class Wishlist(models.Model):
+    id = models.AutoField(primary_key=True)
+    qr_code_text = models.TextField(blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Wishlist {self.id}"
