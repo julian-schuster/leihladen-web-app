@@ -12,7 +12,7 @@ import SearchView from '../views/SearchView.vue'
 import WishlistView from '../views/WishlistView.vue'
 import AdminLoginView from '../views/AdminLoginView.vue'
 import AdminpanelView from '../views/AdminpanelView.vue'
-import CheckoutView from '../views/CheckoutView.vue'
+import WishlistCheckout from '../views/WishlistCheckoutView.vue'
 
 const routes = [{
     path: '/',
@@ -39,8 +39,8 @@ const routes = [{
   },
   {
     path: '/wishlist/checkout',
-    name: 'Checkout',
-    component: CheckoutView
+    name: 'WishlistCheckout',
+    component: WishlistCheckout
   },
   {
     path: '/login',

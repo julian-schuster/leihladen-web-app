@@ -24,7 +24,7 @@
 
                 <p v-else> Es befindet sich zurzeit kein Artikel in der Wunschliste</p>
 
-                <div class="column is-12 box">
+                <div class="column is-12 box" v-if="wishlistTotalLength">
                     <h2 class="subtitle">Zusammenfassung</h2>
                     <strong>{{ wishlistTotalLength }} Artikel</strong>
                     <hr>
@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import WishlistItem from '@/components/WishlistItem.vue'
 
 export default {

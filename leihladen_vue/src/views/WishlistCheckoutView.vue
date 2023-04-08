@@ -2,7 +2,7 @@
     <div class="page-checkout">
         <div class="columns is-multiline">
             <div class="column is-12">
-                <h1 class="title">Fertige Wunschliste</h1>
+                <h1 class="title">Übersicht und QR-Code der Wunschliste</h1>
             </div>
 
             <div class="column is-12 box">
@@ -44,7 +44,7 @@ import axios from 'axios'
 import QRCode from 'qrcode'
 
 export default {
-    name: 'Checkout',
+    name: 'WishlistCheckout',
     components: {
         QRCode
     },
@@ -53,8 +53,7 @@ export default {
             wishlist: {
                 items: []
             },
-            clientId: '',
-            hasWishlist: false
+            clientId: ''
         }
     },
     mounted() {
