@@ -32,7 +32,6 @@
             {{ $store.state.clientId }}
           </div>
         </div>
-
         <div class="navbar-end">
           <router-link to="/garten" class="navbar-item">Garten</router-link>
           <router-link to="/brettspiele" class="navbar-item">Brettspiele</router-link>

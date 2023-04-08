@@ -50,8 +50,31 @@ def search(request):
         return Response({"products": []})
     
 class WishlistDetails(APIView):
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         qr_code_text = request.data.get('qr_code_text')
-        wishlist = Wishlist.objects.create(qr_code_text=qr_code_text)
-        return Response({'status': 'success', 'wishlist_id': wishlist.id})
+        client_id = request.data.get('client_id')
+        
+        # Versuche, die Wishlist des Clients zu finden
+        wishlist, created = Wishlist.objects.update_or_create(
+            client_id=client_id,
+            defaults={'qr_code_text': qr_code_text}
+        )
+
+        if created:
+            # Wenn eine neue Wishlist erstellt wurde
+            return Response({
+                'status': 'success', 
+                'wishlist_id': wishlist.id, 
+                'client_id': client_id
+            })
+        else:
+            # Wenn die Wishlist des Clients aktualisiert wurde
+            return Response({'status': 'Wishlist updated'})
+
+
+
+      
+
+      
+    
     

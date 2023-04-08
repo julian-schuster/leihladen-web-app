@@ -32,5 +32,6 @@ class WishlistSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "qr_code_text",
+            "client_id",
             "date_added",
         )

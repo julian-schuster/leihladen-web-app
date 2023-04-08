@@ -53,27 +53,33 @@ export default {
             wishlist: {
                 items: []
             },
-            qrcode: Object,
+            clientId: '',
+            hasWishlist: false
         }
     },
     mounted() {
         document.title = 'Wunschliste Abschluss | Leihladen'
 
         this.wishlist = this.$store.state.wishlist
+        this.clientId = this.$store.state.clientId
 
-        this.createWishlist(this.wishlist)
+        const qrCodeText = JSON.stringify(this.wishlist)
+
+        this.createQRCode(qrCodeText)
+        this.createWishlist(qrCodeText)
+
     },
     methods: {
         getItemQuantity(item) {
             return item.quantity
         },
-        createWishlist(wishlist) {
-            const qrCodeText = JSON.stringify(wishlist)
+        createQRCode(qrCodeText) {
             QRCode.toCanvas(this.$refs.qrcode, qrCodeText, function (error) {
                 if (error) console.error(error)
             })
-
-            axios.post('/api/v1/wishlist/', { qr_code_text: qrCodeText })
+        },
+        createWishlist(qrCodeText) {
+            axios.post('/api/v1/wishlist/', { qr_code_text: qrCodeText, client_id: this.clientId })
                 .then(response => {
                     console.log(response.data)
                 })

@@ -67,6 +67,7 @@ class Product(models.Model):
 class Wishlist(models.Model):
     id = models.AutoField(primary_key=True)
     qr_code_text = models.TextField(blank=True, null=True)
+    client_id = models.CharField(max_length=255, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

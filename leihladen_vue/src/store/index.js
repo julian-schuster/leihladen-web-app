@@ -8,13 +8,13 @@ import {
 
 export default createStore({
   state: {
-    clientId: '',
+    clientId: null,
     wishlist: {
       items: [],
     },
     isAuthenticated: false,
     token: '',
-    isLoading: false
+    isLoading: false,
   },
   getters: {},
   mutations: {
@@ -56,9 +56,10 @@ export default createStore({
       state.isAuthenticated = false
     },
     initializeClient(state) {
-      if (localStorage.getItem('clientId') == '') {
+      if (localStorage.getItem('clientId') === null) {
         const uuid = uuidv4()
         localStorage.setItem('clientId', uuid)
+        state.clientId = uuid
       } else {
         state.clientId = localStorage.getItem('clientId')
       }
