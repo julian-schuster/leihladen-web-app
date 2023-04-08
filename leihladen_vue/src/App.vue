@@ -28,10 +28,14 @@
               </div>
             </form>
           </div>
+          <div class="navbar-item">
+            {{ $store.state.clientId }}
+          </div>
         </div>
+
         <div class="navbar-end">
-          <router-link to="/summer" class="navbar-item">Summer</router-link>
-          <router-link to="/winter" class="navbar-item">Winter</router-link>
+          <router-link to="/garten" class="navbar-item">Garten</router-link>
+          <router-link to="/brettspiele" class="navbar-item">Brettspiele</router-link>
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.isAuthenticated">
@@ -61,7 +65,7 @@
     </section>
 
     <footer class="footer">
-      <p class="has-text-centered">Footer</p>
+      <p class="has-text-centered"> footer </p>
     </footer>
   </div>
 </template>
@@ -80,6 +84,7 @@ export default {
   },
   beforeCreate() {
     this.$store.commit("initializeStore");
+    this.$store.commit("initializeClient");
 
     const token = this.$store.state.token
 
@@ -90,7 +95,7 @@ export default {
     }
   },
   mounted() {
-    this.wishlist = this.$store.state.wishlist;
+    this.wishlist = this.$store.state.wishlist
   },
   computed: {
     wishlistTotalLength() {

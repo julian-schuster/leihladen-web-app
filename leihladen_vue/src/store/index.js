@@ -2,8 +2,13 @@ import {
   createStore
 } from 'vuex'
 
+import {
+  v4 as uuidv4
+} from 'uuid';
+
 export default createStore({
   state: {
+    clientId: '',
     wishlist: {
       items: [],
     },
@@ -49,7 +54,15 @@ export default createStore({
     removeToken(state) {
       state.token = ''
       state.isAuthenticated = false
-    }
+    },
+    initializeClient(state) {
+      if (localStorage.getItem('clientId') == '') {
+        const uuid = uuidv4()
+        localStorage.setItem('clientId', uuid)
+      } else {
+        state.clientId = localStorage.getItem('clientId')
+      }
+    },
   },
   actions: {},
   modules: {}
