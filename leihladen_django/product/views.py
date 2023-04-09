@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.http import Http404
 
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -12,7 +13,7 @@ class LatestProductsList(APIView):
     def get(self, request, format=None):
         products = Product.objects.all()[0:4]
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
@@ -24,7 +25,7 @@ class ProductDetail(APIView):
     def get(self, request, category_slug, product_slug, format=None):
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CategoryDetail(APIView):
        def get_object(self, category_slug):
@@ -36,7 +37,7 @@ class CategoryDetail(APIView):
        def get(self, request, category_slug, format=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def search(request):
@@ -45,7 +46,7 @@ def search(request):
     if query:
         products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"products": []})
     
@@ -66,10 +67,10 @@ class WishlistDetails(APIView):
                 'status': 'success', 
                 'wishlist_id': wishlist.id, 
                 'client_id': client_id
-            })
+            }, status=status.HTTP_201_CREATED)
         else:
             # Wenn die Wishlist des Clients aktualisiert wurde
-            return Response({'status': 'Wishlist updated'})
+            return Response({'status': 'Wishlist updated'}, status=status.HTTP_200_OK)
 
 
 
