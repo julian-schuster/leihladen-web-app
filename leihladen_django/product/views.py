@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.http import Http404
+from django.views.decorators.http import require_http_methods
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -49,8 +50,17 @@ def search(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         return Response({"products": []})
+
+class GetWishlist(APIView):
+    def get(self, request, client_id, format=None):
+        try: 
+            wishlist = Wishlist.objects.get(client_id=client_id)
+            response_data = wishlist.qr_code_text
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Wishlist.DoesNotExist:
+            raise Http404
     
-class WishlistDetails(APIView):
+class CreateWishlist(APIView):
     def post(self, request):
         qr_code_text = request.data.get('qr_code_text')
         client_id = request.data.get('client_id')
@@ -71,9 +81,6 @@ class WishlistDetails(APIView):
         else:
             # Wenn die Wishlist des Clients aktualisiert wurde
             return Response({'status': 'Wishlist updated'}, status=status.HTTP_200_OK)
-
-
-
       
 
       

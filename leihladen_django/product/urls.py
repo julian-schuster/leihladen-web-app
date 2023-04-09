@@ -7,5 +7,7 @@ urlpatterns = [
     path('products/search/', views.search),
     path('products/<slug:category_slug>/<slug:product_slug>/', views.ProductDetail.as_view()),
     path('products/<slug:category_slug>/', views.CategoryDetail.as_view()),
-    path('wishlist/', views.WishlistDetails.as_view()),
+    # path('wishlist/', views.WishlistDetails.as_view()),
+    path('wishlist/', views.CreateWishlist.as_view(), name='wishlist-create'),
+    path('wishlist/<str:client_id>/', views.GetWishlist.as_view(), name='wishlist-get'),
 ]

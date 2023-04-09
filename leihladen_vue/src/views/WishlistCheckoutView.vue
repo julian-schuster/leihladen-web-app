@@ -64,7 +64,7 @@ export default {
 
         const qrCodeText = JSON.stringify(this.wishlist)
 
-        this.createQRCode(qrCodeText)
+        this.createQRCode(this.clientId)
         this.createWishlist(qrCodeText)
 
     },
