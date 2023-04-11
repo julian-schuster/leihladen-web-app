@@ -7,12 +7,14 @@
             <div class="column is-6 is-centered">
                 <div class="box">
                     <p class="error">{{ error }}</p>
-                    <qrcode-stream @init="onInit" @decode="onDecode">
-                        <div class="loading-indicator" v-if="loading">
-                            Wird geladen...
+                    <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit">
+                        <div class="is-loading-bar has-text-centered"
+                            v-bind:class="{ 'is-loading': $store.state.isLoading }">
+                            <div class="lds-dual-ring"></div>
                         </div>
                     </qrcode-stream>
                 </div>
+
             </div>
             <table class="table is-fullwidth">
                 <thead>
@@ -24,9 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-
                         <td>{{ item.product.name }}</td>
                         <td>{{ item.quantity }}</td>
                         <td># Verfügbar</td>
@@ -54,31 +54,41 @@ export default {
             wishlist: {
                 items: []
             },
-            loading: false,
-            error: '',
+            camera: 'auto',
+            error: ''
         }
     },
     mounted() {
         document.title = 'Wunschliste Scan | Leihladen'
+        this.$store.commit("setIsLoading", true);
     },
     methods: {
-        onDecode(decodedString) {
+        async onDecode(decodedString) {
             const client_id = decodedString
-            axios.get(`/api/v1/wishlist/${client_id}/`)
+            await axios.get(`/api/v1/wishlist/${client_id}/`)
                 .then(response => {
                     const data = JSON.parse(response.data);
                     this.wishlist = data
-                    console.log(this.wishlist);
-
+                    this.turnCameraOff()
                 })
                 .catch(error => {
                     console.error(error)
                 })
-
+            this.turnCameraOn()
+        },
+        turnCameraOn() {
+            this.camera = 'auto'
+        },
+        turnCameraOff() {
+            this.camera = 'pause'
+        },
+        timeout(ms) {
+            return new Promise(resolve => {
+                window.setTimeout(resolve, ms)
+            })
         },
         async onInit(promise) {
-            this.loading = true
-
+            this.$store.commit("setIsLoading", true);
             try {
                 await promise
             } catch (error) {
@@ -99,20 +109,14 @@ export default {
                 } else {
                     this.error = `ERROR: Camera error (${error.name})`;
                 }
-            } finally {
-                this.loading = false
+            }
+            finally {
+                this.$store.commit("setIsLoading", false);
             }
         },
-
     }
 
 }
 </script>
 
-<style scoped>
-.loading-indicator {
-    font-weight: bold;
-    font-size: 2rem;
-    text-align: center;
-}
-</style>
+<style scoped></style>
