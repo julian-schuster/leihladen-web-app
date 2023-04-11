@@ -7,14 +7,11 @@
             <div class="column is-6 is-centered">
                 <div class="box">
                     <p class="error">{{ error }}</p>
-                    <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit">
-                        <div class="is-loading-bar has-text-centered"
-                            v-bind:class="{ 'is-loading': $store.state.isLoading }">
-                            <div class="lds-dual-ring"></div>
-                        </div>
-                    </qrcode-stream>
+                    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+                        <div class="lds-dual-ring"></div>
+                    </div>
+                    <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit" v-show="show"></qrcode-stream>
                 </div>
-
             </div>
             <table class="table is-fullwidth">
                 <thead>
@@ -55,7 +52,8 @@ export default {
                 items: []
             },
             camera: 'auto',
-            error: ''
+            error: '',
+            show: true
         }
     },
     mounted() {
@@ -80,6 +78,7 @@ export default {
             this.camera = 'auto'
         },
         turnCameraOff() {
+            this.show = false
             this.camera = 'pause'
         },
         timeout(ms) {
@@ -111,7 +110,13 @@ export default {
                 }
             }
             finally {
-                this.$store.commit("setIsLoading", false);
+                if (this.show) {
+                    this.$store.commit("setIsLoading", false)
+                } else {
+                    await this.timeout(1000)
+                    this.show = true
+                    this.$store.commit("setIsLoading", false)
+                }
             }
         },
     }
