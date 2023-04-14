@@ -47,7 +47,10 @@ const routes = [{
   {
     path: '/wishlist/scan',
     name: 'WishlistScan',
-    component: WishlistScanView
+    component: WishlistScanView,
+    meta: {
+      requireLogin: true
+    }
   },
   {
     path: '/login',

@@ -10,6 +10,14 @@ from rest_framework.decorators import api_view
 from .models import Product, Category, Wishlist
 from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
 
+class Products(APIView):
+    def get(self, request, format=None):
+        products = Product.objects.all()
+        product_count = products.count()
+        serializer = ProductSerializer(products, many=True)
+        data = {'products': serializer.data, 'count': product_count}
+        return Response(data, status=status.HTTP_200_OK)
+
 class LatestProductsList(APIView):
     def get(self, request, format=None):
         products = Product.objects.all()[0:4]
@@ -82,7 +90,10 @@ class CreateWishlist(APIView):
             # Wenn die Wishlist des Clients aktualisiert wurde
             return Response({'status': 'Wishlist updated'}, status=status.HTTP_200_OK)
       
-
-      
-    
-    
+class Wishlists(APIView):
+    def get(self, request, format=None):
+        wishlists = Wishlist.objects.all()
+        wishlist_count = wishlists.count()
+        serializer = WishlistSerializer(wishlists, many=True)
+        data = {'wishlists': serializer.data, 'count': wishlist_count}
+        return Response(data, status=status.HTTP_200_OK)
