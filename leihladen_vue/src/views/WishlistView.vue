@@ -1,5 +1,5 @@
 <template>
-    <div class="page-wishlist">
+    <div class="page-wishlist" v-if="!$store.state.isLoading">
         <div class="columns is-multiline">
             <div class="column is-12">
                 <h1 class="title">Wunschliste</h1>
@@ -11,7 +11,7 @@
                         <tr>
                             <th>Artikel</th>
                             <th>Stückzahl</th>
-                            <th>Status</th>
+                            <th>Verfügbar</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -48,7 +48,7 @@ export default {
         return {
             wishlist: {
                 items: []
-            }
+            },
         }
     },
     mounted() {
@@ -57,7 +57,7 @@ export default {
     methods: {
         removeFromWishlist(item) {
             this.wishlist.items = this.wishlist.items.filter(i => i.product.id !== item.product.id)
-        },
+        }
     },
     computed: {
         wishlistTotalLength() {

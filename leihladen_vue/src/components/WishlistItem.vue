@@ -5,12 +5,19 @@
             <a @click="decrementQuanitity(item)">-</a>
             <a @click="incrementQuanitity(item)">+</a>
         </td>
-        <td># Verfügbar</td>
+        <td>
+            <span v-for="product in products" :key="product.id">
+                <span v-if="item.product.name === product.name">
+                    {{ product.available }}</span>
+            </span>
+        </td>
         <td><button class="delete" @click="removeFromWishlist(item)"></button></td>
     </tr>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: 'WishlistItem',
     props: {
@@ -18,8 +25,12 @@ export default {
     },
     data() {
         return {
-            item: this.initialItem
+            item: this.initialItem,
+            products: []
         }
+    },
+    mounted() {
+        this.getProducts()
     },
     methods: {
         getItemTotal(item) {
@@ -42,7 +53,17 @@ export default {
         removeFromWishlist(item) {
             this.$emit('removeFromWishlist', item)
             this.updateWishlist()
-        }
+        },
+        async getProducts() {
+            await axios
+                .get(`/api/v1/products`)
+                .then((response) => {
+                    this.products = response.data.products
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     }
 }
 

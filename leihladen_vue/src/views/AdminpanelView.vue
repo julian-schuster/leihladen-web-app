@@ -210,7 +210,7 @@ export default {
     computed: {
         calculateUtilization() {
             const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
-            return utilization;
+            return utilization.toFixed(2);
         },
         calculateBorrowedItems() {
             let borrowedCount = 0;
