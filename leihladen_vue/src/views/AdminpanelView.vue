@@ -16,26 +16,26 @@
                 </section>
                 <section class="info-tiles">
                     <div class="tile is-ancestor has-text-centered">
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
+                        <div class="tile is-parent " @click="showCard('wishlist')">
+                            <article class="tile is-child box tile-box">
                                 <p class="title">{{ wishlistCount }}</p>
                                 <p class="subtitle">Wunschlisten</p>
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
+                        <div class="tile is-parent" @click="showCard('productsTotal')">
+                            <article class="tile is-child box tile-box">
                                 <p class="title">{{ productsTotal }}</p>
                                 <p class="subtitle">Artikel</p>
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="title">{{ productsAvailable }}</p>
-                                <p class="subtitle">Artikel verfügbar</p>
+                        <div class="tile is-parent" @click="showCard('productsNotAvailable')">
+                            <article class="tile is-child box tile-box">
+                                <p class="title">{{ calculateBorrowedItems }}</p>
+                                <p class="subtitle">Artikel ausgeliehen</p>
                             </article>
                         </div>
                         <div class="tile is-parent">
-                            <article class="tile is-child box">
+                            <article class="tile is-child box ">
                                 <p class="title">{{ calculateUtilization }}%</p>
                                 <p class="subtitle">Auslastung</p>
                             </article>
@@ -44,31 +44,75 @@
                 </section>
                 <div class="columns">
                     <div class="column is-6">
-                        <div class="card">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    Artikel suchen
-                                </p>
-                                <a href="#" class="card-header-icon" aria-label="more options">
-                                    <span class="icon">
-                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                </a>
-                            </header>
-                            <div class="card-content">
-                                <div class="content">
-                                    <div class="control has-icons-left has-icons-right">
-                                        <input class="input is-large" type="text" placeholder="">
-                                        <span class="icon is-medium is-left">
-                                            <i class="fa fa-search"></i>
-                                        </span>
-                                        <span class="icon is-medium is-right">
-                                            <i class="fa fa-check"></i>
-                                        </span>
+                        <section class="info-tiles">
+                            <div>
+                                <div class="columns">
+                                    <div class="column is-12">
+                                        <div class="card" v-if="selectedCard === 'wishlist'">
+                                            <div class="card-content">
+                                                <p class="title">Wunschlisten</p>
+                                                <table class="table is-fullwidth">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>id</th>
+                                                            <th>client_id</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(wishlist, index) in wishlists" :key="index">
+                                                            <td>{{ wishlist.id }}</td>
+                                                            <td>{{ wishlist.client_id }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card" v-else-if="selectedCard === 'productsTotal'">
+                                            <div class="card-content">
+                                                <p class="title">Artikel</p>
+                                                <table class="table is-fullwidth">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Anzahl</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(product, index) in products" :key="index">
+                                                            <td> <router-link v-bind:to="product.get_absolute_url">{{
+                                                                product.name }}</router-link>
+                                                            </td>
+                                                            <td>{{ product.count }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card" v-else-if="selectedCard === 'productsNotAvailable'">
+                                            <div class="card-content">
+                                                <p class="title">Ausgeliehene Artikel </p>
+                                                <table class="table is-fullwidth">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Artikel</th>
+                                                            <th>Anzahl</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(product, index) in filteredProducts" :key="index">
+                                                            <td> <router-link v-bind:to="product.get_absolute_url">{{
+                                                                product.name }}</router-link>
+                                                            </td>
+                                                            <td>{{ product.difference }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </section>
                     </div>
                     <div class="column is-6">
                         <div class="card">
@@ -108,9 +152,13 @@ export default {
     name: 'Adminpanel',
     data() {
         return {
+            products: [],
+            wishlists: [],
             wishlistCount: 0,
             productsAvailable: 0,
-            productsTotal: 0
+            productsNotAvailable: 0,
+            productsTotal: 0,
+            selectedCard: 'wishlist'
         }
     },
     methods: {
@@ -128,7 +176,9 @@ export default {
             await axios
                 .get(`/api/v1/products`)
                 .then((response) => {
+                    this.products = response.data.products
                     this.productsTotal = response.data.count;
+                    this.productsAvailable = response.data.available_count
                 })
                 .catch((error) => {
                     console.log(error);
@@ -138,12 +188,16 @@ export default {
             await axios
                 .get(`/api/v1/wishlists`)
                 .then((response) => {
+                    this.wishlists = response.data.wishlists;
                     this.wishlistCount = response.data.count;
                     this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
+        },
+        showCard(card) {
+            this.selectedCard = card;
         }
     },
     mounted() {
@@ -157,7 +211,32 @@ export default {
         calculateUtilization() {
             const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
             return utilization;
-        }
+        },
+        calculateBorrowedItems() {
+            let borrowedCount = 0;
+            this.products.forEach((product) => {
+                borrowedCount += product.count - product.available;
+            });
+            return borrowedCount;
+        },
+        filteredProducts() {
+            return this.products.filter((product) => {
+                // Differenz zwischen count und available berechnen
+                product.difference = product.count - product.available;
+                console.log(product.difference);
+                // Produkt zurückgeben, wenn count und available unterschiedlich sind
+                return product.count !== product.available;
+            });
+        },
     }
 }
 </script>
+
+<style scoped>
+.tile-box:hover {
+    background-color: #76d1cd;
+    transition: 1s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+</style>

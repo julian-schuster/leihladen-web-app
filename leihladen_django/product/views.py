@@ -1,21 +1,19 @@
-from django.db.models import Q
+from django.db.models import Sum, Q
 from django.http import Http404
-from django.views.decorators.http import require_http_methods
-
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
 from .models import Product, Category, Wishlist
 from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
 
 class Products(APIView):
     def get(self, request, format=None):
         products = Product.objects.all()
-        product_count = products.count()
+        available_count = products.aggregate(total=Sum('available'))['total']
+        total_count = products.aggregate(total=Sum('count'))['total']
         serializer = ProductSerializer(products, many=True)
-        data = {'products': serializer.data, 'count': product_count}
+        data = {'products': serializer.data, 'count': total_count, 'available_count': available_count}
         return Response(data, status=status.HTTP_200_OK)
 
 class LatestProductsList(APIView):
