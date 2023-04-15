@@ -1,22 +1,16 @@
 <template>
   <div class="home">
-    <section class="hero is-medium is-dark mb-6">
+    <section class="mb-6">
       <div class="hero-body has-text-centered">
-        <p class="title mb-6">Willkommen im Leihladen</p>
+        <p class="title is-size-2">Willkommen im Leihladen</p>
         <p class="subtitle">leihen statt kaufen – teilen statt besitzen</p>
       </div>
     </section>
-
     <div class="columns is-multiline">
       <div class="column is-12">
-        <h2 class="is-size-2 has-text-centered">Neueste Artikel</h2>
+        <h2 class="is-size-3 has-text-centered">Neueste Artikel</h2>
       </div>
-
-      <ProductBox
-        v-for="product in latestProducts"
-        v-bind:key="product.id"
-        v-bind:product="product"
-      />
+      <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
     </div>
   </div>
 </template>

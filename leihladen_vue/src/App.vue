@@ -57,7 +57,7 @@
     <section class="section">
       <router-view />
     </section>
-    <footer class="footer">
+    <footer class="footer has-background-white-ter">
       <div class="container">
         <div class="columns is-multiline">
           <div class="column is-12">

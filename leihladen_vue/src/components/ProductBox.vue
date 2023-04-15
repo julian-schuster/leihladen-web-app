@@ -5,14 +5,13 @@
         <img :src="product.get_thumbnail" />
       </figure>
 
-      <h3 class="is-size-4">{{ product.name }}</h3>
+      <div class="product-info">
+        <h3 class="is-size-4 product-name">{{ product.name }}</h3>
 
-      <router-link
-        v-bind:to="product.get_absolute_url"
-        class="button is-dark mt-4"
-      >
-        Genauer ansehen</router-link
-      >
+        <router-link v-bind:to="product.get_absolute_url" class="button is-dark mt-2 product-button">
+          Genauer ansehen
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
