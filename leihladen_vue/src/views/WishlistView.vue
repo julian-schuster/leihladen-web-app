@@ -1,5 +1,5 @@
 <template>
-    <div class="page-wishlist" v-if="!$store.state.isLoading">
+    <div class="page-wishlist is-fullheight" v-if="!$store.state.isLoading">
         <div class="columns is-multiline">
             <div class="column is-12">
                 <h1 class="title">Wunschliste</h1>

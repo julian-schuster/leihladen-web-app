@@ -57,9 +57,28 @@
     <section class="section">
       <router-view />
     </section>
-
     <footer class="footer">
-      <p class="has-text-centered"> footer </p>
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-12">
+            <div class="columns is-mobile is-multiline">
+              <div class="column is-4  has-text-left">
+                <p class="has-text-weight-bold mb-2">Kontakt</p>
+                <p><i class="fas fa-map-marker-alt mr-2"></i> Musterstraße 123, 12345 Musterstadt</p>
+                <p><i class="fas fa-envelope mr-2"></i> info@leihladen.de</p>
+                <p><i class="fas fa-phone mr-2"></i> 0123 / 456 789</p>
+              </div>
+              <div class="column is-4  has-text-centered">
+                <p class="has-text-weight-bold mb-2">Öffnungszeiten</p>
+                <p>Fr: 16:00-17:30 Uhr</p>
+              </div>
+              <div class="column is-4  has-text-right">
+                <p>For Demonstration Only</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
   </div>
 </template>
