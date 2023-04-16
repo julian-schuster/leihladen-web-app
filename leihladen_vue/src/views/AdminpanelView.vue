@@ -30,7 +30,7 @@
                         </div>
                         <div class="tile is-parent" @click="showCard('productsNotAvailable')">
                             <article class="tile is-child box tile-box">
-                                <p class="title">{{ calculateBorrowedItems }}</p>
+                                <p class="title">{{ calculateBorrowedProducts }}</p>
                                 <p class="subtitle">Artikel ausgeliehen</p>
                             </article>
                         </div>
@@ -59,12 +59,15 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(wishlist, index) in wishlists" :key="index">
+                                                        <tr v-for="(wishlist, index) in paginatedWishlists(currentPage)"
+                                                            :key="index">
                                                             <td>{{ wishlist.id }}</td>
                                                             <td>{{ wishlist.client_id }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <Pagination :totalItems="wishlists.length" :itemsPerPage="itemsPerPage"
+                                                    :currentPage="currentPage" @input="onPageChange" />
                                             </div>
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsTotal'">
@@ -78,7 +81,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(product, index) in products" :key="index">
+                                                        <tr v-for="(product, index) in paginatedProducts(currentPage)"
+                                                            :key="index">
                                                             <td> <router-link v-bind:to="product.get_absolute_url">{{
                                                                 product.name }}</router-link>
                                                             </td>
@@ -86,11 +90,13 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <Pagination :totalItems="products.length" :itemsPerPage="itemsPerPage"
+                                                    :currentPage="currentPage" @input="onPageChange" />
                                             </div>
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsNotAvailable'">
                                             <div class="card-content">
-                                                <p class="title">Ausgeliehene Artikel </p>
+                                                <p class="title">Ausgeliehene Artikel</p>
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
@@ -99,7 +105,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(product, index) in filteredProducts" :key="index">
+                                                        <tr v-for="(product, index) in paginatedBorrowedProducts(currentPage, filteredProducts)"
+                                                            :key="index">
                                                             <td> <router-link v-bind:to="product.get_absolute_url">{{
                                                                 product.name }}</router-link>
                                                             </td>
@@ -107,6 +114,9 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <Pagination :totalItems="filteredProducts.length"
+                                                    :itemsPerPage="itemsPerPage" :currentPage="currentPage"
+                                                    @input="onPageChange" />
                                             </div>
                                         </div>
                                     </div>
@@ -120,19 +130,21 @@
                                 <p class="card-header-title">
                                     Funktionen
                                 </p>
-                                <a href="#" class="card-header-icon" aria-label="more options">
-                                    <span class="icon">
-                                        <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                </a>
                             </header>
                             <div class="card-content">
                                 <div class="content">
                                     <div class="buttons">
                                         <div class="column is-12">
-                                            <router-link to="/wishlist/scan" class="button is-dark">Wunschliste
-                                                scannen</router-link>
-                                            <button @click="logout()" class="button is-danger">Log out</button>
+
+                                            <router-link to="#" class="button">
+                                                Artikel hinzufügen</router-link>
+                                            <router-link to="#" class="button">
+                                                Artikel entfernen</router-link>
+                                            <router-link to="#" class="button">
+                                                Artikel bearbeiten</router-link>
+                                            <router-link to="/wishlist/scan" class="button">
+                                                Wunschliste Scannen</router-link>
+                                            <button @click="logout()" class="button">Logout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -147,9 +159,13 @@
 
 <script>
 import axios from 'axios';
+import Pagination from '@/components/Pagination';
 
 export default {
     name: 'Adminpanel',
+    components: {
+        Pagination
+    },
     data() {
         return {
             products: [],
@@ -158,7 +174,9 @@ export default {
             productsAvailable: 0,
             productsNotAvailable: 0,
             productsTotal: 0,
-            selectedCard: 'wishlist'
+            selectedCard: 'wishlist',
+            currentPage: 1,
+            itemsPerPage: 3
         }
     },
     methods: {
@@ -198,21 +216,36 @@ export default {
         },
         showCard(card) {
             this.selectedCard = card;
-        }
+            this.currentPage = 1
+        },
+        paginatedWishlists(page) {
+            const startIndex = (page - 1) * this.itemsPerPage;
+            return this.wishlists.slice(startIndex, startIndex + this.itemsPerPage);
+        },
+        paginatedProducts(page) {
+            const startIndex = (page - 1) * this.itemsPerPage;
+            return this.products.slice(startIndex, startIndex + this.itemsPerPage);
+        },
+        paginatedBorrowedProducts(page, borrowedProducts) {
+            const startIndex = (page - 1) * this.itemsPerPage;
+            return borrowedProducts.slice(startIndex, startIndex + this.itemsPerPage);
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+        },
     },
     mounted() {
         document.title = 'Adminpanel | Leihladen'
         this.$store.commit("setIsLoading", true);
         this.getProducts();
         this.getWishlists();
-
     },
     computed: {
         calculateUtilization() {
             const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
             return utilization.toFixed(2);
         },
-        calculateBorrowedItems() {
+        calculateBorrowedProducts() {
             let borrowedCount = 0;
             this.products.forEach((product) => {
                 borrowedCount += product.count - product.available;
@@ -223,11 +256,10 @@ export default {
             return this.products.filter((product) => {
                 // Differenz zwischen count und available berechnen
                 product.difference = product.count - product.available;
-                console.log(product.difference);
                 // Produkt zurückgeben, wenn count und available unterschiedlich sind
                 return product.count !== product.available;
             });
-        },
+        }
     }
 }
 </script>
