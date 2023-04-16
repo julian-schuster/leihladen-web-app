@@ -69,7 +69,7 @@ export default {
 
                 localStorage.setItem("token", token)
 
-                const toPath = this.$route.query.to || '/wishlist'
+                const toPath = this.$route.query.to || '/adminpanel'
 
                 this.$router.push(toPath)
             }).catch(error => {

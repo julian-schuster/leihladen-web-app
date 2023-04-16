@@ -1,16 +1,37 @@
 <template>
   <div class="column is-3">
     <div class="box">
-      <figure class="image is-square mb-4">
-        <img :src="product.get_thumbnail" />
-      </figure>
-
+      <div class="column is-12 is-12-mobile">
+        <figure class="image is-square">
+          <img v-bind:src="product.get_thumbnail">
+        </figure>
+      </div>
       <div class="product-info">
         <h3 class="is-size-4 product-name">{{ product.name }}</h3>
+        <div class="columns">
 
-        <router-link v-bind:to="product.get_absolute_url" class="button is-dark mt-2 product-button">
-          Details
-        </router-link>
+          <div class="column">
+            <table class="table">
+              <thead>
+                <th>Bestand</th>
+                <th>Verfügbar</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ product.count }}</td>
+                  <td>{{ product.available }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="column has-text-right">
+            <router-link v-bind:to="product.get_absolute_url" class="button mt-2 is-dark product-button">
+              Details
+            </router-link>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>
@@ -22,6 +43,20 @@ export default {
   props: {
     product: Object,
   },
+  methods: {
+    getProducts() {
+      axios
+        .get(`/api/v1/products`)
+        .then((response) => {
+          this.products = response.data.products
+          console.log(this.products);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+
 };
 </script>
 

@@ -22,6 +22,20 @@
             </div>
           </div>
         </div>
+        <div class="column is-12 is-12-mobile">
+          <table class="table">
+            <thead>
+              <th>Bestand</th>
+              <th>Verfügbar</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ product.count }}</td>
+                <td>{{ product.available }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

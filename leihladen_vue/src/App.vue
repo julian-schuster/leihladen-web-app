@@ -58,7 +58,7 @@
       <router-view />
     </section>
   </div>
-  <footer class="footer has-background-white-ter">
+  <footer class="footer has-background-white-ter mobile-is-6">
     <div class="container">
       <div class="columns is-multiline">
         <div class="column is-12">
@@ -69,12 +69,12 @@
               <p><i class="fas fa-envelope mr-2"></i> info@leihladen.de</p>
               <p><i class="fas fa-phone mr-2"></i> 0123 / 456 789</p>
             </div>
-            <div class="column is-4  has-text-centered">
+            <div class="column is-4 has-text-centered">
               <p class="has-text-weight-bold mb-2">Öffnungszeiten</p>
               <p>Fr: 16:00-17:30 Uhr</p>
             </div>
-            <div class="column is-4  has-text-right">
-              <p>For Demonstration Only</p>
+            <div class="column is-4 has-text-right">
+              <p class="has-text-weight-bold">For Demonstration Only</p>
             </div>
           </div>
         </div>

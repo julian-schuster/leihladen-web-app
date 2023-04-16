@@ -5,7 +5,7 @@
     <div class="container" v-if="!$store.state.isLoading">
         <div class="columns">
             <div class="column is-12">
-                <section class="hero is-dark welcome is-small ">
+                <section class="hero  welcome is-small ">
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title ">
