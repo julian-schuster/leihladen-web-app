@@ -18,16 +18,24 @@
                     <tr>
                         <th>Artikel</th>
                         <th>Stückzahl</th>
-                        <th>Status</th>
-                        <th>Verfügbarkeit ändern</th>
+                        <th>Bestand</th>
+                        <th>Verfügbar</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
                         <td>{{ item.product.name }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td># Verfügbar</td>
-                        <td><button>Verfügbar schalten</button><button>Nicht Verfügbar schalten</button></td>
+                        <td>{{ getProductCount(item.product.id) }}</td>
+                        <td>{{ getProductAvailable(item.product.id) }}</td>
+                        <td><button class="button is-success is-light"
+                                @click="updateProductAvailability(item.product.id, 1)">Verfügbar
+                                schalten</button></td>
+                        <td><button class="button is-danger is-light"
+                                @click="updateProductAvailability(item.product.id, -1)">Nicht Verfügbar
+                                schalten</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -39,6 +47,7 @@
 import { QrcodeStream } from 'vue3-qrcode-reader'
 import WishlistItem from '@/components/WishlistItem.vue'
 import axios from 'axios'
+import { toast } from 'bulma-toast'
 
 export default {
     name: 'WishlistScan',
@@ -51,6 +60,7 @@ export default {
             wishlist: {
                 items: []
             },
+            products: [],
             camera: 'auto',
             error: '',
             show: true
@@ -59,6 +69,7 @@ export default {
     mounted() {
         document.title = 'Wunschliste Scan | Leihladen'
         this.$store.commit("setIsLoading", true);
+        this.getProducts()
     },
     methods: {
         async onDecode(decodedString) {
@@ -119,6 +130,53 @@ export default {
                 }
             }
         },
+        getProducts() {
+            axios
+                .get(`/api/v1/products`)
+                .then((response) => {
+                    this.products = response.data.products
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        getProductAvailable(productId) {
+            const product = this.products.find(p => p.id === productId);
+            return product ? product.available : '-';
+        },
+        getProductCount(productId) {
+            const product = this.products.find(p => p.id === productId);
+            return product ? product.count : '-';
+        },
+        updateProductAvailability(id, value) {
+            axios.put(`/api/v1/product/${id}/availability/`, { value: value })
+                .then(response => {
+                    console.log(response.data);
+                    toast({
+                        message: response.data.message,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 2000,
+                        position: "bottom-right",
+                    });
+
+                    this.getProducts()
+                })
+                .catch(error => {
+                    console.error(error);
+
+                    toast({
+                        message: error.response.data.error,
+                        type: "is-danger",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 2000,
+                        position: "bottom-right",
+                    });
+
+                });
+        }
     }
 
 }

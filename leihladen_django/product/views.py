@@ -95,3 +95,24 @@ class Wishlists(APIView):
         serializer = WishlistSerializer(wishlists, many=True)
         data = {'wishlists': serializer.data, 'count': wishlist_count}
         return Response(data, status=status.HTTP_200_OK)
+    
+class ProductAvailability(APIView):
+    def put(self, request, id):
+        product = Product.objects.get(id=id)
+        value = request.data.get('value', None)
+        if value is not None:
+            # Berechne die neue Verfügbarkeit
+            new_available = product.available + value
+            
+            # Überprüfe, ob die neue Verfügbarkeit gültig ist
+            if new_available < 0:
+                return Response({'error': 'Die Verfügbarkeit darf nicht unter 0 fallen.'}, status=status.HTTP_400_BAD_REQUEST)
+            elif new_available > product.count:
+                return Response({'error': 'Die Verfügbarkeit darf nicht größer als der aktuelle Bestand sein.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Wenn die neue Verfügbarkeit gültig ist, aktualisiere das Produkt
+                product.available = new_available
+                product.save()
+                return Response({'message': 'Verfügbarkeit aktualisiert'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Ungültige Eingabe'}, status=status.HTTP_400_BAD_REQUEST)
