@@ -54,33 +54,33 @@
         </div>
       </div>
     </nav>
-    <section class="section">
+    <section class="section content">
       <router-view />
     </section>
-    <footer class="footer has-background-white-ter">
-      <div class="container">
-        <div class="columns is-multiline">
-          <div class="column is-12">
-            <div class="columns is-mobile is-multiline">
-              <div class="column is-4  has-text-left">
-                <p class="has-text-weight-bold mb-2">Kontakt</p>
-                <p><i class="fas fa-map-marker-alt mr-2"></i> Musterstraße 123, 12345 Musterstadt</p>
-                <p><i class="fas fa-envelope mr-2"></i> info@leihladen.de</p>
-                <p><i class="fas fa-phone mr-2"></i> 0123 / 456 789</p>
-              </div>
-              <div class="column is-4  has-text-centered">
-                <p class="has-text-weight-bold mb-2">Öffnungszeiten</p>
-                <p>Fr: 16:00-17:30 Uhr</p>
-              </div>
-              <div class="column is-4  has-text-right">
-                <p>For Demonstration Only</p>
-              </div>
+  </div>
+  <footer class="footer has-background-white-ter">
+    <div class="container">
+      <div class="columns is-multiline">
+        <div class="column is-12">
+          <div class="columns is-mobile is-multiline">
+            <div class="column is-4  has-text-left">
+              <p class="has-text-weight-bold mb-2">Kontakt</p>
+              <p><i class="fas fa-map-marker-alt mr-2"></i> Musterstraße 123, 12345 Musterstadt</p>
+              <p><i class="fas fa-envelope mr-2"></i> info@leihladen.de</p>
+              <p><i class="fas fa-phone mr-2"></i> 0123 / 456 789</p>
+            </div>
+            <div class="column is-4  has-text-centered">
+              <p class="has-text-weight-bold mb-2">Öffnungszeiten</p>
+              <p>Fr: 16:00-17:30 Uhr</p>
+            </div>
+            <div class="column is-4  has-text-right">
+              <p>For Demonstration Only</p>
             </div>
           </div>
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -164,5 +164,21 @@ export default {
   &.is-loading {
     height: 80px;
   }
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;
 }
 </style>
