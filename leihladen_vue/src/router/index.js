@@ -14,6 +14,7 @@ import AdminpanelView from '../views/AdminpanelView.vue'
 import WishlistView from '../views/WishlistView.vue'
 import WishlistCheckoutView from '../views/WishlistCheckoutView.vue'
 import WishlistScanView from '../views/WishlistScanView.vue'
+import ProductCreateView from '../views/ProductCreateView.vue'
 
 
 const routes = [{
@@ -75,6 +76,15 @@ const routes = [{
     name: 'Category',
     component: CategoryView
   },
+  {
+    path: '/product/create',
+    name: 'ProductCreate',
+    component: ProductCreateView,
+    meta: {
+      requireLogin: true
+    }
+  },
+
 
 ]
 

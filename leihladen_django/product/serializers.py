@@ -12,7 +12,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "description",
             "get_image",
             "get_thumbnail",
-            "count",
+            "quantity",
             "available"
         )
 

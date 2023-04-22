@@ -5,7 +5,7 @@
     <div class="container" v-if="!$store.state.isLoading">
         <div class="columns">
             <div class="column is-12">
-                <section class="hero  welcome is-small ">
+                <section class="hero welcome is-small ">
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title ">
@@ -86,7 +86,7 @@
                                                             <td> <router-link v-bind:to="product.get_absolute_url">{{
                                                                 product.name }}</router-link>
                                                             </td>
-                                                            <td>{{ product.count }}</td>
+                                                            <td>{{ product.quantity }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -136,7 +136,7 @@
                                     <div class="buttons">
                                         <div class="column is-12">
 
-                                            <router-link to="#" class="button">
+                                            <router-link to="/product/create" class="button">
                                                 Artikel hinzufügen</router-link>
                                             <router-link to="#" class="button">
                                                 Artikel entfernen</router-link>
@@ -195,7 +195,7 @@ export default {
                 .get(`/api/v1/products`)
                 .then((response) => {
                     this.products = response.data.products
-                    this.productsTotal = response.data.count;
+                    this.productsTotal = response.data.quantity;
                     this.productsAvailable = response.data.available_count
                 })
                 .catch((error) => {
@@ -248,16 +248,16 @@ export default {
         calculateBorrowedProducts() {
             let borrowedCount = 0;
             this.products.forEach((product) => {
-                borrowedCount += product.count - product.available;
+                borrowedCount += product.quantity - product.available;
             });
             return borrowedCount;
         },
         filteredProducts() {
             return this.products.filter((product) => {
                 // Differenz zwischen count und available berechnen
-                product.difference = product.count - product.available;
+                product.difference = product.quantity - product.available;
                 // Produkt zurückgeben, wenn count und available unterschiedlich sind
-                return product.count !== product.available;
+                return product.quantity !== product.available;
             });
         }
     }

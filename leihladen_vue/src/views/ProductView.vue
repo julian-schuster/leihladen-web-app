@@ -30,7 +30,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{ product.count }}</td>
+                <td>{{ product.quantity }}</td>
                 <td>{{ product.available }}</td>
               </tr>
             </tbody>

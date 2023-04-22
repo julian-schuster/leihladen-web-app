@@ -27,18 +27,18 @@ class Product(models.Model):
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
-    count = models.IntegerField(default = 1, validators=[MinValueValidator(0)])
+    quantity = models.IntegerField(default = 1, validators=[MinValueValidator(0)])
     available = models.IntegerField(default = 1, validators=[MinValueValidator(0)])
 
     class Meta:
-        ordering = ('date_added',)
+        ordering = ('-date_added',)
 
     def __str__(self):
         return self.name
 
     def clean(self):
-        if self.available > self.count:
-            raise ValidationError("Available quantity cannot be greater than total quantity.")
+        if self.available > self.quantity:
+            raise ValidationError("Die verfügbare Menge kann nicht größer sein als die Gesamtmenge.")
         
     def get_absolute_url(self):
         return f'/{self.category.slug}/{self.slug}/'

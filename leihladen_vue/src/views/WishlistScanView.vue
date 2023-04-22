@@ -146,7 +146,7 @@ export default {
         },
         getProductCount(productId) {
             const product = this.products.find(p => p.id === productId);
-            return product ? product.count : '-';
+            return product ? product.quantity : '-';
         },
         updateProductAvailability(id, value) {
             axios.put(`/api/v1/product/${id}/availability/`, { value: value })

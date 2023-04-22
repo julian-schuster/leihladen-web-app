@@ -35,6 +35,7 @@
         <div class="navbar-end">
           <router-link to="/garten" class="navbar-item">Garten</router-link>
           <router-link to="/brettspiele" class="navbar-item">Brettspiele</router-link>
+          <router-link to="/sport" class="navbar-item">Sport</router-link>
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.isAuthenticated">

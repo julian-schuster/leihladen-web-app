@@ -1,5 +1,6 @@
 from django.db.models import Sum, Q
 from django.http import Http404
+from django.utils.text import slugify
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -11,9 +12,9 @@ class Products(APIView):
     def get(self, request, format=None):
         products = Product.objects.all()
         available_count = products.aggregate(total=Sum('available'))['total']
-        total_count = products.aggregate(total=Sum('count'))['total']
+        total_count = products.aggregate(total=Sum('quantity'))['total']
         serializer = ProductSerializer(products, many=True)
-        data = {'products': serializer.data, 'count': total_count, 'available_count': available_count}
+        data = {'products': serializer.data, 'quantity': total_count, 'available_count': available_count}
         return Response(data, status=status.HTTP_200_OK)
 
 class LatestProductsList(APIView):
@@ -107,7 +108,7 @@ class ProductAvailability(APIView):
             # Überprüfe, ob die neue Verfügbarkeit gültig ist
             if new_available < 0:
                 return Response({'error': 'Die Verfügbarkeit darf nicht unter 0 fallen.'}, status=status.HTTP_400_BAD_REQUEST)
-            elif new_available > product.count:
+            elif new_available > product.quantity:
                 return Response({'error': 'Die Verfügbarkeit darf nicht größer als der aktuelle Bestand sein.'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 # Wenn die neue Verfügbarkeit gültig ist, aktualisiere das Produkt
@@ -116,3 +117,24 @@ class ProductAvailability(APIView):
                 return Response({'message': 'Verfügbarkeit aktualisiert'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Ungültige Eingabe'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class CreateProduct(APIView):
+      def post(self, request):
+        name = request.data.get('name')
+        description = request.data.get('description')
+        quantity = request.data.get('quantity')
+        image = request.data.get('image')
+        category_id = request.data.get('category')
+        
+        category = Category.objects.get(id=category_id)
+        slug = slugify(name)  # Slug basierend auf dem Namen erstellen
+
+        product = Product(name=name, slug=slug, description=description, quantity=quantity, image=image, category=category, available=quantity)
+        product.save()
+
+        # Thumbnail erstellen, falls ein Bild vorhanden ist
+        if product.image:
+            product.thumbnail = product.make_thumbnail(product.image)
+            product.save()
+
+        return Response({'status': 'Artikel erstellt'}, status=status.HTTP_201_CREATED)

@@ -4,12 +4,6 @@
         <span>{{ currentPage }}/{{ pageCount }}</span>
         <button class="button" :disabled="currentPage === pageCount" @click="nextPage">Weiter</button>
     </div>
-
-    <!-- <div>
-        <button @click="prevPage">Zurück</button>
-        <span>{{ currentPage }}/{{ totalPages }}</span>
-        <button @click="nextPage">Weiter</button>
-    </div> -->
 </template>
   
 <script>
