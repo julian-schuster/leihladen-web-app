@@ -195,7 +195,11 @@ export default {
                 .get(`/api/v1/products`)
                 .then((response) => {
                     this.products = response.data.products
-                    this.productsTotal = response.data.quantity;
+                    if (response.data.quantity) {
+                        this.productsTotal = response.data.quantity;
+                    } else {
+                        this.productsTotal = 0
+                    }
                     this.productsAvailable = response.data.available_count
                 })
                 .catch((error) => {

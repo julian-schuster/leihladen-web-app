@@ -99,6 +99,18 @@ export default {
     },
     methods: {
         submitForm() {
+            if (this.product.quantity <= 0) {
+                toast({
+                    message: "Bitte geben Sie eine Anzahl größer als 0 ein.",
+                    type: "is-danger",
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 2000,
+                    position: "bottom-right",
+                });
+                return;
+            }
+
             const formData = new FormData();
             formData.append('name', this.product.name);
             formData.append('description', this.product.description);
@@ -119,6 +131,14 @@ export default {
                         duration: 2000,
                         position: "bottom-right",
                     });
+
+                    this.product.name = ''
+                    this.product.description = ''
+                    this.product.category = ''
+                    this.product.quantity = 0
+                    this.product.image = null
+                    this.file = null
+
 
                 })
                 .catch((error) => {

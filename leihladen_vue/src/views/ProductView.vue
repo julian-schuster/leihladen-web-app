@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-6">
     <div class="columns is-multiline">
-      <div class="column is-6 is-12-mobile">
-        <figure class="image is-square">
+      <div class="column is-5 is-12-mobile">
+        <figure class="image is-5by4">
           <img v-bind:src="product.get_image" alt="Produktbild">
         </figure>
       </div>
