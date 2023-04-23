@@ -15,6 +15,7 @@ import WishlistView from '../views/WishlistView.vue'
 import WishlistCheckoutView from '../views/WishlistCheckoutView.vue'
 import WishlistScanView from '../views/WishlistScanView.vue'
 import ProductCreateView from '../views/ProductCreateView.vue'
+import ProductEditView from '../views/ProductEditView.vue'
 
 
 const routes = [{
@@ -80,6 +81,14 @@ const routes = [{
     path: '/product/create',
     name: 'ProductCreate',
     component: ProductCreateView,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/:category_slug/:product_slug/edit',
+    name: 'ProductEdit',
+    component: ProductEditView,
     meta: {
       requireLogin: true
     }

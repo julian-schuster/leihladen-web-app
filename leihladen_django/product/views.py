@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from .models import Product, Category, Wishlist
 from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
 
@@ -98,6 +99,7 @@ class Wishlists(APIView):
         return Response(data, status=status.HTTP_200_OK)
     
 class ProductAvailability(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, id):
         product = Product.objects.get(id=id)
         value = request.data.get('value', None)
@@ -118,8 +120,9 @@ class ProductAvailability(APIView):
         else:
             return Response({'error': 'Ungültige Eingabe'}, status=status.HTTP_400_BAD_REQUEST)
         
-class CreateProduct(APIView):
-      def post(self, request):
+class ProductManagement(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
         name = request.data.get('name')
         description = request.data.get('description')
         quantity = request.data.get('quantity')
@@ -138,3 +141,13 @@ class CreateProduct(APIView):
             product.save()
 
         return Response({'status': 'Artikel erstellt'}, status=status.HTTP_201_CREATED)
+      
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, id):
+        try:
+            product = Product.objects.get(id=id)
+            product.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+

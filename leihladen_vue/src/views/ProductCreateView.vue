@@ -119,7 +119,7 @@ export default {
             formData.append('image', this.file);
 
             axios
-                .post(`/api/v1/product/create/`, formData)
+                .post(`/api/v1/product/`, formData)
                 .then((response) => {
                     console.log(response.data);
 
@@ -138,8 +138,6 @@ export default {
                     this.product.quantity = 0
                     this.product.image = null
                     this.file = null
-
-
                 })
                 .catch((error) => {
                     console.log(error);
@@ -151,14 +149,10 @@ export default {
                         duration: 2000,
                         position: "bottom-right",
                     });
-
                 });
         },
-
-
         handleFileUpload(event) {
             const file = event.target.files[0];
-
             if (file) {
                 const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
                 if (!allowedExtensions.exec(file.name)) {
@@ -169,7 +163,6 @@ export default {
                 this.product.image = URL.createObjectURL(file);
                 this.isValidImage = true;
             }
-
         }
     },
 };

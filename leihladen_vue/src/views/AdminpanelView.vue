@@ -78,6 +78,7 @@
                                                         <tr>
                                                             <th>Name</th>
                                                             <th>Anzahl</th>
+                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -87,6 +88,16 @@
                                                                 product.name }}</router-link>
                                                             </td>
                                                             <td>{{ product.quantity }}</td>
+                                                            <td class="has-text-right">
+                                                                <router-link :to="product.get_absolute_url + 'edit'">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </router-link>
+
+                                                                <span @click="deleteProduct(product.id)"
+                                                                    class="delete-wrapper">
+                                                                    <i class="fa fa-trash delete-icon"></i>
+                                                                </span>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -138,10 +149,6 @@
 
                                             <router-link to="/product/create" class="button">
                                                 Artikel hinzufügen</router-link>
-                                            <router-link to="#" class="button">
-                                                Artikel entfernen</router-link>
-                                            <router-link to="#" class="button">
-                                                Artikel bearbeiten</router-link>
                                             <router-link to="/wishlist/scan" class="button">
                                                 Wunschliste Scannen</router-link>
                                             <button @click="logout()" class="button">Logout</button>
@@ -160,6 +167,7 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/components/Pagination';
+import { toast } from "bulma-toast";
 
 export default {
     name: 'Adminpanel',
@@ -237,6 +245,30 @@ export default {
         onPageChange(page) {
             this.currentPage = page;
         },
+        deleteProduct(id) {
+            if (confirm("Sind Sie sicher, dass Sie dieses Produkt löschen möchten?")) {
+                axios
+                    .delete(`/api/v1/product/${id}`)
+                    .then((response) => {
+                        console.log(response);
+
+                        this.products = this.products.filter(product => product.id !== id);
+
+                        toast({
+                            message: "Artikel wurde entfernt",
+                            type: "is-success",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: "bottom-right",
+                        });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+
+        }
     },
     mounted() {
         document.title = 'Adminpanel | Leihladen'
@@ -274,5 +306,14 @@ export default {
     transition: 1s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+}
+
+.delete-icon:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.delete-wrapper {
+    margin-left: 10px;
 }
 </style>
