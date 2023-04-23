@@ -10,21 +10,16 @@
                 <div class="column is-6 is-12-mobile">
                     <div class="content">
                         <h1 class="title is-3">
+                            <label class="label" for="name">Name</label>
                             <input class="input" v-model="product.name" required>
                         </h1>
                         <p class="subtitle is-5">
+                            <label class="label" for="description">Beschreibung</label>
                             <textarea class="textarea" v-model="product.description" required></textarea>
                         </p>
-
-                        <div class="select">
-                            <select v-model="product.category" required>
-                                <option v-for="category in categories" :key="category.id" :value="category.id">{{
-                                    category.name }}</option>
-                            </select>
-                        </div>
-                        <br> <br>
                         <div class="field has-addons">
                             <div class="control">
+                                <label class="label" for="quantity">Bestand</label>
                                 <input type="number" class="input" min="1" v-model="product.quantity" required>
                             </div>
                         </div>
@@ -112,7 +107,6 @@ export default {
             formData.append('id', this.product.id);
             formData.append('name', this.product.name);
             formData.append('description', this.product.description);
-            formData.append('category', this.product.category);
             formData.append('quantity', this.product.quantity);
             if (this.file) {
                 formData.append('image', this.file);
