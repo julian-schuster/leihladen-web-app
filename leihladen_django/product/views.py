@@ -142,6 +142,8 @@ class ProductManagement(APIView):
 
         return Response({'status': 'Artikel erstellt'}, status=status.HTTP_201_CREATED)
       
+
+
     permission_classes = [IsAuthenticated]
     def delete(self, request, id):
         try:
@@ -150,4 +152,32 @@ class ProductManagement(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Product.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+
+    permission_classes = [IsAuthenticated]
+    def put(self, request):
+        product_id = request.data.get('id')
+        product = Product.objects.get(id=product_id)
+
+        if request.data.get('name'):
+            product.name = request.data['name']
+        if request.data.get('description'):
+            product.description = request.data['description']
+        if request.data.get('quantity'):
+            product.quantity = request.data['quantity']
+        if request.data.get('category'):
+            category_id = request.data['category']
+            category = Category.objects.get(id=category_id)
+            product.category = category
+        if request.data.get('image'):
+            product.image = request.data['image']
+
+        product.save()
+
+        if product.image:
+            product.thumbnail = product.make_thumbnail(product.image)
+            product.save()
+
+        return Response({'status': 'Artikel aktualisiert'}, status=status.HTTP_200_OK)
 
