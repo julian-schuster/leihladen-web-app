@@ -72,6 +72,8 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          //Wenn Fehler auftritt zurück auf Startseite leiten
+          this.$router.push("/")
         });
 
       this.$store.commit("setIsLoading", false);

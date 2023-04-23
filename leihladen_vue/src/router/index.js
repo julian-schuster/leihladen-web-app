@@ -91,10 +91,12 @@ const routes = [{
     component: ProductEditView,
     meta: {
       requireLogin: true
-    }
+    },
   },
-
-
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/'
+  }
 ]
 
 const router = createRouter({
