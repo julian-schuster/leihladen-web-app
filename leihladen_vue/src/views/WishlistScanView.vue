@@ -17,9 +17,9 @@
                 <thead>
                     <tr>
                         <th>Artikel</th>
-                        <th>Stückzahl</th>
-                        <th>Bestand</th>
-                        <th>Verfügbar</th>
+                        <th class="has-text-centered">Anzahl</th>
+                        <th class="has-text-centered">Bestand</th>
+                        <th class="has-text-centered">Auf Lager</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -27,13 +27,13 @@
                 <tbody>
                     <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
                         <td>{{ item.product.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ getProductCount(item.product.id) }}</td>
-                        <td>{{ getProductAvailable(item.product.id) }}</td>
-                        <td><button class="button is-success is-light"
+                        <td class="has-text-centered">{{ item.quantity }}</td>
+                        <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
+                        <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
+                        <td class="has-text-right"><button class="button is-success is-light"
                                 @click="updateProductAvailability(item.product.id, 1)">Verfügbar
                                 schalten</button></td>
-                        <td><button class="button is-danger is-light"
+                        <td class="has-text-right"><button class="button is-danger is-light has-text-right"
                                 @click="updateProductAvailability(item.product.id, -1)">Nicht Verfügbar
                                 schalten</button></td>
                     </tr>
@@ -72,9 +72,9 @@ export default {
         this.getProducts()
     },
     methods: {
-        async onDecode(decodedString) {
+        onDecode(decodedString) {
             const client_id = decodedString
-            await axios.get(`/api/v1/wishlist/${client_id}/`)
+            axios.get(`/api/v1/wishlist/${client_id}/`)
                 .then(response => {
                     const data = JSON.parse(response.data);
                     this.wishlist = data
