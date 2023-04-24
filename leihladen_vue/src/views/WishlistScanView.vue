@@ -19,7 +19,7 @@
                         <th>Artikel</th>
                         <th class="has-text-centered">Anzahl</th>
                         <th class="has-text-centered">Bestand</th>
-                        <th class="has-text-centered">Auf Lager</th>
+                        <th class="has-text-centered">Verfügbar</th>
                         <th></th>
                         <th></th>
                     </tr>

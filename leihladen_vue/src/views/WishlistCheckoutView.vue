@@ -34,7 +34,9 @@
                 <canvas ref="qrcode"></canvas>
                 <p class="has-text-grey mb-4">Bitte zeigen Sie diesen QR-Code entweder ausgedruckt oder auf Ihrem Smartphone
                     im Leihladen vor.</p>
+                <button class="button is-dark" @click="generatePDF">PDF generieren</button>
             </div>
+
         </div>
     </div>
 </template>
@@ -42,6 +44,8 @@
 <script>
 import axios from 'axios'
 import QRCode from 'qrcode'
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
     name: 'WishlistCheckout',
@@ -86,6 +90,41 @@ export default {
                     console.error(error)
                 })
         },
+        generatePDF() {
+            // Erstelle ein neues jsPDF-Objekt
+            const doc = new jsPDF();
+
+            // Füge den Titel "Wunschliste" hinzu
+            doc.setFontSize(18);
+            doc.text('Wunschliste | Leihladen', doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+
+            // Füge die Client ID hinzu
+            doc.setFontSize(12);
+            doc.text(`Client ID: ${this.clientId}`, 10, 30);
+
+            // Füge das Datum hinzu
+            const now = new Date();
+            const date = now.toLocaleDateString();
+            doc.text(`Erstellt am: ${date}`, doc.internal.pageSize.getWidth() - 60, 30);
+
+            // Füge eine Tabelle hinzu
+            const headers = [['Artikel', 'Stückzahl']];
+            const data = this.wishlist.items.map(item => [item.product.name, item.quantity]);
+            doc.autoTable({
+                head: headers,
+                body: data,
+                startY: 40,
+                margin: { top: 40 },
+            });
+
+            // Füge den QR-Code hinzu
+            QRCode.toDataURL(this.clientId, { errorCorrectionLevel: 'L' }, function (err, url) {
+                if (err) console.error(err);
+                doc.addImage(url, 'PNG', 20, doc.autoTable.previous.finalY + 10, 30, 30);
+                doc.text('Bitte zeigen Sie den QR-Code im Leihladen vor.', 60, doc.autoTable.previous.finalY + 30);
+                doc.save('Wunschliste.pdf');
+            });
+        }
     },
     computed: {
         wishlistTotalLength() {

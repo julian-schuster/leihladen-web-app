@@ -76,7 +76,7 @@
             </div>
             <div class="column is-4 has-text-right">
               <p class="has-text-weight-bold">For Demonstration Only</p>
-              <div class=" mb-2"><router-link to="/impressum">Impressum</router-link></div>
+              <div class="mb-2"><router-link to="/impressum">Impressum</router-link></div>
             </div>
           </div>
         </div>
