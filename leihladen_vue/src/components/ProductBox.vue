@@ -1,20 +1,23 @@
 <template>
-  <div class="column is-3">
+  <div class="column is-3-desktop is-6-tablet">
     <div class="box">
-      <div class="column is-12 is-12-mobile">
-        <figure class="image is-square">
-          <img v-bind:src="product.get_thumbnail">
-        </figure>
+      <div class="columns is-centered is-mobile">
+        <div class="column is-12 is-12-mobile">
+          <figure class="image is-square">
+            <img :src="product.get_thumbnail">
+          </figure>
+        </div>
       </div>
       <div class="product-info">
-        <h3 class="is-size-4 product-name">{{ product.name }}</h3>
-        <div class="columns">
-
+        <h3 class="title is-size-4-desktop is-size-5-mobile is-clipped">{{ product.name }}</h3>
+        <div class="columns is-mobile">
           <div class="column">
-            <table class="table">
+            <table class="table is-narrow">
               <thead>
-                <th>Bestand</th>
-                <th>Verfügbar</th>
+                <tr>
+                  <th>Bestand</th>
+                  <th>Verfügbar</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
@@ -24,14 +27,14 @@
               </tbody>
             </table>
           </div>
-          <div class="column has-text-right">
-            <router-link v-bind:to="product.get_absolute_url" class="button mt-2 is-dark product-button">
+        </div>
+        <div class="columns is-centered is-mobile">
+          <div class="column is-narrow">
+            <router-link :to="product.get_absolute_url" class="button is-dark is-rounded">
               Details
             </router-link>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -65,5 +68,11 @@ export default {
   margin-top: -1.25rem;
   margin-left: -1.25rem;
   margin-right: -1.25rem;
+}
+
+.is-clipped {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

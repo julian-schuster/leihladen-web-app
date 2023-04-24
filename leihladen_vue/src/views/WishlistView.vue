@@ -10,7 +10,7 @@
                     <thead>
                         <tr>
                             <th>Artikel</th>
-                            <th>Stückzahl</th>
+                            <th>Anzahl</th>
                             <th>Verfügbar</th>
                             <th></th>
                         </tr>

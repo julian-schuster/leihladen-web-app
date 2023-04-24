@@ -10,7 +10,7 @@
                     <thead>
                         <tr>
                             <th>Artikel</th>
-                            <th>Stückzahl</th>
+                            <th>Anzahl</th>
                         </tr>
                     </thead>
 
@@ -108,7 +108,7 @@ export default {
             doc.text(`Erstellt am: ${date}`, doc.internal.pageSize.getWidth() - 60, 30);
 
             // Füge eine Tabelle hinzu
-            const headers = [['Artikel', 'Stückzahl']];
+            const headers = [['Artikel', 'Anzahl']];
             const data = this.wishlist.items.map(item => [item.product.name, item.quantity]);
             doc.autoTable({
                 head: headers,
