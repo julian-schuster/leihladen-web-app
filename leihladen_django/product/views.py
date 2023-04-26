@@ -121,9 +121,11 @@ class ProductAvailability(APIView):
                 # Wenn die neue Verfügbarkeit gültig ist, aktualisiere das Produkt
                 product.available = new_available
                 product.save()
-                return Response({'message': 'Verfügbarkeit aktualisiert'}, status=status.HTTP_200_OK)
+                # Gib das aktualisierte Produkt zurück
+                serialized_product = ProductSerializer(product).data
+                return Response(serialized_product, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Ungültige Eingabe'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Fehler beim Aktualisieren der Verfügbarkeit'}, status=status.HTTP_400_BAD_REQUEST)
         
 class ProductManagement(APIView):
     permission_classes = [IsAuthenticated]
@@ -169,6 +171,8 @@ class ProductManagement(APIView):
             product.description = request.data['description']
         if request.data.get('quantity'):
             product.quantity = request.data['quantity']
+        if request.data.get('available'):
+            product.available = request.data['available']
         if request.data.get('image'):
             product.image = request.data['image']
 

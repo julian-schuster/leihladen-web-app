@@ -17,10 +17,15 @@
                             <label class="label" for="description">Beschreibung</label>
                             <textarea class="textarea" v-model="product.description" required></textarea>
                         </p>
-                        <div class="field has-addons">
-                            <div class="control">
+                        <div class="field has-addons" style="display: flex;">
+                            <div class="control" style="margin-right: 10px; width: 150px;">
                                 <label class="label" for="quantity">Bestand</label>
                                 <input type="number" class="input" min="1" v-model="product.quantity" required>
+                            </div>
+                            <div class="control" style="width: 150px;">
+                                <label class="label" for="quantity">Verfügbar</label>
+                                <input type="number" class="input" min="1" :max="product.quantity"
+                                    v-model="product.available" required>
                             </div>
                         </div>
                         <div class="field">
@@ -108,6 +113,8 @@ export default {
             formData.append('name', this.product.name);
             formData.append('description', this.product.description);
             formData.append('quantity', this.product.quantity);
+            formData.append('available', this.product.available);
+
             if (this.file) {
                 formData.append('image', this.file);
             }
