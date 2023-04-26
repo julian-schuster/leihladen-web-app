@@ -51,6 +51,12 @@
                                         <div class="card" v-if="selectedCard === 'wishlist'">
                                             <div class="card-content">
                                                 <p class="title">Wunschlisten</p>
+                                                <div class="field">
+                                                    <div class="control">
+                                                        <input class="input" type="text" placeholder="Suche Wunschliste"
+                                                            v-model="searchQuery">
+                                                    </div>
+                                                </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
@@ -59,7 +65,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(wishlist, index) in paginatedWishlists(currentPage)"
+                                                        <tr v-for="(wishlist, index) in paginatedFilteredWishlists"
                                                             :key="index">
                                                             <td>{{ wishlist.id }}</td>
                                                             <td><router-link :to="'/wishlist/' + wishlist.client_id">{{
@@ -67,8 +73,9 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <Pagination :totalItems="wishlists.length" :itemsPerPage="itemsPerPage"
-                                                    :currentPage="currentPage" @input="onPageChange" />
+                                                <Pagination v-if="totalPages > 1" :totalItems="filteredWishlists.length"
+                                                    :itemsPerPage="itemsPerPage" :currentPage="currentPage"
+                                                    @input="onPageChange" />
                                             </div>
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsTotal'">
@@ -185,7 +192,8 @@ export default {
             productsTotal: 0,
             selectedCard: 'wishlist',
             currentPage: 1,
-            itemsPerPage: 10
+            itemsPerPage: 1,
+            searchQuery: ''
         }
     },
     methods: {
@@ -268,7 +276,6 @@ export default {
                         console.log(error);
                     });
             }
-
         }
     },
     mounted() {
@@ -276,6 +283,15 @@ export default {
         this.$store.commit("setIsLoading", true);
         this.getProducts();
         this.getWishlists();
+    },
+    watch: {
+        totalPages(newTotal, oldTotal) {
+            if (newTotal === 1 && oldTotal > 1) {
+                this.currentPage = 1;
+            } else if (this.currentPage > newTotal) {
+                this.currentPage = newTotal;
+            }
+        }
     },
     computed: {
         calculateUtilization() {
@@ -296,7 +312,26 @@ export default {
                 // Produkt zurückgeben, wenn count und available unterschiedlich sind
                 return product.quantity !== product.available;
             });
-        }
+        },
+        filteredWishlists() {
+            const searchQuery = this.searchQuery.toLowerCase();
+            this.currentPage = 1
+
+            if (!searchQuery) {
+
+                return this.wishlists
+            }
+            return this.wishlists.filter((wishlist) => {
+                return wishlist.client_id.toLowerCase().includes(searchQuery);
+            });
+        },
+        totalPages() {
+            return Math.ceil(this.filteredWishlists.length / this.itemsPerPage);
+        },
+        paginatedFilteredWishlists() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            return this.filteredWishlists.slice(startIndex, startIndex + this.itemsPerPage)
+        },
     }
 }
 </script>
