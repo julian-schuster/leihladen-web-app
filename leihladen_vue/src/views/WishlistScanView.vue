@@ -45,15 +45,13 @@
 
 <script>
 import { QrcodeStream } from 'vue3-qrcode-reader'
-import WishlistItem from '@/components/WishlistItem.vue'
 import axios from 'axios'
 import { toast } from 'bulma-toast'
 
 export default {
     name: 'WishlistScan',
     components: {
-        QrcodeStream,
-        WishlistItem
+        QrcodeStream
     },
     data() {
         return {
@@ -76,8 +74,7 @@ export default {
             const client_id = decodedString
             axios.get(`/api/v1/wishlist/${client_id}/`)
                 .then(response => {
-                    const data = JSON.parse(response.data);
-                    this.wishlist = data
+                    this.wishlist = JSON.parse(response.data.qr_code_text);
                     this.turnCameraOff()
                 })
                 .catch(error => {

@@ -16,7 +16,7 @@
 
                     <tbody>
                         <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-                            <td>{{ item.product.name }}</td>
+                            <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
                             <td>{{ item.quantity }}</td>
                         </tr>
                     </tbody>

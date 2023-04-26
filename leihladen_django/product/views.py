@@ -63,8 +63,13 @@ class GetWishlist(APIView):
     def get(self, request, client_id, format=None):
         try: 
             wishlist = Wishlist.objects.get(client_id=client_id)
-            response_data = wishlist.qr_code_text
-            return Response(response_data, status=status.HTTP_200_OK)
+            qr_code_text = wishlist.qr_code_text
+            date_added = wishlist.date_added
+            data = {
+                "qr_code_text": qr_code_text,
+                "date_added": date_added
+            }
+            return Response(data, status=status.HTTP_200_OK)
         except Wishlist.DoesNotExist:
             raise Http404
     

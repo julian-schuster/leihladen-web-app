@@ -15,8 +15,10 @@ import AdminpanelView from '../views/AdminpanelView.vue'
 import WishlistView from '../views/WishlistView.vue'
 import WishlistCheckoutView from '../views/WishlistCheckoutView.vue'
 import WishlistScanView from '../views/WishlistScanView.vue'
+import WishlistAdminView from '../views/WishlistAdminView.vue'
 import ProductCreateView from '../views/ProductCreateView.vue'
 import ProductEditView from '../views/ProductEditView.vue'
+
 
 
 const routes = [{
@@ -48,6 +50,14 @@ const routes = [{
     path: '/wishlist/scan',
     name: 'WishlistScan',
     component: WishlistScanView,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/wishlist/:client_id',
+    name: 'WishlistAdmin',
+    component: WishlistAdminView,
     meta: {
       requireLogin: true
     }

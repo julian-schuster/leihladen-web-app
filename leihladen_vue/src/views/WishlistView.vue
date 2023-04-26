@@ -15,7 +15,6 @@
                             <th></th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <WishlistItem v-for="item in wishlist.items" v-bind:key="item.product.id" v-bind:initialItem="item"
                             v-on:removeFromWishlist="removeFromWishlist" />

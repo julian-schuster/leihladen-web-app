@@ -62,7 +62,8 @@
                                                         <tr v-for="(wishlist, index) in paginatedWishlists(currentPage)"
                                                             :key="index">
                                                             <td>{{ wishlist.id }}</td>
-                                                            <td>{{ wishlist.client_id }}</td>
+                                                            <td><router-link :to="'/wishlist/' + wishlist.client_id">{{
+                                                                wishlist.client_id }}</router-link></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -184,7 +185,7 @@ export default {
             productsTotal: 0,
             selectedCard: 'wishlist',
             currentPage: 1,
-            itemsPerPage: 3
+            itemsPerPage: 10
         }
     },
     methods: {
