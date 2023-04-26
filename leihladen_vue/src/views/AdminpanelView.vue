@@ -54,7 +54,7 @@
                                                 <div class="field">
                                                     <div class="control">
                                                         <input class="input" type="text" placeholder="Suche Wunschliste"
-                                                            v-model="searchQuery">
+                                                            v-model="searchWishlistQuery">
                                                     </div>
                                                 </div>
                                                 <table class="table is-fullwidth">
@@ -73,14 +73,20 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <Pagination v-if="totalPages > 1" :totalItems="filteredWishlists.length"
-                                                    :itemsPerPage="itemsPerPage" :currentPage="currentPage"
-                                                    @input="onPageChange" />
+                                                <Pagination v-if="totalWishlistPages > 1"
+                                                    :totalItems="filteredWishlists.length" :itemsPerPage="itemsPerPage"
+                                                    :currentPage="currentPage" @input="onPageChange" />
                                             </div>
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsTotal'">
                                             <div class="card-content">
                                                 <p class="title">Artikel</p>
+                                                <div class="field">
+                                                    <div class="control">
+                                                        <input class="input" type="text" placeholder="Suche Artikel"
+                                                            v-model="searchProductQuery">
+                                                    </div>
+                                                </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
@@ -90,7 +96,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(product, index) in paginatedProducts(currentPage)"
+
+                                                        <tr v-for="(product, index) in paginatedFilteredProducts"
                                                             :key="index">
                                                             <td> <router-link v-bind:to="product.get_absolute_url">{{
                                                                 product.name }}</router-link>
@@ -109,13 +116,20 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <Pagination :totalItems="products.length" :itemsPerPage="itemsPerPage"
+                                                <Pagination v-if="totalProductPages > 1"
+                                                    :totalItems="filteredProducts.length" :itemsPerPage="itemsPerPage"
                                                     :currentPage="currentPage" @input="onPageChange" />
                                             </div>
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsNotAvailable'">
                                             <div class="card-content">
                                                 <p class="title">Ausgeliehene Artikel</p>
+                                                <div class="field">
+                                                    <div class="control">
+                                                        <input class="input" type="text" placeholder="Suche Artikel"
+                                                            v-model="searchNotAvailableProductQuery">
+                                                    </div>
+                                                </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
@@ -124,7 +138,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="(product, index) in paginatedBorrowedProducts(currentPage, filteredProducts)"
+                                                        <tr v-for="(product, index) in paginatedFilteredNotAvailableProducts"
                                                             :key="index">
                                                             <td> <router-link v-bind:to="product.get_absolute_url">{{
                                                                 product.name }}</router-link>
@@ -133,7 +147,8 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <Pagination :totalItems="filteredProducts.length"
+                                                <Pagination v-if="totalNotAvailableProductPages > 1"
+                                                    :totalItems="filterNotAvailableProducts.length"
                                                     :itemsPerPage="itemsPerPage" :currentPage="currentPage"
                                                     @input="onPageChange" />
                                             </div>
@@ -192,8 +207,10 @@ export default {
             productsTotal: 0,
             selectedCard: 'wishlist',
             currentPage: 1,
-            itemsPerPage: 1,
-            searchQuery: ''
+            itemsPerPage: 5,
+            searchWishlistQuery: '',
+            searchProductQuery: '',
+            searchNotAvailableProductQuery: '',
         }
     },
     methods: {
@@ -305,7 +322,7 @@ export default {
             });
             return borrowedCount;
         },
-        filteredProducts() {
+        filterNotAvailableProducts() {
             return this.products.filter((product) => {
                 // Differenz zwischen count und available berechnen
                 product.difference = product.quantity - product.available;
@@ -314,23 +331,61 @@ export default {
             });
         },
         filteredWishlists() {
-            const searchQuery = this.searchQuery.toLowerCase();
+            const searchQuery = this.searchWishlistQuery.toLowerCase();
             this.currentPage = 1
 
             if (!searchQuery) {
-
                 return this.wishlists
             }
+
             return this.wishlists.filter((wishlist) => {
                 return wishlist.client_id.toLowerCase().includes(searchQuery);
             });
         },
-        totalPages() {
+        totalWishlistPages() {
             return Math.ceil(this.filteredWishlists.length / this.itemsPerPage);
         },
         paginatedFilteredWishlists() {
             const startIndex = (this.currentPage - 1) * this.itemsPerPage
             return this.filteredWishlists.slice(startIndex, startIndex + this.itemsPerPage)
+        },
+        filteredProducts() {
+            const searchQuery = this.searchProductQuery.toLowerCase();
+            this.currentPage = 1
+
+            if (!searchQuery) {
+                return this.products
+            }
+
+            return this.products.filter((product) => {
+                return product.name.toLowerCase().includes(searchQuery);
+            });
+        },
+        totalProductPages() {
+            return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+        },
+        paginatedFilteredProducts() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage)
+        },
+        filteredNotAvailableProducts() {
+            const searchQuery = this.searchNotAvailableProductQuery.toLowerCase();
+            this.currentPage = 1
+
+            if (!searchQuery) {
+                return this.filterNotAvailableProducts
+            }
+
+            return this.filterNotAvailableProducts.filter((product) => {
+                return product.name.toLowerCase().includes(searchQuery);
+            });
+        },
+        totalNotAvailableProductPages() {
+            return Math.ceil(this.filteredNotAvailableProducts.length / this.itemsPerPage);
+        },
+        paginatedFilteredNotAvailableProducts() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            return this.filteredNotAvailableProducts.slice(startIndex, startIndex + this.itemsPerPage)
         },
     }
 }
