@@ -2,7 +2,7 @@
     <div class="page-wishlist">
         <div class="columns is-multiline is-mobile is-centered">
             <div class="column is-12">
-                <h1 class="title">Wunschliste Scannen</h1>
+                <h1 class="title has-text-centered">Wunschliste Scannen</h1>
             </div>
             <div class="column is-6 is-centered">
                 <div class="box">
@@ -13,35 +13,54 @@
                     <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit" v-show="show"></qrcode-stream>
                 </div>
             </div>
-            <table class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Artikel</th>
-                        <th class="has-text-centered">Anzahl</th>
-                        <th class="has-text-centered">Bestand</th>
-                        <th class="has-text-centered">Verfügbar</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-                        <td>{{ item.product.name }}</td>
-                        <td class="has-text-centered">{{ item.quantity }}</td>
-                        <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
-                        <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
-                        <td class="has-text-right"><button class="button is-success is-light"
-                                @click="updateProductAvailability(item.product.id, 1)">Verfügbar
-                                schalten</button></td>
-                        <td class="has-text-right"><button class="button is-danger is-light has-text-right"
-                                @click="updateProductAvailability(item.product.id, -1)">Nicht Verfügbar
-                                schalten</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="column is-9">
+                <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Artikel</th>
+                                <th class="has-text-centered">Anzahl</th>
+                                <th class="has-text-centered">Bestand</th>
+                                <th class="has-text-centered">Verfügbar</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+                                <td>
+                                    <router-link :to="item.product.get_absolute_url">{{ item.product.name
+                                    }}</router-link>
+                                </td>
+                                <td class="has-text-centered">{{ item.quantity }}</td>
+                                <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
+                                <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
+                                <td class="has-text-right">
+                                    <a class="button is-success is-light is-small"
+                                        @click="updateProductAvailability(item.product.id, 1)">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="has-text-right">
+                                    <a class="button is-danger is-light is-small"
+                                        @click="updateProductAvailability(item.product.id, -1)">
+                                        <span class="icon">
+                                            <i class="fas fa-minus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
+
 
 <script>
 import { QrcodeStream } from 'vue3-qrcode-reader'
@@ -146,42 +165,47 @@ export default {
             return product ? product.quantity : '-';
         },
         updateProductAvailability(id, value) {
-            axios.put(`/api/v1/product/${id}/availability/`, { value: value })
-                .then(response => {
+            const product = this.products.find(p => p.id === id);
+            const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
+            if (window.confirm(confirmationMessage)) {
 
-                    const updatedProduct = response.data;
-                    const index = this.products.findIndex(p => p.id === updatedProduct.id);
-                    if (index > -1) {
-                        this.products.splice(index, 1, updatedProduct);
-                    }
-                    const wishlistItem = this.wishlist.items.find(item => item.product.id === updatedProduct.id);
-                    if (wishlistItem) {
-                        wishlistItem.product = updatedProduct;
-                    }
+                axios.put(`/api/v1/product/${id}/availability/`, { value: value })
+                    .then(response => {
 
-                    toast({
-                        message: "Verfügbarkeit für " + response.data.name + " geändert",
-                        type: "is-success",
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: "bottom-right",
+                        const updatedProduct = response.data;
+                        const index = this.products.findIndex(p => p.id === updatedProduct.id);
+                        if (index > -1) {
+                            this.products.splice(index, 1, updatedProduct);
+                        }
+                        const wishlistItem = this.wishlist.items.find(item => item.product.id === updatedProduct.id);
+                        if (wishlistItem) {
+                            wishlistItem.product = updatedProduct;
+                        }
+
+                        toast({
+                            message: "Verfügbarkeit für " + response.data.name + " geändert",
+                            type: "is-success",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: "bottom-right",
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+
+                        toast({
+                            message: error.response.data.error,
+                            type: "is-danger",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: "bottom-right",
+                        });
+
                     });
-
-                })
-                .catch(error => {
-                    console.error(error);
-
-                    toast({
-                        message: error.response.data.error,
-                        type: "is-danger",
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: "bottom-right",
-                    });
-
-                });
+            }
         },
     }
 

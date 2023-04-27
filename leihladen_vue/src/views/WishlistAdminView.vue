@@ -1,9 +1,9 @@
 <template>
-    <div class="box is-multiline">
-        <h3>Wunschliste: {{ wishlist_client_id }}</h3>
-        <div class="columns is-multiline is-mobile">
-            <div class="column is-12">
-                <table class="table is-fullwidth is-mobile">
+    <div class="columns is-centered">
+        <div class="column is-9">
+            <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
+            <div class="table-container">
+                <table class="table is-fullwidth">
                     <thead>
                         <tr>
                             <th>Artikel</th>
@@ -15,19 +15,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in  wishlist.items " v-bind:key="item.product.id">
-                            <td><router-link :to="item.product.get_absolute_url">{{
-                                item.product.name
-                            }}</router-link></td>
-                            <td class=" has-text-centered">{{ item.quantity }}</td>
+                        <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+                            <td>
+                                <router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
+                            </td>
+                            <td class="has-text-centered">{{ item.quantity }}</td>
                             <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
                             <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
-                            <td class="has-text-right"><button class="button is-success is-light"
-                                    @click="updateProductAvailability(item.product.id, 1)">Verfügbar
-                                    schalten</button></td>
-                            <td class="has-text-right"><button class="button is-danger is-light has-text-right"
-                                    @click="updateProductAvailability(item.product.id, -1)">Nicht Verfügbar
-                                    schalten</button></td>
+                            <td class="has-text-right">
+                                <a class="button is-success is-light is-small"
+                                    @click="updateProductAvailability(item.product.id, 1)">
+                                    <span class="icon">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                </a>
+                            </td>
+                            <td class="has-text-right">
+                                <a class="button is-danger is-light is-small"
+                                    @click="updateProductAvailability(item.product.id, -1)">
+                                    <span class="icon">
+                                        <i class="fas fa-minus"></i>
+                                    </span>
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -90,42 +100,47 @@ export default {
             return product ? product.quantity : '-';
         },
         updateProductAvailability(id, value) {
-            axios.put(`/api/v1/product/${id}/availability/`, { value: value })
-                .then(response => {
+            const product = this.products.find(p => p.id === id);
+            const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
+            if (window.confirm(confirmationMessage)) {
 
-                    const updatedProduct = response.data;
-                    const index = this.products.findIndex(p => p.id === updatedProduct.id);
-                    if (index > -1) {
-                        this.products.splice(index, 1, updatedProduct);
-                    }
-                    const wishlistItem = this.wishlist.items.find(item => item.product.id === updatedProduct.id);
-                    if (wishlistItem) {
-                        wishlistItem.product = updatedProduct;
-                    }
+                axios.put(`/api/v1/product/${id}/availability/`, { value: value })
+                    .then(response => {
 
-                    toast({
-                        message: "Verfügbarkeit für " + response.data.name + " geändert",
-                        type: "is-success",
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: "bottom-right",
+                        const updatedProduct = response.data;
+                        const index = this.products.findIndex(p => p.id === updatedProduct.id);
+                        if (index > -1) {
+                            this.products.splice(index, 1, updatedProduct);
+                        }
+                        const wishlistItem = this.wishlist.items.find(item => item.product.id === updatedProduct.id);
+                        if (wishlistItem) {
+                            wishlistItem.product = updatedProduct;
+                        }
+
+                        toast({
+                            message: "Verfügbarkeit für " + response.data.name + " geändert",
+                            type: "is-success",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: "bottom-right",
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+
+                        toast({
+                            message: error.response.data.error,
+                            type: "is-danger",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 2000,
+                            position: "bottom-right",
+                        });
+
                     });
-
-                })
-                .catch(error => {
-                    console.error(error);
-
-                    toast({
-                        message: error.response.data.error,
-                        type: "is-danger",
-                        dismissible: true,
-                        pauseOnHover: true,
-                        duration: 2000,
-                        position: "bottom-right",
-                    });
-
-                });
+            }
         },
         formatDate(dateString) {
             const date = new Date(dateString);
@@ -137,3 +152,24 @@ export default {
 
 }
 </script>
+
+
+<style scoped>
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0 10px;
+}
+
+@media (min-width: 769px) {
+    .table-container {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .column {
+        padding: 0;
+    }
+}
+</style>
