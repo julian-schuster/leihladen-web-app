@@ -122,9 +122,25 @@ export default {
                 if (err) console.error(err);
                 doc.addImage(url, 'PNG', 20, doc.autoTable.previous.finalY + 10, 30, 30);
                 doc.text('Bitte zeigen Sie den QR-Code im Leihladen vor.', 60, doc.autoTable.previous.finalY + 30);
+
+                // Füge den Footer hinzu
+                const contactInfo = 'Kontakt:\nMusterstraße 123, 12345 Musterstadt\ninfo@leihladen.de\n0123 / 456 789';
+                const openingHours = 'Öffnungszeiten:\nFr: 16:00-17:30 Uhr';
+                const footerX = doc.internal.pageSize.getWidth() / 2;
+                const footerY = doc.internal.pageSize.getHeight() - 20;
+                doc.setFontSize(10);
+                doc.text(contactInfo, footerX - 50, footerY, { align: 'left' });
+                doc.text(openingHours, footerX + 50, footerY, { align: 'right' });
+
                 doc.save('Wunschliste.pdf');
             });
         }
+
+
+
+
+
+
     },
     computed: {
         wishlistTotalLength() {
