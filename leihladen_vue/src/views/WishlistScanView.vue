@@ -148,9 +148,19 @@ export default {
         updateProductAvailability(id, value) {
             axios.put(`/api/v1/product/${id}/availability/`, { value: value })
                 .then(response => {
-                    console.log(response.data);
+
+                    const updatedProduct = response.data;
+                    const index = this.products.findIndex(p => p.id === updatedProduct.id);
+                    if (index > -1) {
+                        this.products.splice(index, 1, updatedProduct);
+                    }
+                    const wishlistItem = this.wishlist.items.find(item => item.product.id === updatedProduct.id);
+                    if (wishlistItem) {
+                        wishlistItem.product = updatedProduct;
+                    }
+
                     toast({
-                        message: response.data.message,
+                        message: "Verfügbarkeit für " + response.data.name + " geändert",
                         type: "is-success",
                         dismissible: true,
                         pauseOnHover: true,
@@ -158,7 +168,6 @@ export default {
                         position: "bottom-right",
                     });
 
-                    this.getProducts()
                 })
                 .catch(error => {
                     console.error(error);
@@ -173,7 +182,7 @@ export default {
                     });
 
                 });
-        }
+        },
     }
 
 }
