@@ -42,6 +42,12 @@
                     </tbody>
                 </table>
             </div>
+            <div class="has-text-centered">
+                <h4>Verlauf</h4>
+                <div v-for="entry in log" :key="entry.product.id">
+                    {{ entry.message }}
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -59,7 +65,8 @@ export default {
                 date_added: ''
             },
             wishlist_client_id: '',
-            products: []
+            products: [],
+            log: []
         }
     },
     mounted() {
@@ -116,6 +123,12 @@ export default {
                         if (wishlistItem) {
                             wishlistItem.product = updatedProduct;
                         }
+
+                        const logEntry = {
+                            product: updatedProduct,
+                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}`
+                        };
+                        this.log.push(logEntry);
 
                         toast({
                             message: "Verfügbarkeit für " + response.data.name + " geändert",

@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="column is-9">
-                <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
+                <h3 class="has-text-centered">Wunschliste: {{ wishlist.client_id }}</h3>
                 <div class="table-container">
                     <table class="table is-fullwidth">
                         <thead>
@@ -56,6 +56,12 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="has-text-centered">
+                    <h4>Verlauf</h4>
+                    <div v-for="entry in log" :key="entry.product.id">
+                        {{ entry.message }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -75,12 +81,14 @@ export default {
     data() {
         return {
             wishlist: {
-                items: []
+                items: [],
+                client_id: '',
             },
             products: [],
             camera: 'auto',
             error: '',
-            show: true
+            show: true,
+            log: []
         }
     },
     mounted() {
@@ -94,6 +102,7 @@ export default {
             axios.get(`/api/v1/wishlist/${client_id}/`)
                 .then(response => {
                     this.wishlist = JSON.parse(response.data.qr_code_text);
+                    this.wishlist.client_id = client_id
                     this.turnCameraOff()
                 })
                 .catch(error => {
@@ -181,6 +190,12 @@ export default {
                         if (wishlistItem) {
                             wishlistItem.product = updatedProduct;
                         }
+
+                        const logEntry = {
+                            product: updatedProduct,
+                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}`
+                        };
+                        this.log.push(logEntry);
 
                         toast({
                             message: "Verfügbarkeit für " + response.data.name + " geändert",
