@@ -5,9 +5,9 @@
         <router-link to="/" class="navbar-item"><strong>Leihladen</strong></router-link>
         <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu"
           @click="showMobileMenu = !showMobileMenu">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
+          <span aria-hidden="true" class="burger-icon"></span>
+          <span aria-hidden="true" class="burger-icon"></span>
+          <span aria-hidden="true" class="burger-icon"></span>
         </a>
       </div>
       <div class="navbar-menu" id="navbar-menu" v-bind:class="{ 'is-active': showMobileMenu }">
@@ -36,8 +36,8 @@
           <router-link to="/garten" class="navbar-item">Garten</router-link>
           <router-link to="/brettspiele" class="navbar-item">Brettspiele</router-link>
           <router-link to="/sport" class="navbar-item">Sport</router-link>
-          <div class="navbar-item">
-            <div class="buttons">
+          <div class="navbar-item has-text-centered">
+            <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <template v-if="$store.state.isAuthenticated">
                 <router-link to="/adminpanel" class="button is-light">Adminpanel</router-link>
               </template>
