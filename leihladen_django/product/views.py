@@ -134,21 +134,29 @@ class ProductManagement(APIView):
         description = request.data.get('description')
         quantity = request.data.get('quantity')
         image = request.data.get('image')
+        image2 = request.data.get('image2')
+        image3 = request.data.get('image3')
         category_id = request.data.get('category')
-        
-        category = Category.objects.get(id=category_id)
-        slug = slugify(name)  # Slug basierend auf dem Namen erstellen
 
-        product = Product(name=name, slug=slug, description=description, quantity=quantity, image=image, category=category, available=quantity)
+        category = Category.objects.get(id=category_id)
+        slug = slugify(name)
+
+        product = Product(name=name, slug=slug, description=description, quantity=quantity, category=category, available=quantity)
         product.save()
 
         # Thumbnail erstellen, falls ein Bild vorhanden ist
-        if product.image:
-            product.thumbnail = product.make_thumbnail(product.image)
-            product.save()
+        if image:
+            product.image = image
+            product.thumbnail = product.make_thumbnail(image)
+        if image2:
+            product.image2 = image2
+            product.thumbnail2 = product.make_thumbnail(image2)
+        if image3:
+            product.image3 = image3
+            product.thumbnail3 = product.make_thumbnail(image3)
+        product.save()
 
         return Response({'status': 'Artikel erstellt'}, status=status.HTTP_201_CREATED)
-      
 
     permission_classes = [IsAuthenticated]
     def delete(self, request, id):
@@ -165,22 +173,33 @@ class ProductManagement(APIView):
         product_id = request.data.get('id')
         product = Product.objects.get(id=product_id)
 
-        if request.data.get('name'):
+        if request.data.get('name') is not None:
             product.name = request.data['name']
-        if request.data.get('description'):
+        if request.data.get('description') is not None:
             product.description = request.data['description']
-        if request.data.get('quantity'):
+        if request.data.get('quantity') is not None:
             product.quantity = request.data['quantity']
-        if request.data.get('available'):
+        if request.data.get('available') is not None:
             product.available = request.data['available']
-        if request.data.get('image'):
+        if request.data.get('image') is not None:
             product.image = request.data['image']
+            product.thumbnail = product.make_thumbnail(product.image)
+        if request.data.get('image2') is not None:
+            product.image2 = request.data['image2']
+            product.thumbnail2 = product.make_thumbnail(product.image2)
+        else:
+            product.image2 = None
+            product.thumbnail2 = None
+        if request.data.get('image3') is not None:
+            product.image3 = request.data['image3']
+            product.thumbnail3 = product.make_thumbnail(product.image3)
+        else:
+            product.image3 = None
+            product.thumbnail3 = None
 
         product.save()
 
-        if product.image:
-            product.thumbnail = product.make_thumbnail(product.image)
-            product.save()
-
-        return Response({'status': 'Artikel aktualisiert'}, status=status.HTTP_200_OK)
+        
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 

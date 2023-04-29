@@ -29,27 +29,31 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="image">Bild</label>
-                        <div class="file has-name is-fullwidth">
-                            <label class="file-label">
-                                <input id="image" class="file-input" type="file" accept="image/jpeg, image/jpg, image/png"
-                                    @change="handleFileUpload" required>
-                                <span class="file-cta">
-                                    <span class="file-icon">
-                                        <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                        Bild auswählen...
-                                    </span>
-                                </span>
-                                <span class="file-name" v-if="file">{{ file.name }}</span>
-                            </label>
+                        <label class="label">Bilder</label>
+                        <div class="drag-and-drop has-text-centered control">
+                            <div class="box">
+                                <input id="image" class="file-input" type="file" accept="image/jpeg, image/jpg"
+                                    @change="handleFileUpload" multiple />
+                                <div class="drag-text">
+                                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                                    <h3 class="title is-4">Bilder hierher ziehen oder klicken</h3>
+                                </div>
+                            </div>
                         </div>
-                        <p class="help is-danger" v-if="file && !isValidImage">Bitte laden Sie eine Bilddatei (jpg, jpeg,
-                            png) hoch.</p>
-                        <div v-if="product.image">
-                            <img :src="product.image" alt="Hochgeladenes Bild" class="image is-128x128">
+                        <div class="images-container columns is-multiline is-mobile is-centered">
+                            <div v-for="(file, index) in [file1, file2, file3]" :key="index" class="column is-narrow mb-4">
+                                <div v-if="file">
+                                    <div class="file-name" style="width: 150px">{{ file.name }}</div>
+                                    <div v-if="product['image' + (index + 1)]">
+                                        <img :src="product['image' + (index + 1)]" alt="Hochgeladenes Bild"
+                                            class="image is-128x128" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <p class="help is-danger" v-if="!validImages">
+                            Bitte laden Sie Bilddateien (jpg, jpeg) hoch.
+                        </p>
                     </div>
                     <div class="field">
                         <label class="label" for="quantity">Anzahl</label>
@@ -81,7 +85,9 @@ export default {
             product: {
                 name: '',
                 description: '',
-                image: null,
+                image1: null,
+                image2: null,
+                image3: null,
                 quantity: 0
             },
             categories: [
@@ -89,9 +95,17 @@ export default {
                 { id: 2, name: "Brettspiele" },
                 { id: 3, name: "Sport" }
             ],
-
-            file: null,
-            isValidImage: true
+            file1: null,
+            file2: null,
+            file3: null,
+            validImages: true,
+            isValidImage1: true,
+            isValidImage2: true,
+            isValidImage3: true,
+            fileName1: null,
+            fileName2: null,
+            fileName3: null,
+            isImageUploaded: false,
         };
     },
     mounted() {
@@ -99,6 +113,18 @@ export default {
     },
     methods: {
         submitForm() {
+            if (!this.isImageUploaded) {
+                toast({
+                    message: "Bitte laden Sie mindestens ein Bild hoch.",
+                    type: "is-danger",
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 2000,
+                    position: "bottom-right",
+                });
+                return;
+            }
+
             if (this.product.quantity <= 0) {
                 toast({
                     message: "Bitte geben Sie eine Anzahl größer als 0 ein.",
@@ -116,8 +142,13 @@ export default {
             formData.append('description', this.product.description);
             formData.append('category', this.product.category);
             formData.append('quantity', this.product.quantity);
-            formData.append('image', this.file);
-
+            formData.append('image', this.file1);
+            if (this.file2) {
+                formData.append('image2', this.file2);
+            }
+            if (this.file3) {
+                formData.append('image3', this.file3);
+            }
             axios
                 .post(`/api/v1/product/`, formData)
                 .then((response) => {
@@ -136,8 +167,12 @@ export default {
                     this.product.description = ''
                     this.product.category = ''
                     this.product.quantity = 0
-                    this.product.image = null
-                    this.file = null
+                    this.product.image1 = null
+                    this.product.image2 = null
+                    this.product.image3 = null
+                    this.file1 = null;
+                    this.file2 = null;
+                    this.file3 = null;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -152,18 +187,83 @@ export default {
                 });
         },
         handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            const files = event.target.files;
+            const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+            this.file1 = null;
+            this.product.image1 = null;
+            this.isValidImage1 = false;
+            this.fileName1 = '';
+            this.file2 = null;
+            this.product.image2 = null;
+            this.isValidImage2 = false;
+            this.fileName2 = '';
+            this.file3 = null;
+            this.product.image3 = null;
+            this.isValidImage3 = false;
+            this.fileName3 = '';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
                 if (!allowedExtensions.exec(file.name)) {
-                    this.isValidImage = false;
+                    this.validImages = false;
                     return;
+                } else {
+                    this.validImages = true;
                 }
-                this.file = file;
-                this.product.image = URL.createObjectURL(file);
-                this.isValidImage = true;
+                if (i === 0) {
+                    this.file1 = file;
+                    this.product.image1 = URL.createObjectURL(file);
+                    this.isValidImage1 = true;
+                    this.fileName1 = file.name;
+                    this.isImageUploaded = true
+                } else if (i === 1) {
+                    this.file2 = file;
+                    this.product.image2 = URL.createObjectURL(file);
+                    this.isValidImage2 = true;
+                    this.fileName2 = file.name;
+                } else if (i === 2) {
+                    this.file3 = file;
+                    this.product.image3 = URL.createObjectURL(file);
+                    this.isValidImage3 = true;
+                    this.fileName3 = file.name;
+                }
             }
-        }
+        },
+        fileName(index) {
+            if (index === 1) {
+                return this.file1.name;
+            } else if (index === 2) {
+                return this.file2.name;
+            } else if (index === 3) {
+                return this.file3.name;
+            }
+        }, validateImages() {
+            if (this.file1 || this.file2 || this.file3) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    },
+    computed: {
+        isValidImages() {
+            return this.validateImages();
+        },
     },
 };
 </script>
+
+<style scoped>
+.file-name {
+    display: inline-block;
+    width: 30%;
+    border-style: none;
+    margin-left: -15px
+}
+
+.images-container {
+    display: flex;
+    justify-content: space-between;
+}
+</style>

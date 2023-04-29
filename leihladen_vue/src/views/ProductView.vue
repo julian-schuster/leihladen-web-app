@@ -1,10 +1,31 @@
 <template>
   <div class="container mt-6">
     <div class="columns is-multiline">
-      <div class="column is-5 is-12-mobile">
-        <figure class="image is-5by4">
-          <img v-bind:src="product.get_image" alt="Produktbild">
+      <div class="column is-6 is-12-mobile">
+        <figure class="image is-3by2 is-square">
+          <a @click="showModal = true">
+            <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url" alt="Produktbild"
+              @click="zoomImage(0)">
+          </a>
         </figure>
+        <div class="columns is-multiline">
+          <div class="column is-6" v-if="product.get_images && product.get_images[1]">
+            <figure class="image is-3by2">
+              <a @click="showModal = true">
+                <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
+                  alt="Produktbild" @click="zoomImage(1)">
+              </a>
+            </figure>
+          </div>
+          <div class="column is-6">
+            <figure class="image is-3by2" v-if="product.get_images && product.get_images[2]">
+              <a @click="showModal = true">
+                <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
+                  alt="Produktbild" @click="zoomImage(2)">
+              </a>
+            </figure>
+          </div>
+        </div>
       </div>
       <div class="column is-6 is-12-mobile">
         <div class="content">
@@ -39,6 +60,16 @@
       </div>
     </div>
   </div>
+
+  <div class="modal" :class="{ 'is-active': showModal }">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <p class="image">
+        <img :src="images[currentIndex]" alt="Produktbild">
+      </p>
+    </div>
+    <button class="modal-close is-large" aria-label="close" @click="showModal = false"></button>
+  </div>
 </template>
 
 <script>
@@ -51,24 +82,28 @@ export default {
     return {
       product: {},
       quantity: 1,
+      showModal: false,
+      images: [],
+      currentIndex: 0,
     };
   },
   mounted() {
     this.getProduct();
+
   },
   methods: {
-    async getProduct() {
+    getProduct() {
       this.$store.commit("setIsLoading", true);
 
       const category_slug = this.$route.params.category_slug;
       const product_slug = this.$route.params.product_slug;
 
-      await axios
+      axios
         .get(`/api/v1/products/${category_slug}/${product_slug}`)
         .then((response) => {
           this.product = response.data;
-
           document.title = this.product.name + " | Leihladen";
+          this.images = this.product.get_images.map((image) => image.url);
         })
         .catch((error) => {
           console.log(error);
@@ -99,8 +134,26 @@ export default {
         position: "bottom-right",
       });
     },
+    zoomImage(index) {
+      this.showModal = true;
+      this.currentIndex = index;
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.image {
+  border-style: solid;
+  transition: transform 0.5s;
+  transform-origin: center;
+}
+
+.image.zoomed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(2);
+  z-index: 9999;
+}
+</style>
