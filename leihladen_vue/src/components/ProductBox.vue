@@ -4,7 +4,7 @@
       <div class="columns is-centered is-mobile">
         <div class="column is-12 is-12-mobile">
           <figure class="image is-square">
-            <img :src="product.get_thumbnail">
+            <img :src="product.get_image">
           </figure>
         </div>
       </div>
