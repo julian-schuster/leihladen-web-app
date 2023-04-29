@@ -312,8 +312,12 @@ export default {
     },
     computed: {
         calculateUtilization() {
-            const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
-            return utilization.toFixed(2);
+            if (this.productsTotal === 0) {
+                return 0;
+            } else {
+                const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
+                return utilization.toFixed(2);
+            }
         },
         calculateBorrowedProducts() {
             let borrowedCount = 0;

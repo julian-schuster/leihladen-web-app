@@ -115,7 +115,6 @@ export default {
             fileName1: null,
             fileName2: null,
             fileName3: null,
-            isImageUploaded: false,
         };
     },
     mounted() {
@@ -130,6 +129,7 @@ export default {
                 .get(`/api/v1/products/${category_slug}/${product_slug}`)
                 .then((response) => {
                     this.product = response.data;
+
                     document.title = this.product.name + " | Leihladen";
                 })
                 .catch((error) => {
@@ -139,18 +139,6 @@ export default {
                 });
         },
         updateProduct() {
-            if (!this.isImageUploaded) {
-                toast({
-                    message: "Bitte laden Sie mindestens ein Bild hoch.",
-                    type: "is-danger",
-                    dismissible: true,
-                    pauseOnHover: true,
-                    duration: 2000,
-                    position: "bottom-right",
-                });
-                return;
-            }
-
             if (this.product.quantity <= 0) {
                 toast({
                     message: "Bitte geben Sie eine Anzahl größer als 0 ein.",
@@ -169,12 +157,18 @@ export default {
             formData.append('description', this.product.description);
             formData.append('quantity', this.product.quantity);
             formData.append('available', this.product.available);
-            formData.append('image', this.file1);
+            if (this.file1) {
+                formData.append('image', this.file1);
+            }
             if (this.file2) {
                 formData.append('image2', this.file2);
             }
             if (this.file3) {
                 formData.append('image3', this.file3);
+            }
+
+            if (!this.file1 && !this.file2 && !this.file3) {
+                formData.append('skipImageGeneration', true)
             }
 
             axios
@@ -197,12 +191,21 @@ export default {
                     if (this.file2) {
                         this.product.get_images[1].url = URL.createObjectURL(this.file2);
                     } else {
-                        this.product.get_images[1] = null
+                        if (!this.file1 && !this.file2 && !this.file3) {
+
+                        } else {
+                            this.product.get_images[1] = null
+                        }
+
                     }
                     if (this.file3) {
                         this.product.get_images[2].url = URL.createObjectURL(this.file3);
                     } else {
-                        this.product.get_images[2] = null
+                        if (!this.file1 && !this.file2 && !this.file3) {
+
+                        } else {
+                            this.product.get_images[2] = null
+                        }
                     }
 
                     this.file1 = null;
@@ -252,7 +255,6 @@ export default {
                     this.product.image1 = URL.createObjectURL(file);
                     this.isValidImage1 = true;
                     this.fileName1 = file.name;
-                    this.isImageUploaded = true
                 } else if (i === 1) {
                     this.file2 = file;
                     this.product.image2 = URL.createObjectURL(file);

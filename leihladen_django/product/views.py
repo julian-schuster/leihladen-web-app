@@ -172,6 +172,7 @@ class ProductManagement(APIView):
     def put(self, request):
         product_id = request.data.get('id')
         product = Product.objects.get(id=product_id)
+        skip = request.data.get('skipImageGeneration')
 
         if request.data.get('name') is not None:
             product.name = request.data['name']
@@ -183,23 +184,27 @@ class ProductManagement(APIView):
             product.available = request.data['available']
         if request.data.get('image') is not None:
             product.image = request.data['image']
-            product.thumbnail = product.make_thumbnail(product.image)
+            if not skip:
+                product.thumbnail = product.make_thumbnail(product.image)
         if request.data.get('image2') is not None:
             product.image2 = request.data['image2']
-            product.thumbnail2 = product.make_thumbnail(product.image2)
+            if not skip:
+                product.thumbnail2 = product.make_thumbnail(product.image2)
         else:
-            product.image2 = None
-            product.thumbnail2 = None
+            if not skip:
+                product.image2 = None
+                product.thumbnail2 = None
         if request.data.get('image3') is not None:
             product.image3 = request.data['image3']
-            product.thumbnail3 = product.make_thumbnail(product.image3)
+            if not skip:
+                product.thumbnail3 = product.make_thumbnail(product.image3)
         else:
-            product.image3 = None
-            product.thumbnail3 = None
+            if not skip:
+                product.image3 = None
+                product.thumbnail3 = None
 
         product.save()
 
-        
         serializer = ProductSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
