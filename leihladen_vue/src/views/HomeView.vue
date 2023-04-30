@@ -1,27 +1,34 @@
 <template>
   <div class="container">
-    <section>
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <h1 class="title is-2">Willkommen im Leihladen</h1>
-          <h2 class="subtitle is-4">leihen statt kaufen – teilen statt besitzen</h2>
+    <div class="columns is-centered">
+      <div class="column is-5">
+        <h1 class="title is-2">Willkommen im Leihladen</h1>
+        <h2 class="subtitle is-4">leihen statt kaufen - teilen statt besitzen</h2>
+        <form method="get" action="/search">
+          <div class="field has-addons">
+            <div class="control" style="width: 80%;">
+              <input type="text" class="input is-rounded" placeholder="Nach Artikel suchen" name="query">
+            </div>
+            <div class="control">
+              <button class="button is-success">
+                <span class="icon">
+                  <i class="fas fa-search"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+      <div class="column is-7">
+        <h1 class="title is-4">Neueste Artikel</h1>
+        <div class="columns">
+          <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
         </div>
       </div>
-    </section>
-    <form method="get" action="/search">
-      <div class="field has-addons has-addons-centered">
-        <div class="control">
-          <input type="text" class="input is-rounded" placeholder="Nach Artikel suchen" name="query">
-        </div>
-        <div class="control">
-          <button class="button is-success">
-            <span class="icon">
-              <i class="fas fa-search"></i>
-            </span>
-          </button>
-        </div>
-      </div>
-    </form>
+    </div>
+    <hr>
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
@@ -57,14 +64,8 @@
         </div>
       </div>
     </section>
-    <div class="columns is-multiline">
-      <div class="column is-12">
-        <h2 class="is-size-3 has-text-centered">Neueste Artikel</h2>
-      </div>
-      <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
-    </div>
+
   </div>
-  <hr>
 </template>
 
 <script>

@@ -1,9 +1,9 @@
 <template>
-  <div class="column is-3-desktop is-6-tablet" @mouseover="isHovered = true" @mouseleave="isHovered = false">
-    <div class="box" :class="{ 'highlight': isHovered }">
+  <div class="column is-3-desktop is-6-tablet">
+    <div class="box highlight">
       <div class="columns is-centered is-mobile">
         <div class="column is-12 is-12-mobile">
-          <figure class="image is-square">
+          <figure class="image is-square ">
             <img :src="product.get_image">
           </figure>
         </div>
@@ -12,7 +12,7 @@
         <h3 class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</h3>
         <div class="columns">
           <div class="column details">
-            <router-link :to="product.get_absolute_url" class="button is-dark is-fullwidth">
+            <router-link :to="product.get_absolute_url" class="button is-success is-fullwidth">
               Details
             </router-link>
           </div>
@@ -30,7 +30,6 @@ export default {
   },
   data() {
     return {
-      isHovered: false,
     }
   },
   methods: {
@@ -65,8 +64,11 @@ export default {
 }
 
 .highlight {
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
+  border: 2px solid transparent;
+}
+
+.highlight:hover {
+  border-color: #ddd;
 }
 
 .button {

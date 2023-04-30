@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns is-multiline">
       <div class="column is-6 is-12-mobile">
-        <figure class="image is-3by2 is-square ">
+        <figure class="image is-3by2 is-square highlight">
           <a @click="showModal = true">
             <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url" alt="Produktbild"
               @click="zoomImage(0)">
@@ -10,7 +10,7 @@
         </figure>
         <div class="columns is-multiline">
           <div class="column is-6" v-if="product.get_images && product.get_images[1]">
-            <figure class="image is-3by2">
+            <figure class="image is-3by2 highlight">
               <a @click="showModal = true">
                 <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
                   alt="Produktbild" @click="zoomImage(1)">
@@ -18,7 +18,7 @@
             </figure>
           </div>
           <div class="column is-6">
-            <figure class="image is-3by2" v-if="product.get_images && product.get_images[2]">
+            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[2]">
               <a @click="showModal = true">
                 <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
                   alt="Produktbild" @click="zoomImage(2)">
@@ -37,7 +37,7 @@
               <input type="number" class="input is-rounded" min="1" v-model="quantity">
             </div>
             <div class="control">
-              <a class="button is-dark" @click="addToWishlist">
+              <a class="button is-success" @click="addToWishlist">
                 Zur Wunschliste hinzufügen
               </a>
             </div>
@@ -156,8 +156,11 @@ export default {
   z-index: 9999;
 }
 
-.image:hover {
-  border: 1px solid #ccc;
-  box-shadow: 0 0 5px #ccc;
+.highlight {
+  border: 2px solid transparent;
+}
+
+.highlight:hover {
+  border-color: #ddd;
 }
 </style>

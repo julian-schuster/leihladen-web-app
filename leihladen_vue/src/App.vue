@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
+          <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
             <a class="navbar-link">
               Kategorien
             </a>
@@ -45,7 +45,14 @@
               </a>
             </div>
           </div>
+          <div class="navbar-item is-hidden-desktop" v-show="showMobileMenu">
+            <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
+              class="navbar-item">
+              {{ category.name }}
+            </a>
+          </div>
           <div class="navbar-item has-text-centered">
+
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <template v-if="$store.state.isAuthenticated">
                 <router-link to="/adminpanel" class="button is-light">Adminpanel</router-link>
@@ -64,6 +71,7 @@
         </div>
       </div>
     </nav>
+
     <section class="section content">
       <router-view />
     </section>

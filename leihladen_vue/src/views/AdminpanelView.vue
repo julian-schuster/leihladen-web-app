@@ -18,25 +18,28 @@
                     <div class="tile is-ancestor has-text-centered">
                         <div class="tile is-parent" @click="showCard('wishlist')">
                             <article class="tile is-child box tile-box">
-                                <p class="title"><i class="fas fa-list"></i> {{ wishlistCount }}</p>
+                                <p class="title"><i class="fas fa-list" style="color: #EFA00B;"></i> {{ wishlistCount }}
+                                </p>
                                 <p class="subtitle">Wunschlisten</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsTotal')">
                             <article class="tile is-child box tile-box">
-                                <p class="title"><i class="fas fa-box"></i> {{ productsTotal }}</p>
+                                <p class="title"><i class="fas fa-box" style="color: #A9DF9C;"></i> {{ productsTotal }}</p>
                                 <p class="subtitle">Artikel</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsNotAvailable')">
                             <article class="tile is-child box tile-box">
-                                <p class="title"><i class="fas fa-hand-holding"></i> {{ calculateBorrowedProducts }}</p>
+                                <p class="title"><i class="fas fa-hand-holding" style="color: #FF5733;"></i> {{
+                                    calculateBorrowedProducts }}</p>
                                 <p class="subtitle">Artikel ausgeliehen</p>
                             </article>
                         </div>
                         <div class="tile is-parent">
                             <article class="tile is-child box ">
-                                <p class="title"><i class="fas fa-chart-pie"></i> {{ calculateUtilization }}%</p>
+                                <p class="title"><i class="fas fa-chart-pie" style="color: #3498DB;"></i> {{
+                                    calculateUtilization }}%</p>
                                 <p class="subtitle">Auslastung</p>
                             </article>
                         </div>
@@ -173,13 +176,13 @@
                                     <div class="buttons">
                                         <div class="column is-12">
                                             <router-link to="/product/create" class="button">
-                                                Artikel hinzufügen<i class="fas fa-plus"></i>
+                                                Artikel hinzufügen<i class="fas fa-plus" style="color: green;"></i>
                                             </router-link>
                                             <router-link to="/wishlist/scan" class="button">
-                                                Wunschliste Scannen<i class="fas fa-qrcode"></i>
+                                                Wunschliste Scannen<i class="fas fa-qrcode" style="color: blue;"></i>
                                             </router-link>
                                             <button @click="logout()" class="button">
-                                                Logout<i class="fas fa-sign-out-alt"></i>
+                                                Logout<i class="fas fa-sign-out-alt" style="color: red;"></i>
                                             </button>
                                         </div>
                                     </div>
