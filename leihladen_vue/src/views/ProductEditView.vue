@@ -52,7 +52,7 @@
                             </div>
                             <div class="control" style="width: 150px;">
                                 <label class="label" for="quantity">Verfügbar</label>
-                                <input type="number" class="input" min="1" :max="product.quantity"
+                                <input type="number" class="input" min="0" :max="product.quantity"
                                     v-model="product.available" required>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ export default {
                     type: "is-danger",
                     dismissible: true,
                     pauseOnHover: true,
-                    duration: 2000,
+                    duration: 4000,
                     position: "bottom-right",
                 });
                 return;
@@ -213,11 +213,11 @@ export default {
                     this.product = response.data
 
                     toast({
-                        message: "Artikel wurde erfolgreich bearbeitet",
+                        message: `Artikel "${this.product.name}" wurde bearbeitet`,
                         type: "is-success",
                         dismissible: true,
                         pauseOnHover: true,
-                        duration: 2000,
+                        duration: 4000,
                         position: "bottom-right",
                     });
 
@@ -257,7 +257,7 @@ export default {
                         type: "is-danger",
                         dismissible: true,
                         pauseOnHover: true,
-                        duration: 2000,
+                        duration: 4000,
                         position: "bottom-right",
                     });
                 });

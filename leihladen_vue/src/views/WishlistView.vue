@@ -4,7 +4,6 @@
             <div class="column is-12">
                 <h1 class="title">Wunschliste</h1>
             </div>
-
             <div class="column is-12 box">
                 <table class="table is-fullwidth" v-if="wishlistTotalLength">
                     <thead>
@@ -20,15 +19,14 @@
                             v-on:removeFromWishlist="removeFromWishlist" />
                     </tbody>
                 </table>
-
                 <p v-else> Es befindet sich zurzeit kein Artikel in der Wunschliste</p>
-
                 <div class="column is-12 box" v-if="wishlistTotalLength">
                     <h2 class="subtitle">Zusammenfassung</h2>
                     <strong>{{ wishlistTotalLength }} Artikel</strong>
                     <hr>
-                    <router-link to="/wishlist/checkout" class="button is-dark">Wunschliste
-                        abschließen</router-link>
+                    <router-link to="/wishlist/checkout" class="button is-success">
+                        <span class="icon"><i class="fas fa-check-circle"></i></span>
+                        <span>Wunschliste abschließen</span></router-link>
                 </div>
             </div>
         </div>

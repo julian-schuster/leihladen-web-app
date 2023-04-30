@@ -8,12 +8,15 @@
           </figure>
         </div>
       </div>
+
       <div class="product-info">
-        <h3 class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</h3>
+        <div class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</div>
+        <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ product.date_added }}</div>
         <div class="columns">
           <div class="column details">
             <router-link :to="product.get_absolute_url" class="button is-success is-fullwidth">
-              Details
+              <span class="icon"><i class="fas fa-info-circle"></i></span>
+              <span>Details</span>
             </router-link>
           </div>
         </div>
@@ -30,20 +33,13 @@ export default {
   },
   data() {
     return {
+
     }
   },
   methods: {
-    getProducts() {
-      axios
-        .get(`/api/v1/products`)
-        .then((response) => {
-          this.products = response.data.products
-          console.log(this.products);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+  },
+  mounted() {
+    this.product.date_added = new Date(this.product.date_added).toLocaleDateString();
   },
 
 };
@@ -69,6 +65,7 @@ export default {
 
 .highlight:hover {
   border-color: #ddd;
+  background-color: rgb(245, 245, 245);
 }
 
 .button {

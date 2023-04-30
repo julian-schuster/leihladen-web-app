@@ -1,8 +1,9 @@
 <template>
   <div id="wrapper">
-    <nav class="navbar is-dark">
+    <nav class="navbar has-background-success">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><strong>Leihladen</strong></router-link>
+        <router-link to="/" class="navbar-item"><img class="image" style="width: 100%; height: 100%;"
+            src="@/assets/leihladen_logo.png"></router-link>
         <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu"
           @click="showMobileMenu = !showMobileMenu">
           <span aria-hidden="true" class="burger-icon"></span>
@@ -28,16 +29,15 @@
               </div>
             </form>
           </div>
-          <div class="navbar-item">
+          <!-- <div class="navbar-item">
             {{ $store.state.clientId }}
-          </div>
+          </div> -->
         </div>
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
-            <a class="navbar-link">
+            <a class="navbar-link" style="background-color: hsl(153, 53%, 53%); color: white;">
               Kategorien
             </a>
-
             <div class="navbar-dropdown">
               <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
                 class="navbar-item">
@@ -55,11 +55,14 @@
 
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <template v-if="$store.state.isAuthenticated">
-                <router-link to="/adminpanel" class="button is-light">Adminpanel</router-link>
+
+                <router-link to="/adminpanel" class="button is-success"> <span class="icon"><i
+                      class="fas fa-cog"></i></span><span>Adminpanel</span></router-link>
               </template>
 
               <template v-else>
-                <router-link to="/login" class="button is-light">Login</router-link>
+                <router-link to="/login" class="button is-success"><span class="icon"><i
+                      class="fas fa-user"></i></span><span>Login</span></router-link>
               </template>
 
               <router-link to="/wishlist" class="button is-success">

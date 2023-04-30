@@ -22,7 +22,10 @@
                                 </td>
                                 <td class="has-text-centered">{{ item.quantity }}</td>
                                 <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
-                                <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
+                                <td class="has-text-centered" v-if="getProductAvailable(item.product.id) == 0"
+                                    style="color:red">{{ getProductAvailable(item.product.id) }}</td>
+                                <td class="has-text-centered" v-else style="color:green">{{
+                                    getProductAvailable(item.product.id) }}</td>
                                 <td class="has-text-right">
                                     <a class="button is-success is-light is-small"
                                         @click="updateProductAvailability(item.product.id, 1)">
@@ -129,17 +132,17 @@ export default {
 
                         const logEntry = {
                             product: updatedProduct,
-                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
+                            message: `Verfügbarkeit für Artikel "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
                             time: new Date().toLocaleTimeString()
                         };
                         this.log.push(logEntry);
 
                         toast({
-                            message: "Verfügbarkeit für " + response.data.name + " geändert",
+                            message: `Verfügbarkeit für Artikel "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
                             type: "is-success",
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 2000,
+                            duration: 4000,
                             position: "bottom-right",
                         });
 
@@ -152,7 +155,7 @@ export default {
                             type: "is-danger",
                             dismissible: true,
                             pauseOnHover: true,
-                            duration: 2000,
+                            duration: 4000,
                             position: "bottom-right",
                         });
 

@@ -5,10 +5,10 @@
     <div class="container" v-if="!$store.state.isLoading">
         <div class="columns">
             <div class="column is-12">
-                <section class="hero welcome is-small ">
+                <section class="hero welcome is-small">
                     <div class="hero-body">
                         <div class="container">
-                            <h1 class="title ">
+                            <h1 class="title has-text-centered">
                                 Adminpanel
                             </h1>
                         </div>
@@ -17,20 +17,22 @@
                 <section class="info-tiles">
                     <div class="tile is-ancestor has-text-centered">
                         <div class="tile is-parent" @click="showCard('wishlist')">
-                            <article class="tile is-child box tile-box">
-                                <p class="title"><i class="fas fa-list" style="color: #EFA00B;"></i> {{ wishlistCount }}
-                                </p>
+                            <article class="tile is-child box tile-box"
+                                :class="{ 'selected': selectedCard === 'wishlist' }">
+                                <p class="title"><i class="fas fa-list" style="color: #EFA00B;"></i> {{ wishlistCount }}</p>
                                 <p class="subtitle">Wunschlisten</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsTotal')">
-                            <article class="tile is-child box tile-box">
+                            <article class="tile is-child box tile-box"
+                                :class="{ 'selected': selectedCard === 'productsTotal' }">
                                 <p class="title"><i class="fas fa-box" style="color: #A9DF9C;"></i> {{ productsTotal }}</p>
                                 <p class="subtitle">Artikel</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsNotAvailable')">
-                            <article class="tile is-child box tile-box">
+                            <article class="tile is-child box tile-box"
+                                :class="{ 'selected': selectedCard === 'productsNotAvailable' }">
                                 <p class="title"><i class="fas fa-hand-holding" style="color: #FF5733;"></i> {{
                                     calculateBorrowedProducts }}</p>
                                 <p class="subtitle">Artikel ausgeliehen</p>
@@ -54,12 +56,15 @@
                                     <div class="column is-12">
                                         <div class="card" v-if="selectedCard === 'wishlist'">
                                             <div class="card-content">
-                                                <p class="title">Wunschlisten</p>
+                                                <p class="title has-text-centered">Wunschlisten</p>
                                                 <div class="field">
-                                                    <div class="control">
+                                                    <p class="control has-icons-left">
                                                         <input class="input" type="text" placeholder="Suche Wunschliste"
                                                             v-model="searchWishlistQuery">
-                                                    </div>
+                                                        <span class="icon is-small is-left">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
@@ -84,12 +89,15 @@
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsTotal'">
                                             <div class="card-content">
-                                                <p class="title">Artikel</p>
+                                                <p class="title has-text-centered">Artikel</p>
                                                 <div class="field">
-                                                    <div class="control">
+                                                    <p class="control has-icons-left">
                                                         <input class="input" type="text" placeholder="Suche Artikel"
                                                             v-model="searchProductQuery">
-                                                    </div>
+                                                        <span class="icon is-small is-left">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
@@ -128,12 +136,15 @@
                                         </div>
                                         <div class="card" v-else-if="selectedCard === 'productsNotAvailable'">
                                             <div class="card-content">
-                                                <p class="title">Ausgeliehene Artikel</p>
+                                                <p class="title has-text-centered">Ausgeliehene Artikel</p>
                                                 <div class="field">
-                                                    <div class="control">
+                                                    <p class="control has-icons-left">
                                                         <input class="input" type="text" placeholder="Suche Artikel"
                                                             v-model="searchNotAvailableProductQuery">
-                                                    </div>
+                                                        <span class="icon is-small is-left">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                    </p>
                                                 </div>
                                                 <table class="table is-fullwidth">
                                                     <thead>
@@ -167,7 +178,7 @@
                     <div class="column is-6">
                         <div class="card">
                             <header class="card-header">
-                                <p class="card-header-title">
+                                <p class="card-header-title is-centered">
                                     Funktionen
                                 </p>
                             </header>
@@ -176,13 +187,16 @@
                                     <div class="buttons">
                                         <div class="column is-12">
                                             <router-link to="/product/create" class="button">
-                                                Artikel hinzufügen<i class="fas fa-plus" style="color: green;"></i>
+                                                <span class="icon"><i class="fas fa-plus" style="color: green;"></i> </span>
+                                                <span> Artikel hinzufügen</span>
                                             </router-link>
                                             <router-link to="/wishlist/scan" class="button">
-                                                Wunschliste Scannen<i class="fas fa-qrcode" style="color: blue;"></i>
+                                                <span class="icon"><i class="fas fa-qrcode" style="color: blue;"></i></span>
+                                                <span>Wunschliste Scannen</span>
                                             </router-link>
                                             <button @click="logout()" class="button">
-                                                Logout<i class="fas fa-sign-out-alt" style="color: red;"></i>
+                                                <span class="icon"><i class="fas fa-sign-out-alt"
+                                                        style="color: red;"></i></span> <span> Logout</span>
                                             </button>
                                         </div>
                                     </div>
@@ -410,6 +424,10 @@ export default {
     transition: 1s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+}
+
+.selected {
+    background-color: #76d1cd;
 }
 
 .delete-icon:hover {

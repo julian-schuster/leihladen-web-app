@@ -34,9 +34,11 @@
                 <canvas ref="qrcode"></canvas>
                 <p class="has-text-grey mb-4">Bitte zeigen Sie diesen QR-Code entweder ausgedruckt oder auf Ihrem Smartphone
                     im Leihladen vor.</p>
-                <button class="button is-dark" @click="generatePDF">PDF generieren</button>
+                <button class="button is-success" @click="generatePDF">
+                    <span class="icon"><i class="far fa-file-pdf"></i></span>
+                    <span>PDF generieren</span>
+                </button>
             </div>
-
         </div>
     </div>
 </template>

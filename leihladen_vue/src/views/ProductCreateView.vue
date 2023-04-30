@@ -64,7 +64,8 @@
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary" type="submit">Bestätigen</button>
+                            <button class="button is-success" type="submit"> <span class="icon">
+                                    <i class="fas fa-check-circle"></i></span> <span> Bestätigen</span></button>
                         </div>
                     </div>
                 </form>
@@ -119,7 +120,7 @@ export default {
                     type: "is-danger",
                     dismissible: true,
                     pauseOnHover: true,
-                    duration: 2000,
+                    duration: 4000,
                     position: "bottom-right",
                 });
                 return;
@@ -131,7 +132,7 @@ export default {
                     type: "is-danger",
                     dismissible: true,
                     pauseOnHover: true,
-                    duration: 2000,
+                    duration: 4000,
                     position: "bottom-right",
                 });
                 return;
@@ -155,11 +156,11 @@ export default {
                     console.log(response.data);
 
                     toast({
-                        message: "Artikel erfolgreich erstellt",
+                        message: `Artikel "${this.product.name}" wurde ${this.product.quantity}x hinzugefügt`,
                         type: "is-success",
                         dismissible: true,
                         pauseOnHover: true,
-                        duration: 2000,
+                        duration: 4000,
                         position: "bottom-right",
                     });
 
@@ -181,7 +182,7 @@ export default {
                         type: "is-danger",
                         dismissible: true,
                         pauseOnHover: true,
-                        duration: 2000,
+                        duration: 4000,
                         position: "bottom-right",
                     });
                 });

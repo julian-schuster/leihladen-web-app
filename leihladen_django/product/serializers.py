@@ -15,7 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "get_thumbnail",
             "quantity",
             "available",
-            "category"
+            "category",
+            "date_added"
         )
 
 class CategorySerializer(serializers.ModelSerializer):
