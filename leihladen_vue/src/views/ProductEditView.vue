@@ -27,13 +27,25 @@
                     <div class="content">
                         <h1 class="title is-3">
                             <label class="label" for="name">Name</label>
-                            <input class="input" v-model="product.name" required>
+                            <input class="input" v-model="product.name" maxlength="30" required>
                         </h1>
                         <p class="subtitle is-5">
                             <label class="label" for="description">Beschreibung</label>
-                            <textarea class="textarea" v-model="product.description" required></textarea>
+                            <textarea class="textarea" v-model="product.description" maxlength="255" required></textarea>
                         </p>
+                        <div class="field">
+                            <label class="label" for="category">Kategorie</label>
+                            <div class="select">
+                                <select v-model="product.category" required>
+                                    <option value="">Bitte wählen</option>
+                                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                                        {{ category.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="field has-addons" style="display: flex;">
+
                             <div class="control" style="margin-right: 10px; width: 150px;">
                                 <label class="label" for="quantity">Bestand</label>
                                 <input type="number" class="input" min="1" v-model="product.quantity" required>
@@ -98,12 +110,10 @@ export default {
                 image1: null,
                 image2: null,
                 image3: null,
-                quantity: 0
+                quantity: 0,
+                category: '',
             },
             categories: [
-                { id: 1, name: "Garten" },
-                { id: 2, name: "Brettspiele" },
-                { id: 3, name: "Sport" }
             ],
             file1: null,
             file2: null,
@@ -119,8 +129,23 @@ export default {
     },
     mounted() {
         this.getProduct();
+        this.getCategories();
     },
     methods: {
+        async getCategories() {
+            await axios
+                .get(`/api/v1/categories`)
+                .then((response) => {
+                    this.categories = response.data;
+                    console.log(this.categories);
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                    //Wenn Fehler auftritt zurück auf Startseite leiten
+                    this.$router.push("/")
+                });
+        },
         async getProduct() {
             const category_slug = this.$route.params.category_slug;
             const product_slug = this.$route.params.product_slug;
@@ -157,6 +182,17 @@ export default {
             formData.append('description', this.product.description);
             formData.append('quantity', this.product.quantity);
             formData.append('available', this.product.available);
+            formData.append('category', this.product.category);
+
+            let categoryId = this.product.category;
+            let categoryName = "";
+            for (let i = 0; i < this.categories.length; i++) {
+                if (this.categories[i].id == categoryId) {
+                    categoryName = this.categories[i].name;
+                    break;
+                }
+            }
+
             if (this.file1) {
                 formData.append('image', this.file1);
             }
@@ -212,6 +248,7 @@ export default {
                     this.file2 = null;
                     this.file3 = null;
 
+                    this.$router.push(`/${categoryName.toLowerCase()}/${this.product.name.toLowerCase()}/edit`);
                 })
                 .catch((error) => {
                     console.log(error);

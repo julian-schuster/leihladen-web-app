@@ -59,6 +59,13 @@ def search(request):
     else:
         return Response({"products": []})
 
+class GetCategories(APIView):
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
 class GetWishlist(APIView):
     def get(self, request, client_id, format=None):
         try: 
@@ -182,6 +189,10 @@ class ProductManagement(APIView):
             product.quantity = request.data['quantity']
         if request.data.get('available') is not None:
             product.available = request.data['available']
+        if request.data.get('category') is not None:
+            category_id = request.data['category']
+            category = Category.objects.get(id=category_id)
+            product.category = category
         if request.data.get('image') is not None:
             product.image = request.data['image']
             if not skip:

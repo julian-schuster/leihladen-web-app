@@ -43,12 +43,13 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="has-text-centered">
-                    <h4>Verlauf</h4>
-                    <div v-for="entry in log" :key="entry.product.id">
-                        {{ entry.message }}
-                    </div>
-                </div>
+
+            </div>
+        </div>
+        <div class="has-text-centered">
+            <h4>Verlauf</h4>
+            <div v-for="entry in log" :key="entry.product.id" class="log-entry">
+                <span class="time">{{ entry.time }} </span>: {{ entry.message }}
             </div>
         </div>
     </div>
@@ -128,7 +129,8 @@ export default {
 
                         const logEntry = {
                             product: updatedProduct,
-                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}`
+                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
+                            time: new Date().toLocaleTimeString()
                         };
                         this.log.push(logEntry);
 
@@ -157,17 +159,10 @@ export default {
                     });
             }
         },
-        formatDate(dateString) {
-            const date = new Date(dateString);
-            const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-            return formattedDate;
-        },
-
     },
 
 }
 </script>
-
 
 <style scoped>
 .table-container {

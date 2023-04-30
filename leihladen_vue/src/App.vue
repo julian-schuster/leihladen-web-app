@@ -12,7 +12,7 @@
       </div>
       <div class="navbar-menu" id="navbar-menu" v-bind:class="{ 'is-active': showMobileMenu }">
         <div class="navbar-start">
-          <div class="navbar-item">
+          <div class="navbar-item" v-if="$route.path !== '/'">
             <form method="get" action="/search">
               <div class="field has-addons">
                 <div class="control">
@@ -33,9 +33,18 @@
           </div>
         </div>
         <div class="navbar-end">
-          <router-link to="/garten" class="navbar-item">Garten</router-link>
-          <router-link to="/brettspiele" class="navbar-item">Brettspiele</router-link>
-          <router-link to="/sport" class="navbar-item">Sport</router-link>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              Kategorien
+            </a>
+
+            <div class="navbar-dropdown">
+              <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
+                class="navbar-item">
+                {{ category.name }}
+              </a>
+            </div>
+          </div>
           <div class="navbar-item has-text-centered">
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <template v-if="$store.state.isAuthenticated">
@@ -95,6 +104,7 @@ export default {
       wishlist: {
         items: [],
       },
+      categories: [],
     };
   },
   beforeCreate() {
@@ -111,6 +121,21 @@ export default {
   },
   mounted() {
     this.wishlist = this.$store.state.wishlist
+    this.getCategories()
+  },
+  methods: {
+    getCategories() {
+      axios
+        .get(`/api/v1/categories`)
+        .then((response) => {
+          this.categories = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+          //Wenn Fehler auftritt zurück auf Startseite leiten
+          this.$router.push("/")
+        });
+    },
   },
   computed: {
     wishlistTotalLength() {

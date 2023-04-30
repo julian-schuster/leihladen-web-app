@@ -1,6 +1,6 @@
 <template>
-  <div class="column is-3-desktop is-6-tablet">
-    <div class="box">
+  <div class="column is-3-desktop is-6-tablet" @mouseover="isHovered = true" @mouseleave="isHovered = false">
+    <div class="box" :class="{ 'highlight': isHovered }">
       <div class="columns is-centered is-mobile">
         <div class="column is-12 is-12-mobile">
           <figure class="image is-square">
@@ -9,28 +9,10 @@
         </div>
       </div>
       <div class="product-info">
-        <h3 class="title is-size-4-desktop is-size-5-mobile is-clipped">{{ product.name }}</h3>
-        <div class="columns is-mobile">
-          <div class="column">
-            <table class="table is-narrow">
-              <thead>
-                <tr>
-                  <th>Bestand</th>
-                  <th>Verfügbar</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ product.quantity }}</td>
-                  <td>{{ product.available }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="columns is-centered is-mobile">
-          <div class="column is-narrow">
-            <router-link :to="product.get_absolute_url" class="button is-dark is-rounded">
+        <h3 class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</h3>
+        <div class="columns">
+          <div class="column details">
+            <router-link :to="product.get_absolute_url" class="button is-dark is-fullwidth">
               Details
             </router-link>
           </div>
@@ -45,6 +27,11 @@ export default {
   name: "ProductBox",
   props: {
     product: Object,
+  },
+  data() {
+    return {
+      isHovered: false,
+    }
   },
   methods: {
     getProducts() {
@@ -75,5 +62,24 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-bottom: 5px
+}
+
+.highlight {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+.button {
+  text-align: center;
+  color: #fff;
+  width: 100%;
+  padding: 0;
+  border: 0px;
+  outline: none;
+  margin-top: 5px;
+}
+
+.details {
+  padding: 0;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns is-multiline">
       <div class="column is-6 is-12-mobile">
-        <figure class="image is-3by2 is-square">
+        <figure class="image is-3by2 is-square ">
           <a @click="showModal = true">
             <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url" alt="Produktbild"
               @click="zoomImage(0)">
@@ -144,7 +144,6 @@ export default {
 
 <style scoped>
 .image {
-  border-style: solid;
   transition: transform 0.5s;
   transform-origin: center;
 }
@@ -155,5 +154,10 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%) scale(2);
   z-index: 9999;
+}
+
+.image:hover {
+  border: 1px solid #ccc;
+  box-shadow: 0 0 5px #ccc;
 }
 </style>

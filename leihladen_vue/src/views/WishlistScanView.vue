@@ -13,7 +13,7 @@
                     <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit" v-show="show"></qrcode-stream>
                 </div>
             </div>
-            <div class="column is-9">
+            <div class="column is-12">
                 <h3 class="has-text-centered">Wunschliste: {{ wishlist.client_id }}</h3>
                 <div class="table-container">
                     <table class="table is-fullwidth">
@@ -58,8 +58,8 @@
                 </div>
                 <div class="has-text-centered">
                     <h4>Verlauf</h4>
-                    <div v-for="entry in log" :key="entry.product.id">
-                        {{ entry.message }}
+                    <div v-for="entry in log" :key="entry.product.id" class="log-entry">
+                        <span class="time">{{ entry.time }} </span>: {{ entry.message }}
                     </div>
                 </div>
             </div>
@@ -193,7 +193,8 @@ export default {
 
                         const logEntry = {
                             product: updatedProduct,
-                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}`
+                            message: `Verfügbarkeit für "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
+                            time: new Date().toLocaleTimeString()
                         };
                         this.log.push(logEntry);
 

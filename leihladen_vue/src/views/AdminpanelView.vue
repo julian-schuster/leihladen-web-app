@@ -18,7 +18,7 @@
                     <div class="tile is-ancestor has-text-centered">
                         <div class="tile is-parent" @click="showCard('wishlist')">
                             <article class="tile is-child box tile-box">
-                                <p class="title"><i class="fas fa-heart"></i> {{ wishlistCount }}</p>
+                                <p class="title"><i class="fas fa-list"></i> {{ wishlistCount }}</p>
                                 <p class="subtitle">Wunschlisten</p>
                             </article>
                         </div>
@@ -97,11 +97,12 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
                                                         <tr v-for="(product, index) in paginatedFilteredProducts"
                                                             :key="index">
-                                                            <td> <router-link v-bind:to="product.get_absolute_url">{{
-                                                                product.name }}</router-link>
+                                                            <td>
+                                                                <router-link v-bind:to="product.get_absolute_url">
+                                                                    <div class="product-name">{{ product.name }}</div>
+                                                                </router-link>
                                                             </td>
                                                             <td>{{ product.quantity }}</td>
                                                             <td class="has-text-right">
@@ -141,8 +142,9 @@
                                                     <tbody>
                                                         <tr v-for="(product, index) in paginatedFilteredNotAvailableProducts"
                                                             :key="index">
-                                                            <td> <router-link v-bind:to="product.get_absolute_url">{{
-                                                                product.name }}</router-link>
+                                                            <td> <router-link v-bind:to="product.get_absolute_url">
+                                                                    <div class="product-name">{{ product.name }}</div>
+                                                                </router-link>
                                                             </td>
                                                             <td>{{ product.difference }}</td>
                                                         </tr>
@@ -423,5 +425,9 @@ export default {
 
 .buttons .button i {
     margin-left: 0.5em;
+}
+
+.product-name {
+    word-break: break-all;
 }
 </style>
