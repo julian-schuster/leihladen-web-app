@@ -1,51 +1,53 @@
 <template>
-    <div class="columns is-centered">
-        <div class="column is-9">
-            <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
-            <div class="table-container">
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Artikel</th>
-                            <th class="has-text-centered">Anzahl</th>
-                            <th class="has-text-centered">Bestand</th>
-                            <th class="has-text-centered">Verfügbar</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-                            <td>
-                                <router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
-                            </td>
-                            <td class="has-text-centered">{{ item.quantity }}</td>
-                            <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
-                            <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
-                            <td class="has-text-right">
-                                <a class="button is-success is-light is-small"
-                                    @click="updateProductAvailability(item.product.id, 1)">
-                                    <span class="icon">
-                                        <i class="fas fa-plus"></i>
-                                    </span>
-                                </a>
-                            </td>
-                            <td class="has-text-right">
-                                <a class="button is-danger is-light is-small"
-                                    @click="updateProductAvailability(item.product.id, -1)">
-                                    <span class="icon">
-                                        <i class="fas fa-minus"></i>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="has-text-centered">
-                <h4>Verlauf</h4>
-                <div v-for="entry in log" :key="entry.product.id">
-                    {{ entry.message }}
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-12">
+                <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Artikel</th>
+                                <th class="has-text-centered">Anzahl</th>
+                                <th class="has-text-centered">Bestand</th>
+                                <th class="has-text-centered">Verfügbar</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+                                <td>
+                                    <router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
+                                </td>
+                                <td class="has-text-centered">{{ item.quantity }}</td>
+                                <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
+                                <td class="has-text-centered">{{ getProductAvailable(item.product.id) }}</td>
+                                <td class="has-text-right">
+                                    <a class="button is-success is-light is-small"
+                                        @click="updateProductAvailability(item.product.id, 1)">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="has-text-right">
+                                    <a class="button is-danger is-light is-small"
+                                        @click="updateProductAvailability(item.product.id, -1)">
+                                        <span class="icon">
+                                            <i class="fas fa-minus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="has-text-centered">
+                    <h4>Verlauf</h4>
+                    <div v-for="entry in log" :key="entry.product.id">
+                        {{ entry.message }}
+                    </div>
                 </div>
             </div>
         </div>

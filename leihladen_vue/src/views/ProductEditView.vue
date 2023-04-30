@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-6">
+    <div class="container">
         <form @submit.prevent="updateProduct">
             <div class="columns is-multiline">
                 <div class="column is-6 is-12-mobile">

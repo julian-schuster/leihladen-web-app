@@ -1,5 +1,5 @@
 <template>
-    <div class="page-wishlist">
+    <div class="container page-wishlist">
         <div class="columns is-multiline is-mobile is-centered">
             <div class="column is-12">
                 <h1 class="title has-text-centered">Wunschliste Scannen</h1>

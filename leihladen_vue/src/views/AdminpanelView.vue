@@ -16,32 +16,33 @@
                 </section>
                 <section class="info-tiles">
                     <div class="tile is-ancestor has-text-centered">
-                        <div class="tile is-parent " @click="showCard('wishlist')">
+                        <div class="tile is-parent" @click="showCard('wishlist')">
                             <article class="tile is-child box tile-box">
-                                <p class="title">{{ wishlistCount }}</p>
+                                <p class="title"><i class="fas fa-heart"></i> {{ wishlistCount }}</p>
                                 <p class="subtitle">Wunschlisten</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsTotal')">
                             <article class="tile is-child box tile-box">
-                                <p class="title">{{ productsTotal }}</p>
+                                <p class="title"><i class="fas fa-box"></i> {{ productsTotal }}</p>
                                 <p class="subtitle">Artikel</p>
                             </article>
                         </div>
                         <div class="tile is-parent" @click="showCard('productsNotAvailable')">
                             <article class="tile is-child box tile-box">
-                                <p class="title">{{ calculateBorrowedProducts }}</p>
+                                <p class="title"><i class="fas fa-hand-holding"></i> {{ calculateBorrowedProducts }}</p>
                                 <p class="subtitle">Artikel ausgeliehen</p>
                             </article>
                         </div>
                         <div class="tile is-parent">
                             <article class="tile is-child box ">
-                                <p class="title">{{ calculateUtilization }}%</p>
+                                <p class="title"><i class="fas fa-chart-pie"></i> {{ calculateUtilization }}%</p>
                                 <p class="subtitle">Auslastung</p>
                             </article>
                         </div>
                     </div>
                 </section>
+
                 <div class="columns">
                     <div class="column is-6">
                         <section class="info-tiles">
@@ -169,12 +170,15 @@
                                 <div class="content">
                                     <div class="buttons">
                                         <div class="column is-12">
-
                                             <router-link to="/product/create" class="button">
-                                                Artikel hinzufügen</router-link>
+                                                Artikel hinzufügen<i class="fas fa-plus"></i>
+                                            </router-link>
                                             <router-link to="/wishlist/scan" class="button">
-                                                Wunschliste Scannen</router-link>
-                                            <button @click="logout()" class="button">Logout</button>
+                                                Wunschliste Scannen<i class="fas fa-qrcode"></i>
+                                            </router-link>
+                                            <button @click="logout()" class="button">
+                                                Logout<i class="fas fa-sign-out-alt"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -410,5 +414,14 @@ export default {
 
 .delete-wrapper {
     margin-left: 10px;
+}
+
+.buttons .button {
+    display: inline-flex;
+    align-items: center;
+}
+
+.buttons .button i {
+    margin-left: 0.5em;
 }
 </style>

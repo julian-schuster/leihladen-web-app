@@ -1,7 +1,7 @@
 <template>
-    <div class="page-admin-login">
+    <div class="container page-admin-login">
         <div class="columns">
-            <div class="column is-4 is-offset-4">
+            <div class="column is-4 is-offset-4 box">
                 <h1 class="title">Admin Login</h1>
 
                 <form @submit.prevent="submitForm">
