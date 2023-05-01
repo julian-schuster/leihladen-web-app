@@ -7,13 +7,13 @@
                     <div class="field">
                         <label class="label" for="title">Name</label>
                         <div class="control">
-                            <input id="title" v-model="product.name" class="input" type="text" required>
+                            <input id="title" v-model="product.name" maxlength="30" class="input" type="text" required>
                         </div>
                     </div>
                     <div class="field">
                         <label class="label" for="content">Beschreibung</label>
                         <div class="control">
-                            <textarea id="content" v-model="product.description" class="textarea" rows="5"
+                            <textarea id="content" v-model="product.description" maxlength="255" class="textarea" rows="5"
                                 required></textarea>
                         </div>
                     </div>
