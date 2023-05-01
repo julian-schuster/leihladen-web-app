@@ -4,32 +4,32 @@
             <div class="columns">
                 <div class="column is-half">
                     <div class="columns is-multiline">
-                        <div class="column is-12" v-if="product.get_images && product.get_images.length == 1">
+                        <div class="column is-12" v-if="(product.get_images && product.get_images.length == 1)">
                             <figure class="image is-square highlight">
                                 <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6" v-else>
-                            <figure class="image is-3by2 highlight">
+                            <figure class="image is-3by2">
                                 <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
-                            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[1]">
+                            <figure class="image is-3by2" v-if="product.get_images && product.get_images[1]">
                                 <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
-                            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[2]">
+                            <figure class="image is-3by2" v-if="product.get_images && product.get_images[2]">
                                 <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
-                            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[3]">
+                            <figure class="image is-3by2" v-if="product.get_images && product.get_images[3]">
                                 <img v-bind:src="product.get_images && product.get_images[3] && product.get_images[3].url"
                                     alt="Produktbild">
                             </figure>
@@ -44,7 +44,8 @@
                         </h1>
                         <p class="subtitle is-5">
                             <label class="label" for="description">Beschreibung</label>
-                            <textarea class="textarea" v-model="product.description" maxlength="255" required></textarea>
+                            <textarea class="textarea input" v-model="product.description" maxlength="255"
+                                required></textarea>
                         </p>
                         <div class="field">
                             <label class="label" for="category">Kategorie</label>
@@ -264,6 +265,7 @@ export default {
                     this.file4 = null;
 
                     this.$router.push(`${this.product.get_absolute_url}edit`);
+
                 })
                 .catch((error) => {
                     console.log(error);
@@ -335,5 +337,15 @@ export default {
 .images-container {
     display: flex;
     justify-content: space-between;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+    border-color: #398378;
+}
+
+.select select:focus {
+    outline: none;
+    border-color: #398378;
+    box-shadow: 0 0 10px 2px rgba(57, 131, 120, 0.5);
 }
 </style>

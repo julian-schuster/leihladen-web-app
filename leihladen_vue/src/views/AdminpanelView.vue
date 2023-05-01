@@ -69,16 +69,19 @@
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
-                                                            <th>id</th>
-                                                            <th>client_id</th>
+
+                                                            <th>ID:</th>
+                                                            <th>Erstellt am:</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr v-for="(wishlist, index) in paginatedFilteredWishlists"
                                                             :key="index">
-                                                            <td>{{ wishlist.id }}</td>
+
                                                             <td><router-link :to="'/wishlist/' + wishlist.client_id">{{
-                                                                wishlist.client_id }}</router-link></td>
+                                                                wishlist.client_id }} </router-link></td>
+                                                            <td>{{ new Date(wishlist.date_added).toLocaleString()
+                                                            }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -323,6 +326,7 @@ export default {
         this.$store.commit("setIsLoading", true);
         this.getProducts();
         this.getWishlists();
+
     },
     watch: {
         totalPages(newTotal, oldTotal) {

@@ -46,7 +46,8 @@
                 <div class="dropdown is-hoverable">
                   <div class="dropdown-trigger">
                     <button class="button navbutton" aria-haspopup="true" aria-controls="dropdown-menu4">
-                      <span>Kategorie</span>
+                      <span class="icon"><i class="fa fa-folder-open"></i></span>
+                      <span>Kategorien</span>
                       <span class="icon is-small">
                         <i class="fas fa-angle-down" aria-hidden="true"></i>
                       </span>
@@ -57,7 +58,16 @@
                       <div class="dropdown-item">
                         <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
                           class="navbar-item">
-                          {{ category.name }}
+                          <span class="icon" v-if="category.name == 'Garten'" style="color:green"><i
+                              class="fas fa-seedling"></i></span>
+                          <span class="icon" v-if="category.name == 'Sport'"><i class="fas fa-futbol"></i></span>
+                          <span class="icon" v-if="category.name == 'Werkzeug'" style="color:black"><i
+                              class="fas fa-cog"></i></span>
+                          <span class="icon" v-if="category.name == 'Haushalt'" style="color:orange"><i
+                              class="fas fa-home"></i></span>
+                          <span class="icon" v-if="category.name == 'Spiele'" style="color:purple"><i
+                              class="fas fa-dice-six"></i></span>
+                          <span>{{ category.name }}</span>
                         </a>
                       </div>
                     </div>
@@ -85,7 +95,7 @@
       <router-view />
     </section>
   </div>
-  <footer class="footer has-background-white-ter mobile-is-6">
+  <footer class="footer mobile-is-6">
     <div class="container">
       <div class="columns is-multiline">
         <div class="column is-12">
@@ -224,6 +234,8 @@ body {
 
 footer {
   margin-top: auto;
+  background-color: rgb(245, 245, 245);
+  ;
 }
 
 @media screen and (max-width: 768px) {
@@ -248,5 +260,10 @@ footer {
 
 .burger-icon {
   color: white;
+}
+
+.input:focus {
+  border-color: #398378;
+  box-shadow: 0 0 10px 2px rgba(57, 131, 120, 0.5);
 }
 </style>

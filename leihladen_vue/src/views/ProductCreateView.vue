@@ -13,8 +13,8 @@
                     <div class="field">
                         <label class="label" for="content">Beschreibung</label>
                         <div class="control">
-                            <textarea id="content" v-model="product.description" maxlength="255" class="textarea" rows="5"
-                                required></textarea>
+                            <textarea id="content" v-model="product.description" maxlength="255" class="textarea input"
+                                rows="5" required></textarea>
                         </div>
                     </div>
                     <div class="field">

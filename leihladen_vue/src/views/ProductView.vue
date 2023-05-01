@@ -50,6 +50,11 @@
           <label class="label" for="name">Name</label>
           <p class="subtitle is-5">{{ product.name }}</p>
           <hr>
+          <label class="label" for="category">Kategorie</label>
+
+          <p class="subtitle is-5"><a :href="`/${category}`">{{ formattedCategory }} </a></p>
+
+          <hr>
           <label class="label" for="description">Beschreibung</label>
           <p class="subtitle is-5">{{ product.description }}</p>
           <hr>
@@ -98,9 +103,13 @@ export default {
       showModal: false,
       images: [],
       currentIndex: 0,
+      category: ''
     };
   },
   mounted() {
+    const currentUrl = window.location.href;
+    const urlParts = currentUrl.split('/');
+    this.category = urlParts[urlParts.length - 3];
     this.getProduct();
   },
   methods: {
@@ -161,6 +170,10 @@ export default {
       this.showModal = true;
       this.currentIndex = index;
     },
+  }, computed: {
+    formattedCategory() {
+      return this.category.charAt(0).toUpperCase() + this.category.slice(1);
+    }
   },
 };
 </script>

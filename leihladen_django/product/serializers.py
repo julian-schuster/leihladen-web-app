@@ -15,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "quantity",
             "available",
             "category",
-            "date_added"
+            "date_added",
         )
 
 class CategorySerializer(serializers.ModelSerializer):

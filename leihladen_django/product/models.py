@@ -68,5 +68,8 @@ class Wishlist(models.Model):
     client_id = models.CharField(max_length=255, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('-date_added',)
+        
     def __str__(self):
         return f"Wishlist {self.id}"
