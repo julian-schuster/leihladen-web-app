@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper">
-    <nav class="navbar has-background-success">
+    <nav class="navbar" style="background-color: #398378;">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item"><img class="image" style="width: 100%; height: 100%;"
             src="@/assets/leihladen_logo.png"></router-link>
@@ -20,52 +20,59 @@
                   <input type="text" class="input" placeholder="Nach Artikel suchen" name="query">
                 </div>
                 <div class="control">
-                  <button class="button is-success">
+                  <button class="button">
                     <span class="icon">
-                      <i class="fas fa-search"></i>
+                      <i class="fas fa-search" style="color:#398378;"></i>
                     </span>
                   </button>
                 </div>
               </div>
             </form>
           </div>
-          <!-- <div class="navbar-item">
-            {{ $store.state.clientId }}
-          </div> -->
         </div>
         <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
-            <a class="navbar-link" style="background-color: hsl(153, 53%, 53%); color: white;">
-              Kategorien
-            </a>
-            <div class="navbar-dropdown">
-              <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
-                class="navbar-item">
-                {{ category.name }}
-              </a>
-            </div>
-          </div>
+          <!-- Mobile menu start -->
           <div class="navbar-item is-hidden-desktop" v-show="showMobileMenu">
             <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
               class="navbar-item">
               {{ category.name }}
             </a>
           </div>
+          <!-- Mobile menu end -->
+
           <div class="navbar-item has-text-centered">
-
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
+              <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
+                <div class="dropdown is-hoverable">
+                  <div class="dropdown-trigger">
+                    <button class="button navbutton" aria-haspopup="true" aria-controls="dropdown-menu4">
+                      <span>Kategorie</span>
+                      <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                    <div class="dropdown-content">
+                      <div class="dropdown-item">
+                        <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
+                          class="navbar-item">
+                          {{ category.name }}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <template v-if="$store.state.isAuthenticated">
-
-                <router-link to="/adminpanel" class="button is-success"> <span class="icon"><i
+                <router-link to="/adminpanel" class="button navbutton"> <span class="icon"><i
                       class="fas fa-cog"></i></span><span>Adminpanel</span></router-link>
               </template>
-
               <template v-else>
-                <router-link to="/login" class="button is-success"><span class="icon"><i
+                <router-link to="/login" class="button navbutton"><span class="icon"><i
                       class="fas fa-user"></i></span><span>Login</span></router-link>
               </template>
-
-              <router-link to="/wishlist" class="button is-success">
+              <router-link to="/wishlist" class="button navbutton">
                 <span class="icon"><i class="fas fa-list"></i></span>
                 <span>Wunschliste ({{ wishlistTotalLength }})</span>
               </router-link>
@@ -74,7 +81,6 @@
         </div>
       </div>
     </nav>
-
     <section class="section content">
       <router-view />
     </section>
@@ -224,5 +230,23 @@ footer {
   .footer {
     font-size: 14px;
   }
+}
+
+.navbutton {
+  background-color: #398378;
+  color: white;
+  margin-right: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.navbutton:hover,
+.navbutton:active,
+.navbutton.is-active {
+  background-color: rgb(245, 245, 245);
+}
+
+.burger-icon {
+  color: white;
 }
 </style>

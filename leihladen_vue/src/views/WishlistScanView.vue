@@ -59,10 +59,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="has-text-centered">
+                <div>
                     <h4>Verlauf</h4>
                     <div v-for="entry in log" :key="entry.product.id" class="log-entry">
-                        <span class="time">{{ entry.time }} </span>: {{ entry.message }}
+                        <span class="time">{{ entry.time }}</span>: {{ entry.message }}
                     </div>
                 </div>
             </div>

@@ -9,8 +9,8 @@
                     <thead>
                         <tr>
                             <th>Artikel</th>
-                            <th>Anzahl</th>
-                            <th>Verfügbar</th>
+                            <th class="has-text-centered">Anzahl</th>
+                            <th class="has-text-centered">Verfügbar</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -24,8 +24,8 @@
                     <h2 class="subtitle">Zusammenfassung</h2>
                     <strong>{{ wishlistTotalLength }} Artikel</strong>
                     <hr>
-                    <router-link to="/wishlist/checkout" class="button is-success">
-                        <span class="icon"><i class="fas fa-check-circle"></i></span>
+                    <router-link to="/wishlist/checkout" class="button">
+                        <span class="icon"><i class="fas fa-check-circle" style="color:green"></i></span>
                         <span>Wunschliste abschließen</span></router-link>
                 </div>
             </div>

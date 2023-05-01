@@ -2,8 +2,8 @@
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-5">
-        <figure class="image is-3by3">
-          <img class="is-rounded" style="width: 50%; height: 50%;" src="@/assets/leihladen_logo.png">
+        <figure class="image">
+          <img class="is-rounded" style="width: 60%; height: 60%;" src="@/assets/leihladen_logo.png">
         </figure>
         <h1 class="title is-2">Willkommen im Leihladen</h1>
         <h2 class="subtitle is-4">leihen statt kaufen - teilen statt besitzen</h2>
@@ -13,9 +13,9 @@
               <input type="text" class="input is-rounded" placeholder="Nach Artikel suchen" name="query">
             </div>
             <div class="control">
-              <button class="button is-success">
+              <button class="button">
                 <span class="icon">
-                  <i class="fas fa-search"></i>
+                  <i class="fas fa-search" style="color:#398378;"></i>
                 </span>
               </button>
             </div>
@@ -23,7 +23,7 @@
         </form>
       </div>
       <div class="column is-7">
-        <div style="margin-top:10.8%">
+        <div style="margin-top:19.3%">
           <h1 class="title is-4">Neueste Artikel</h1>
           <div class="columns">
             <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
@@ -63,7 +63,7 @@
             <div class="box highlight">
               <h2 class="title is-4 has-text-centered">3. Artikel ausleihen und zurückgeben</h2>
               <div class="has-text-centered"> <span class="icon" style="margin-bottom:20px"><i class="fas fa-share fa-2x"
-                    style="color: #A9DF9C;"></i></span></div>
+                    style="color: #398378;"></i></span></div>
               <p>Wenn Sie im Leihladen ankommen, zeigen Sie einfach den QR-Code vor und die Mitarbeiter werden Ihnen die
                 Artikel aus Ihrer Wunschliste aushändigen.
                 Preis und Ausleihdauer werden vor Ort besprochen. Um den Prozess der Rückgabe zu erleichtern zeigen Sie
@@ -139,7 +139,7 @@ export default {
 }
 
 .highlight:hover {
-  border-color: #ddd;
+  border-color: #398378;
   transform: scale(1.1);
   background-color: rgb(245, 245, 245);
 }

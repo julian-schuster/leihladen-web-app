@@ -143,6 +143,7 @@ class ProductManagement(APIView):
         image = request.data.get('image')
         image2 = request.data.get('image2')
         image3 = request.data.get('image3')
+        image4 = request.data.get('image4')
         category_id = request.data.get('category')
 
         category = Category.objects.get(id=category_id)
@@ -151,16 +152,15 @@ class ProductManagement(APIView):
         product = Product(name=name, slug=slug, description=description, quantity=quantity, category=category, available=quantity)
         product.save()
 
-        # Thumbnail erstellen, falls ein Bild vorhanden ist
         if image:
             product.image = image
-            product.thumbnail = product.make_thumbnail(image)
         if image2:
             product.image2 = image2
-            product.thumbnail2 = product.make_thumbnail(image2)
         if image3:
             product.image3 = image3
-            product.thumbnail3 = product.make_thumbnail(image3)
+        if image4:
+            product.image4 = image4
+
         product.save()
 
         return Response({'status': 'Artikel erstellt'}, status=status.HTTP_201_CREATED)
@@ -179,7 +179,7 @@ class ProductManagement(APIView):
     def put(self, request):
         product_id = request.data.get('id')
         product = Product.objects.get(id=product_id)
-        skip = request.data.get('skipImageGeneration')
+        noImageChange = request.data.get('noImageChange')
 
         if request.data.get('name') is not None:
             product.name = request.data['name']
@@ -195,24 +195,21 @@ class ProductManagement(APIView):
             product.category = category
         if request.data.get('image') is not None:
             product.image = request.data['image']
-            if not skip:
-                product.thumbnail = product.make_thumbnail(product.image)
         if request.data.get('image2') is not None:
             product.image2 = request.data['image2']
-            if not skip:
-                product.thumbnail2 = product.make_thumbnail(product.image2)
         else:
-            if not skip:
+            if not noImageChange:
                 product.image2 = None
-                product.thumbnail2 = None
         if request.data.get('image3') is not None:
             product.image3 = request.data['image3']
-            if not skip:
-                product.thumbnail3 = product.make_thumbnail(product.image3)
         else:
-            if not skip:
+            if not noImageChange:
                 product.image3 = None
-                product.thumbnail3 = None
+        if request.data.get('image4') is not None:
+            product.image4 = request.data['image4']
+        else:
+            if not noImageChange:
+                product.image4 = None
 
         product.save()
 

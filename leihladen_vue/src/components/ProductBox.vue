@@ -2,19 +2,18 @@
   <div class="column is-3-desktop is-6-tablet">
     <div class="box highlight">
       <div class="columns is-centered is-mobile">
-        <div class="column is-12 is-12-mobile">
-          <figure class="image is-square ">
+        <div class="column is-12 is-9-mobile">
+          <figure class="image is-square">
             <img :src="product.get_image">
           </figure>
         </div>
       </div>
-
       <div class="product-info">
         <div class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</div>
         <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ product.date_added }}</div>
         <div class="columns">
           <div class="column details">
-            <router-link :to="product.get_absolute_url" class="button is-success is-fullwidth">
+            <router-link :to="product.get_absolute_url" class="button is-info is-light">
               <span class="icon"><i class="fas fa-info-circle"></i></span>
               <span>Details</span>
             </router-link>
@@ -64,7 +63,7 @@ export default {
 }
 
 .highlight:hover {
-  border-color: #ddd;
+  border-color: #398378;
   background-color: rgb(245, 245, 245);
 }
 

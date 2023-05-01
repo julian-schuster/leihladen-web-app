@@ -41,7 +41,8 @@
                             </div>
                         </div>
                         <div class="images-container columns is-multiline is-mobile is-centered">
-                            <div v-for="(file, index) in [file1, file2, file3]" :key="index" class="column is-narrow mb-4">
+                            <div v-for="(file, index) in [file1, file2, file3, file4]" :key="index"
+                                class="column is-narrow mb-4">
                                 <div v-if="file">
                                     <div class="file-name" style="width: 150px">{{ file.name }}</div>
                                     <div v-if="product['image' + (index + 1)]">
@@ -89,30 +90,35 @@ export default {
                 image1: null,
                 image2: null,
                 image3: null,
+                image4: null,
                 quantity: 0
             },
-            categories: [
-                { id: 1, name: "Garten" },
-                { id: 2, name: "Brettspiele" },
-                { id: 3, name: "Sport" }
-            ],
+            categories: [],
             file1: null,
             file2: null,
             file3: null,
+            file4: null,
             validImages: true,
-            isValidImage1: true,
-            isValidImage2: true,
-            isValidImage3: true,
-            fileName1: null,
-            fileName2: null,
-            fileName3: null,
             isImageUploaded: false,
         };
     },
     mounted() {
         document.title = "Artikel hinzufügen | Leihladen";
+        this.getCategories()
     },
     methods: {
+        async getCategories() {
+            await axios
+                .get(`/api/v1/categories`)
+                .then((response) => {
+                    this.categories = response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    //Wenn Fehler auftritt zurück auf Startseite leiten
+                    this.$router.push("/")
+                });
+        },
         submitForm() {
             if (!this.isImageUploaded) {
                 toast({
@@ -150,6 +156,9 @@ export default {
             if (this.file3) {
                 formData.append('image3', this.file3);
             }
+            if (this.file4) {
+                formData.append('image4', this.file4);
+            }
             axios
                 .post(`/api/v1/product/`, formData)
                 .then((response) => {
@@ -171,9 +180,11 @@ export default {
                     this.product.image1 = null
                     this.product.image2 = null
                     this.product.image3 = null
+                    this.product.image4 = null
                     this.file1 = null;
                     this.file2 = null;
                     this.file3 = null;
+                    this.file4 = null
                 })
                 .catch((error) => {
                     console.log(error);
@@ -193,16 +204,13 @@ export default {
 
             this.file1 = null;
             this.product.image1 = null;
-            this.isValidImage1 = false;
-            this.fileName1 = '';
             this.file2 = null;
             this.product.image2 = null;
-            this.isValidImage2 = false;
-            this.fileName2 = '';
             this.file3 = null;
             this.product.image3 = null;
-            this.isValidImage3 = false;
-            this.fileName3 = '';
+            this.file4 = null;
+            this.product.image4 = null;
+
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -215,32 +223,21 @@ export default {
                 if (i === 0) {
                     this.file1 = file;
                     this.product.image1 = URL.createObjectURL(file);
-                    this.isValidImage1 = true;
-                    this.fileName1 = file.name;
                     this.isImageUploaded = true
                 } else if (i === 1) {
                     this.file2 = file;
                     this.product.image2 = URL.createObjectURL(file);
-                    this.isValidImage2 = true;
-                    this.fileName2 = file.name;
                 } else if (i === 2) {
                     this.file3 = file;
                     this.product.image3 = URL.createObjectURL(file);
-                    this.isValidImage3 = true;
-                    this.fileName3 = file.name;
+                } else if (i === 3) {
+                    this.file4 = file;
+                    this.product.image4 = URL.createObjectURL(file);
                 }
             }
         },
-        fileName(index) {
-            if (index === 1) {
-                return this.file1.name;
-            } else if (index === 2) {
-                return this.file2.name;
-            } else if (index === 3) {
-                return this.file3.name;
-            }
-        }, validateImages() {
-            if (this.file1 || this.file2 || this.file3) {
+        validateImages() {
+            if (this.file1 || this.file2 || this.file3 || this.file4) {
                 return true;
             } else {
                 return false;

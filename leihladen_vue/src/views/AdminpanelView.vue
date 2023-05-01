@@ -295,7 +295,7 @@ export default {
             this.currentPage = page;
         },
         deleteProduct(id) {
-            if (confirm("Sind Sie sicher, dass Sie dieses Produkt löschen möchten?")) {
+            if (confirm("Sind Sie sicher, dass Sie diesen Artikel löschen möchten?")) {
                 axios
                     .delete(`/api/v1/product/${id}`)
                     .then((response) => {
@@ -420,14 +420,18 @@ export default {
 
 <style scoped>
 .tile-box:hover {
-    background-color: #76d1cd;
     transition: 1s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+
+}
+
+.tile-box {
+    border: 2px solid transparent;
 }
 
 .selected {
-    background-color: #76d1cd;
+    border-color: #398378;
 }
 
 .delete-icon:hover {

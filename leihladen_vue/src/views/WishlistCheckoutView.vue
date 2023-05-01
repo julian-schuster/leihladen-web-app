@@ -10,21 +10,21 @@
                     <thead>
                         <tr>
                             <th>Artikel</th>
-                            <th>Anzahl</th>
+                            <th class="has-text-centered">Anzahl</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
                             <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
-                            <td>{{ item.quantity }}</td>
+                            <td class="has-text-centered">{{ item.quantity }}</td>
                         </tr>
                     </tbody>
 
                     <tfoot>
                         <tr>
                             <td></td>
-                            <td>{{ wishlistTotalLength }}</td>
+                            <td class="has-text-centered">{{ wishlistTotalLength }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -34,8 +34,8 @@
                 <canvas ref="qrcode"></canvas>
                 <p class="has-text-grey mb-4">Bitte zeigen Sie diesen QR-Code entweder ausgedruckt oder auf Ihrem Smartphone
                     im Leihladen vor.</p>
-                <button class="button is-success" @click="generatePDF">
-                    <span class="icon"><i class="far fa-file-pdf"></i></span>
+                <button class="button" @click="generatePDF">
+                    <span class="icon"><i class="far fa-file-pdf" style="color:blue"></i></span>
                     <span>PDF generieren</span>
                 </button>
             </div>

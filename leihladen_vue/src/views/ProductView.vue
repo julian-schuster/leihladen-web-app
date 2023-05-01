@@ -1,19 +1,29 @@
 <template>
   <div class="container">
-    <div class="columns is-multiline">
-      <div class="column is-6 is-12-mobile">
-        <figure class="image is-3by2 is-square highlight">
-          <a @click="showModal = true">
-            <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url" alt="Produktbild"
-              @click="zoomImage(0)" style="object-fit: cover; width: 100%; height: 100%;">
-          </a>
-        </figure>
+    <div class="columns">
+      <div class="column is-half">
         <div class="columns is-multiline">
-          <div class="column is-6" v-if="product.get_images && product.get_images[1]">
+          <div class="column is-12" v-if="product.get_images && product.get_images.length == 1">
+            <figure class="image is-square highlight">
+              <a @click="showModal = true">
+                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
+                  alt="Produktbild" @click="zoomImage(0)">
+              </a>
+            </figure>
+          </div>
+          <div class="column is-6" v-else>
             <figure class="image is-3by2 highlight">
               <a @click="showModal = true">
+                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
+                  alt="Produktbild" @click="zoomImage(0)">
+              </a>
+            </figure>
+          </div>
+          <div class="column is-6">
+            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[1]">
+              <a @click="showModal = true">
                 <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
-                  alt="Produktbild" @click="zoomImage(1)" style="object-fit: cover; width: 100%; height: 100%;">
+                  alt="Produktbild" @click="zoomImage(1)">
               </a>
             </figure>
           </div>
@@ -21,13 +31,21 @@
             <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[2]">
               <a @click="showModal = true">
                 <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
-                  alt="Produktbild" @click="zoomImage(2)" style="object-fit: cover; width: 100%; height: 100%;">
+                  alt="Produktbild" @click="zoomImage(2)">
+              </a>
+            </figure>
+          </div>
+          <div class="column is-6">
+            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[3]">
+              <a @click="showModal = true">
+                <img v-bind:src="product.get_images && product.get_images[3] && product.get_images[3].url"
+                  alt="Produktbild" @click="zoomImage(3)">
               </a>
             </figure>
           </div>
         </div>
       </div>
-      <div class="column is-6 is-12-mobile">
+      <div class="column is-half">
         <div class="content">
           <label class="label" for="name">Name</label>
           <p class="subtitle is-5">{{ product.name }}</p>
@@ -45,11 +63,11 @@
           <label class="label" for="wishlist_add">Zur Wunschliste hinzufügen </label>
           <div class="field has-addons">
             <div class="control">
-              <input type="number" class="input is-rounded" min="1" v-model="quantity" placeholder="Menge">
+              <input type="number" class="input is-rounded" min="1" max="20" v-model="quantity" placeholder="Menge">
             </div>
             <div class="control">
-              <a class="button is-success" @click="addToWishlist">
-                <span class="icon"><i class="fas fa-plus"></i></span>
+              <a class="button" @click="addToWishlist">
+                <span class="icon"><i class="fas fa-plus" style="color:#398378;"></i></span>
               </a>
             </div>
           </div>
@@ -58,10 +76,10 @@
     </div>
   </div>
   <div class="modal" :class="{ 'is-active': showModal }">
-    <div class="modal-background"></div>
+    <div class="modal-background" @click="closeModal"></div>
     <div class="modal-content">
-      <button class="modal-close is-large" aria-label="close" @click="showModal = false"></button>
-      <img :src="images[currentIndex]" alt="Produktbild" class="modal-image">
+      <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
+      <img :src="images[currentIndex]" alt="Produktbild" class="modal-image" @click.stop>
     </div>
   </div>
 </template>
@@ -86,6 +104,13 @@ export default {
     this.getProduct();
   },
   methods: {
+    openModal(index) {
+      this.currentIndex = index
+      this.showModal = true
+    },
+    closeModal() {
+      this.showModal = false
+    },
     getProduct() {
       this.$store.commit("setIsLoading", true);
 
@@ -112,6 +137,9 @@ export default {
       if (isNaN(this.quantity) || this.quantity < 1) {
         this.quantity = 1;
       }
+      if (this.quantity > 20) {
+        this.quantity = 20
+      }
 
       const item = {
         product: this.product,
@@ -121,7 +149,7 @@ export default {
       this.$store.commit("addToWishlist", item);
 
       toast({
-        message: `Der Artikel "${this.product.name}" wurde zur Wunschliste hinzugefügt`,
+        message: `Der Artikel "${this.product.name}" wurde ${this.quantity}x zur Wunschliste hinzugefügt`,
         type: "is-success",
         dismissible: true,
         pauseOnHover: true,
@@ -157,7 +185,7 @@ export default {
 }
 
 .highlight:hover {
-  border-color: #ddd;
+  border-color: #398378;
   transform: scale(1.1);
 }
 
@@ -171,5 +199,9 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.modal-background {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 </style>

@@ -1,15 +1,16 @@
 <template>
     <tr>
         <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
-        <td>{{ item.quantity }}
+        <td class="has-text-centered">{{ item.quantity }}
             <a @click="decrementQuanitity(item)" style="padding-right:10px; padding-left:5px; color: red;">-</a>
             <a @click="incrementQuanitity(item)" style="color:green">+</a>
         </td>
         <td>
             <span v-for="product in products" :key="product.id">
                 <div v-if="item.product.name === product.name">
-                    <div v-if="product.available == 0" style="color:red"> {{ product.available }}</div>
-                    <div v-else style="color:green"> {{ product.available }}</div>
+                    <div v-if="product.available == 0" style="color:red" class="has-text-centered"> {{ product.available }}
+                    </div>
+                    <div v-else style="color:green" class="has-text-centered"> {{ product.available }}</div>
                 </div>
             </span>
         </td>
