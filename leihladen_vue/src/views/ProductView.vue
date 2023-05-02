@@ -4,7 +4,8 @@
       <ul>
         <li><a href="/"><span class="icon"><i class="fas fa-home"></i></span></a></li>
         <li v-for="(section, index) in sections" :key="index" :class="{ 'is-active': index === sections.length }">
-          <span v-if="index !== sections.length"><a :href="getUrl(index)" style="text-transform: capitalize;">{{ section
+          <span v-if="index !== sections.length"><a :href="getUrl(index)" style="text-transform: capitalize;">{{
+            decodeURIComponent(section)
           }}</a></span>
         </li>
       </ul>
@@ -19,8 +20,8 @@
           </figure>
         </div>
         <div class="thumbnails thumbnail" v-if="images.length > 1">
-          <div class="columns is-multiline">
-            <div class="column is-3" v-for="(image, index) in      product.get_images     ">
+          <div class="columns is-multiline is-centered">
+            <div class="column is-3" v-for="(image, index) in           product.get_images          ">
               <figure class="image is-3by2 highlight">
                 <a @click="currentIndex = index; updatePreview()">
                   <img v-bind:src=" image.url " alt="Produktbild">
@@ -111,7 +112,7 @@ export default {
       const product_slug = this.$route.params.product_slug;
 
       axios
-        .get(`/api/v1/products/${category_slug}/${product_slug}`)
+        .get(`/api/v1/products/${category_slug}/${product_slug}/`)
         .then((response) => {
           this.product = response.data;
           this.currentPreview = this.product.get_images[0].url;
@@ -122,7 +123,7 @@ export default {
         .catch((error) => {
           console.log(error);
           //Wenn Fehler auftritt zurück auf Startseite leiten
-          this.$router.push("/")
+          // this.$router.push("/")
         });
 
       this.$store.commit("setIsLoading", false);
@@ -156,19 +157,6 @@ export default {
 </script>
 
 <style scoped>
-.image {
-  transition: transform 0.5s;
-  transform-origin: center;
-}
-
-.image.zoomed {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(2);
-  z-index: 9999;
-}
-
 .highlight {
   border: 2px solid transparent;
   transition: border-color 0.3s, transform 0.3s;
@@ -201,18 +189,11 @@ export default {
 }
 
 .thumbnails {
-  margin-top: 20px
+  margin-top: 20px;
 }
 
 .thumbnail img {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  width: 100%;
-}
-
-.content figure {
-  margin-left: 2em;
-  margin-right: 0em;
-  text-align: center;
 }
 </style>

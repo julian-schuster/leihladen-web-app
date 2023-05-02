@@ -1,18 +1,14 @@
-from io import BytesIO
-from PIL import Image
-
-from django.core.files import File
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(allow_unicode=True, max_length=255)
 
     class Meta:
         ordering = ('name',)
-
+    
     def __str__(self):
         return self.name
 
@@ -22,7 +18,7 @@ class Category(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(allow_unicode=True, max_length=255)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image2 = models.ImageField(upload_to='uploads/', blank=True, null=True)
