@@ -72,16 +72,6 @@ export default {
 
         this.createQRCode(this.clientId)
         this.createWishlist(qrCodeText)
-
-        toast({
-            message: `Wunschliste wurde erstellt`,
-            type: "is-success",
-            dismissible: true,
-            pauseOnHover: true,
-            duration: 4000,
-            position: "bottom-right",
-        });
-
     },
     methods: {
         getItemQuantity(item) {
@@ -95,10 +85,28 @@ export default {
         createWishlist(qrCodeText) {
             axios.post('/api/v1/wishlist/', { qr_code_text: qrCodeText, client_id: this.clientId })
                 .then(response => {
-                    console.log(response.data)
+
+                    toast({
+                        message: response.data.status,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+
                 })
                 .catch(error => {
                     console.error(error)
+
+                    toast({
+                        message: "Etwas ist schiefgelaufen. Bitte nochmal versuchen.",
+                        type: "is-danger",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
                 })
         },
         generatePDF() {

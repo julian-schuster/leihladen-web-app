@@ -1,8 +1,9 @@
 <template>
     <tr>
         <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
-        <td class="has-text-centered">{{ item.quantity }}
-            <a @click="decrementQuanitity(item)" style="padding-right:10px; padding-left:5px; color: red;">-</a>
+        <td class="has-text-centered"><a @click="decrementQuanitity(item)"
+                style="padding-right:10px; padding-left:5px; color: red;">-</a>{{ item.quantity }}
+
             <a @click="incrementQuanitity(item)" style="color:green">+</a>
         </td>
         <td>
@@ -47,8 +48,12 @@ export default {
             this.updateWishlist()
         },
         incrementQuanitity(item) {
-            item.quantity += 1
-            this.updateWishlist()
+            const product = this.products.find(p => p.id === item.product.id);
+            if (item.quantity < product.quantity) {
+                item.quantity += 1
+                this.updateWishlist()
+            }
+
         },
         updateWishlist() {
             localStorage.setItem('wishlist', JSON.stringify(this.$store.state.wishlist))

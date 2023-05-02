@@ -82,14 +82,14 @@
                 </div>
               </div>
               <template v-if="$store.state.isAuthenticated">
-                <router-link to="/adminpanel" class="button navbutton"> <span class="icon"><i
+                <router-link to="/adminpanel" class="button"> <span class="icon"><i
                       class="fas fa-cog"></i></span><span>Adminpanel</span></router-link>
               </template>
               <template v-else>
-                <router-link to="/login" class="button navbutton"><span class="icon"><i
+                <router-link to="/login" class="button"><span class="icon"><i
                       class="fas fa-user"></i></span><span>Login</span></router-link>
               </template>
-              <router-link to="/wishlist" class="button navbutton">
+              <router-link to="/wishlist" class="button">
                 <span class="icon"><i class="fas fa-list"></i></span>
                 <span>Wunschliste ({{ wishlistTotalLength }})</span>
               </router-link>
@@ -250,17 +250,8 @@ footer {
 }
 
 .navbutton {
-  background-color: #398378;
-  color: white;
   margin-right: 10px;
-  padding: 8px 12px;
-  border-radius: 4px;
-}
 
-.navbutton:hover,
-.navbutton:active,
-.navbutton.is-active {
-  background-color: rgb(245, 245, 245);
 }
 
 .burger-icon {

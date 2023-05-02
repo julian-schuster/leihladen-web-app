@@ -5,26 +5,26 @@
         <li><a href="/"><span class="icon"><i class="fas fa-home"></i></span></a></li>
         <li v-for="(section, index) in sections" :key="index" :class="{ 'is-active': index === sections.length }">
           <span>
-            <a :href="getUrl(index)" style="text-transform: capitalize;">{{
-              decodeURIComponent(section)
-            }}</a>
+            <a :href="getUrl(index)" style="text-transform: capitalize;">
+              {{ index === sections.length - 1 ? decodeURIComponent(product.name) : decodeURIComponent(section) }}
+            </a>
           </span>
-
         </li>
       </ul>
     </nav>
     <div class="columns">
       <div class="column is-7">
         <div class="preview">
-          <figure class="image is-4by3 highlight thumbnail is-hidden-mobile">
-            <a>
+          <figure class="image is-4by3 thumbnail is-hidden-mobile">
+            <a style="cursor: default;">
               <img v-bind:src="currentPreview" alt="Produktbild">
             </a>
           </figure>
         </div>
         <div class="thumbnails thumbnail" v-if="images.length > 1">
           <div class="columns is-multiline is-centered">
-            <div class="column is-3" v-for="(image, index) in  product.get_images ">
+            <div class="column is-12-mobile is-4-tablet is-3-desktop"
+              v-for="(image, index) in        product.get_images       ">
               <figure class="image is-3by2 highlight">
                 <a @click="currentIndex = index; updatePreview()">
                   <img v-bind:src=" image.url " alt="Produktbild">
@@ -51,17 +51,21 @@
           <label class="label" for="date_added">Hinzugefügt am</label>
           <p class="subtitle is-5">{{ product.date_added }}</p>
           <hr>
+          <label class="label" for="quantity">Im Bestand</label>
+          <p class="subtitle is-5">{{ product.quantity }}</p>
+          <hr>
           <label class="label" for="wishlist_add">Verfügbarkeit</label>
           <p class="subtitle is-5" v-if=" product.available == 0 " style="color:red"><i class="fas fa-times-circle"></i>
-            Vorübergehend nicht verfügbar</p>
+            {{ product.available }} verfügbar</p>
           <p class="subtitle is-5" v-else style="color:green"><i class="fas fa-check-circle"></i>
-            {{ product.available }} Verfügbar
+            {{ product.available }} verfügbar
           </p>
           <hr>
           <label class="label" for="wishlist_add">Zur Wunschliste hinzufügen </label>
           <div class="field has-addons">
             <div class="control">
-              <input type="number" class="input is-rounded" min="1" max="20" v-model=" quantity " placeholder="Menge">
+              <input type="number" class="input is-rounded" min="1" :max=" product.quantity " v-model=" quantity "
+                placeholder="Menge">
             </div>
             <div class="control">
               <a class="button" @click=" addToWishlist ">
@@ -114,8 +118,6 @@ export default {
       const category_slug = this.$route.params.category_slug;
       const product_slug = this.$route.params.product_slug;
 
-      console.log(product_slug)
-
       axios
         .get(`/api/v1/products/${category_slug}/${product_slug}/`)
         .then((response) => {
@@ -128,23 +130,50 @@ export default {
         .catch((error) => {
           console.log(error);
           //Wenn Fehler auftritt zurück auf Startseite leiten
-          // this.$router.push("/")
+          this.$router.push("/")
         });
 
       this.$store.commit("setIsLoading", false);
     },
     addToWishlist() {
-      if (isNaN(this.quantity) || this.quantity < 1) {
-        this.quantity = 1;
-      }
-      if (this.quantity > 20) {
-        this.quantity = 20
-      }
-
       const item = {
         product: this.product,
         quantity: this.quantity,
       };
+
+      const localUserWishlist = JSON.parse(JSON.stringify(this.$store.state.wishlist));
+      const filteredProduct = localUserWishlist.items.filter(item => item.product.id == this.product.id);
+
+      // Überprüfen, ob die Gesamtmenge des Artikels ausreicht, um den Artikel zur Wunschliste hinzuzufügen
+      if (filteredProduct.length === 0) {
+        if (this.product.quantity < this.quantity) {
+          toast({
+            message: `Die Gesamtmenge des Artikels "${this.product.name}" auf Ihrer Wunschliste entspricht bereits dem Bestand.`,
+            type: "is-danger",
+            dismissible: true,
+            pauseOnHover: true,
+            duration: 4000,
+            position: "bottom-right",
+          });
+          return;
+        }
+      } else if (filteredProduct.length === 1) {
+        const totalQuantity = filteredProduct[0].product.quantity;
+        const wishlistQuantity = filteredProduct[0].quantity;
+        const newQuantity = this.quantity;
+
+        if (wishlistQuantity + newQuantity > totalQuantity) {
+          toast({
+            message: `Die Gesamtmenge des Artikels "${this.product.name}" auf Ihrer Wunschliste entspricht bereits dem Bestand.`,
+            type: "is-danger",
+            dismissible: true,
+            pauseOnHover: true,
+            duration: 4000,
+            position: "bottom-right",
+          });
+          return;
+        }
+      }
 
       this.$store.commit("addToWishlist", item);
 

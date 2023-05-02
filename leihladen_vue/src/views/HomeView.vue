@@ -25,6 +25,7 @@
         </form>
       </div>
     </div>
+    <hr>
     <div class="column is-12">
       <h1 class="title is-4">Neueste Artikel</h1>
       <div class="columns is-multiline">
@@ -124,6 +125,16 @@ export default {
   .column.is-12-mobile.is-4-desktop {
     flex: 0 0 100%;
     max-width: 100%;
+  }
+
+  .title {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    text-align: center;
   }
 }
 

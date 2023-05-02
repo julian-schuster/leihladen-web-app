@@ -106,14 +106,14 @@ class CreateWishlist(APIView):
         if created:
             # Wenn eine neue Wishlist erstellt wurde
             response_data = {
-                'status': 'success', 
+                'status': 'Wunschliste wurde erstellt', 
                 'wishlist_id': wishlist.id, 
                 'client_id': client_id
             }
             status_code = status.HTTP_201_CREATED
         else:
             # Wenn die Wishlist des Clients aktualisiert wurde
-            response_data = {'status': 'Wishlist updated'}
+            response_data = {'status': 'Wunschliste wurde aktualisiert.'}
             status_code = status.HTTP_200_OK
 
         return Response(response_data, status=status_code)
