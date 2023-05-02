@@ -1,6 +1,6 @@
 from django.db.models import Sum, Q
 from django.http import Http404
-from django.utils.text import slugify
+from slugify import slugify
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,8 +39,6 @@ class ProductDetail(APIView):
 
     def get(self, request, category_slug, product_slug, format=None):
         # GET-Request, um ein Produkt anhand des Kategorie-Slugs und des Produkt-Slugs abzurufen.
-        print(category_slug)
-        print(product_slug)
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -181,10 +179,9 @@ class ProductManagement(APIView):
 
         # Holt die Kategorie mit der gegebenen ID aus der Datenbank
         category = Category.objects.get(id=category_id)
-
-        # Erstellt einen slug aus dem Artikelnamen
-        slug = slugify(product.name, allow_unicode=True)
-
+        
+        slug = slugify(name, replacements=[['Ü', 'UE'], ['ü', 'ue'],['Ä', 'AE'], ['ä', 'ae'], ['Ö', 'OE'], ['ö', 'oe']])
+    
         # Erstellt ein neues Artikel-Objekt mit den übergebenen Daten
         product = Product(name=name, slug=slug, description=description, quantity=quantity, category=category, available=quantity)
         product.save()
@@ -218,7 +215,7 @@ class ProductManagement(APIView):
         product = Product.objects.get(id=product_id)
         noImageChange = request.data.get('noImageChange')
         product.name = request.data['name']
-        product.slug = slugify(product.name, allow_unicode=True)
+        product.slug = slugify(product.name, replacements=[['Ü', 'UE'], ['ü', 'ue'],['Ä', 'AE'], ['ä', 'ae'], ['Ö', 'OE'], ['ö', 'oe']])
         product.description = request.data['description']
         product.quantity = request.data['quantity']
         product.available = request.data['available']

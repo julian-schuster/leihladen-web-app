@@ -31,15 +31,22 @@
           </div>
         </div>
         <div class="navbar-end">
-          <!-- Mobile menu start -->
+          <!-- Start Mobile Menu Start -->
           <div class="navbar-item is-hidden-desktop" v-show="showMobileMenu">
             <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
               class="navbar-item">
-              {{ category.name }}
+              <span class="icon" v-if="category.name == 'Garten'" style="color:green"><i
+                  class="fas fa-seedling"></i></span>
+              <span class="icon" v-if="category.name == 'Sport'"><i class="fas fa-futbol"></i></span>
+              <span class="icon" v-if="category.name == 'Werkzeug'" style="color:black"><i class="fas fa-cog"></i></span>
+              <span class="icon" v-if="category.name == 'Haushalt'" style="color:orange"><i
+                  class="fas fa-home"></i></span>
+              <span class="icon" v-if="category.name == 'Spiele'" style="color:purple"><i
+                  class="fas fa-dice-six"></i></span>
+              <span>{{ category.name }}</span>
             </a>
           </div>
-          <!-- Mobile menu end -->
-
+          <!-- Ende Mobile Menu -->
           <div class="navbar-item has-text-centered">
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">

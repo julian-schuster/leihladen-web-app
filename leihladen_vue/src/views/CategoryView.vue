@@ -57,8 +57,6 @@ export default {
             duration: 2000,
             position: "bottom-right",
           });
-          //Wenn Fehler auftritt zurück auf Startseite leiten
-          this.$router.push("/")
         });
       this.$store.commit("setIsLoading", false);
     },
