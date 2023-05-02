@@ -1,59 +1,45 @@
 <template>
   <div class="container">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+      <ul>
+        <li><a href="/"><span class="icon"><i class="fas fa-home"></i></span></a></li>
+        <li v-for="(section, index) in sections" :key="index" :class="{ 'is-active': index === sections.length }">
+          <span v-if="index !== sections.length"><a :href="getUrl(index)" style="text-transform: capitalize;">{{ section
+          }}</a></span>
+        </li>
+      </ul>
+    </nav>
     <div class="columns">
-      <div class="column is-half">
-        <div class="columns is-multiline">
-          <div class="column is-12" v-if="product.get_images && product.get_images.length == 1">
-            <figure class="image is-square highlight">
-              <a @click="showModal = true">
-                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
-                  alt="Produktbild" @click="zoomImage(0)">
-              </a>
-            </figure>
-          </div>
-          <div class="column is-6" v-else>
-            <figure class="image is-3by2 highlight">
-              <a @click="showModal = true">
-                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
-                  alt="Produktbild" @click="zoomImage(0)">
-              </a>
-            </figure>
-          </div>
-          <div class="column is-6">
-            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[1]">
-              <a @click="showModal = true">
-                <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
-                  alt="Produktbild" @click="zoomImage(1)">
-              </a>
-            </figure>
-          </div>
-          <div class="column is-6">
-            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[2]">
-              <a @click="showModal = true">
-                <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
-                  alt="Produktbild" @click="zoomImage(2)">
-              </a>
-            </figure>
-          </div>
-          <div class="column is-6">
-            <figure class="image is-3by2 highlight" v-if="product.get_images && product.get_images[3]">
-              <a @click="showModal = true">
-                <img v-bind:src="product.get_images && product.get_images[3] && product.get_images[3].url"
-                  alt="Produktbild" @click="zoomImage(3)">
-              </a>
-            </figure>
+      <div class="column is-7">
+        <div class="preview">
+          <figure class="image is-4by3 highlight thumbnail is-hidden-mobile">
+            <a>
+              <img v-bind:src="currentPreview" alt="Produktbild">
+            </a>
+          </figure>
+        </div>
+        <div class="thumbnails thumbnail" v-if="images.length > 1">
+          <div class="columns is-multiline">
+            <div class="column is-3" v-for="(image, index) in      product.get_images     ">
+              <figure class="image is-3by2 highlight">
+                <a @click="currentIndex = index; updatePreview()">
+                  <img v-bind:src=" image.url " alt="Produktbild">
+                </a>
+              </figure>
+            </div>
           </div>
         </div>
       </div>
-      <div class="column is-half">
+      <div class="column is-5">
         <div class="content">
           <label class="label" for="name">Name</label>
           <p class="subtitle is-5">{{ product.name }}</p>
           <hr>
           <label class="label" for="category">Kategorie</label>
-
-          <p class="subtitle is-5"><a :href="`/${category}`">{{ formattedCategory }} </a></p>
-
+          <p class="subtitle is-5" v-if=" product.get_category_name "><a
+              :href=" `/${product.get_category_name.toLowerCase()}` "
+              style="  text-decoration: none; color: hsl(0, 0%, 29%);">{{
+              product.get_category_name }}</a></p>
           <hr>
           <label class="label" for="description">Beschreibung</label>
           <p class="subtitle is-5">{{ product.description }}</p>
@@ -61,30 +47,26 @@
           <label class="label" for="date_added">Hinzugefügt am</label>
           <p class="subtitle is-5">{{ product.date_added }}</p>
           <hr>
-          <label class="label" for="wishlist_add">Aktuell verfügbar</label>
-          <p class="subtitle is-5" v-if="product.available == 0" style="color:red"> {{ product.available }}</p>
-          <p class="subtitle is-5" v-else style="color:green"> {{ product.available }}</p>
+          <label class="label" for="wishlist_add">Verfügbarkeit</label>
+          <p class="subtitle is-5" v-if=" product.available == 0 " style="color:red"><i class="fas fa-times-circle"></i>
+            Vorübergehend nicht verfügbar</p>
+          <p class="subtitle is-5" v-else style="color:green"><i class="fas fa-check-circle"></i>
+            {{ product.available }} Verfügbar
+          </p>
           <hr>
           <label class="label" for="wishlist_add">Zur Wunschliste hinzufügen </label>
           <div class="field has-addons">
             <div class="control">
-              <input type="number" class="input is-rounded" min="1" max="20" v-model="quantity" placeholder="Menge">
+              <input type="number" class="input is-rounded" min="1" max="20" v-model=" quantity " placeholder="Menge">
             </div>
             <div class="control">
-              <a class="button" @click="addToWishlist">
+              <a class="button" @click=" addToWishlist ">
                 <span class="icon"><i class="fas fa-plus" style="color:#398378;"></i></span>
               </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="modal" :class="{ 'is-active': showModal }">
-    <div class="modal-background" @click="closeModal"></div>
-    <div class="modal-content">
-      <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
-      <img :src="images[currentIndex]" alt="Produktbild" class="modal-image" @click.stop>
     </div>
   </div>
 </template>
@@ -100,25 +82,27 @@ export default {
     return {
       product: {},
       quantity: 1,
-      showModal: false,
       images: [],
       currentIndex: 0,
-      category: ''
+      sections: [],
+      currentPreview: null,
+      currentIndex: 0,
     };
   },
   mounted() {
-    const currentUrl = window.location.href;
-    const urlParts = currentUrl.split('/');
-    this.category = urlParts[urlParts.length - 3];
+    this.sections = this.getSections();
     this.getProduct();
   },
   methods: {
-    openModal(index) {
-      this.currentIndex = index
-      this.showModal = true
+    updatePreview() {
+      this.currentPreview = this.product.get_images[this.currentIndex].url;
     },
-    closeModal() {
-      this.showModal = false
+    getSections() {
+      const path = this.$route.path;
+      return path.split('/').filter(section => section !== '');
+    },
+    getUrl(index) {
+      return '/' + this.sections.slice(0, index + 1).join('/') + '/';
     },
     getProduct() {
       this.$store.commit("setIsLoading", true);
@@ -130,6 +114,7 @@ export default {
         .get(`/api/v1/products/${category_slug}/${product_slug}`)
         .then((response) => {
           this.product = response.data;
+          this.currentPreview = this.product.get_images[0].url;
           this.product.date_added = new Date(this.product.date_added).toLocaleDateString();
           document.title = this.product.name + " | Leihladen";
           this.images = this.product.get_images.map((image) => image.url);
@@ -166,15 +151,7 @@ export default {
         position: "bottom-right",
       });
     },
-    zoomImage(index) {
-      this.showModal = true;
-      this.currentIndex = index;
-    },
-  }, computed: {
-    formattedCategory() {
-      return this.category.charAt(0).toUpperCase() + this.category.slice(1);
-    }
-  },
+  }
 };
 </script>
 
@@ -199,22 +176,43 @@ export default {
 
 .highlight:hover {
   border-color: #398378;
-  transform: scale(1.1);
+  transform: scale(1.05);
+  border-radius: 5px;
 }
 
-.modal-content {
-  position: relative;
-  height: 100%;
+.breadcrumb {
+  color: grey;
+  justify-content: left;
+  background-color: #fff;
 }
 
-.modal-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.breadcrumb li a:hover {
+  color: black;
+
 }
 
-.modal-background {
-  background-color: rgba(0, 0, 0, 0.5);
+.breadcrumb li a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb li .icon {
+  margin-top: 5px;
+}
+
+.thumbnails {
+  margin-top: 20px
+}
+
+.thumbnail img {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.content figure {
+  margin-left: 2em;
+  margin-right: 0em;
+  text-align: center;
 }
 </style>

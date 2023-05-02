@@ -4,7 +4,9 @@
             <div class="columns">
                 <div class="column is-half">
                     <div class="columns is-multiline">
-                        <div class="column is-12" v-if="(product.get_images && product.get_images.length == 1)">
+
+                        <div class="column is-12"
+                            v-if="(product.get_images && product.get_images.length == 1) || (onlyOneImage)">
                             <figure class="image is-square highlight">
                                 <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
                                     alt="Produktbild">
@@ -134,6 +136,7 @@ export default {
             file3: null,
             file4: null,
             validImages: true,
+            onlyOneImage: false,
         };
     },
     mounted() {
@@ -161,6 +164,9 @@ export default {
                 .get(`/api/v1/products/${category_slug}/${product_slug}`)
                 .then((response) => {
                     this.product = response.data;
+                    if (this.product.get_images.length == 1) {
+                        this.onlyOneImage = true
+                    }
                     document.title = this.product.name + " | Leihladen";
                 })
                 .catch((error) => {
@@ -201,15 +207,19 @@ export default {
 
             if (this.file1) {
                 formData.append('image', this.file1);
+                this.onlyOneImage = true
             }
             if (this.file2) {
                 formData.append('image2', this.file2);
+                this.onlyOneImage = false
             }
             if (this.file3) {
                 formData.append('image3', this.file3);
+                this.onlyOneImage = false
             }
             if (this.file4) {
                 formData.append('image4', this.file4);
+                this.onlyOneImage = false
             }
 
             if (!this.file1 && !this.file2 && !this.file3 && !this.file4) {

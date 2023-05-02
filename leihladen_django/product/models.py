@@ -62,6 +62,9 @@ class Product(models.Model):
             images.append({'url': 'http://127.0.0.1:8000' + self.image4.url})
         return images
 
+    def get_category_name(self):
+        return self.category.name
+    
 class Wishlist(models.Model):
     id = models.AutoField(primary_key=True)
     qr_code_text = models.TextField(blank=True, null=True)
