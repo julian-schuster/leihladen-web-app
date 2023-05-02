@@ -4,16 +4,12 @@
       <ul>
         <li><a href="/"><span class="icon"><i class="fas fa-home"></i></span></a></li>
         <li v-for="(section, index) in sections" :key="index" :class="{ 'is-active': index === sections.length }">
-          <span v-if="index !== sections.length - 1">
+          <span>
             <a :href="getUrl(index)" style="text-transform: capitalize;">{{
               decodeURIComponent(section)
             }}</a>
           </span>
-          <span v-else>
-            <a :href="getUrl(index)" style="text-transform: capitalize;">{{
-              product.name
-            }}</a>
-          </span>
+
         </li>
       </ul>
     </nav>
@@ -28,7 +24,7 @@
         </div>
         <div class="thumbnails thumbnail" v-if="images.length > 1">
           <div class="columns is-multiline is-centered">
-            <div class="column is-3" v-for="(image, index) in                  product.get_images                 ">
+            <div class="column is-3" v-for="(image, index) in  product.get_images ">
               <figure class="image is-3by2 highlight">
                 <a @click="currentIndex = index; updatePreview()">
                   <img v-bind:src=" image.url " alt="Produktbild">
@@ -118,6 +114,8 @@ export default {
       const category_slug = this.$route.params.category_slug;
       const product_slug = this.$route.params.product_slug;
 
+      console.log(product_slug)
+
       axios
         .get(`/api/v1/products/${category_slug}/${product_slug}/`)
         .then((response) => {
@@ -130,7 +128,7 @@ export default {
         .catch((error) => {
           console.log(error);
           //Wenn Fehler auftritt zurück auf Startseite leiten
-          this.$router.push("/")
+          // this.$router.push("/")
         });
 
       this.$store.commit("setIsLoading", false);

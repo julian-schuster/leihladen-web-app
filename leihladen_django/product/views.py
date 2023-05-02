@@ -180,7 +180,7 @@ class ProductManagement(APIView):
         # Holt die Kategorie mit der gegebenen ID aus der Datenbank
         category = Category.objects.get(id=category_id)
         
-        slug = slugify(name, replacements=[['Ü', 'UE'], ['ü', 'ue'],['Ä', 'AE'], ['ä', 'ae'], ['Ö', 'OE'], ['ö', 'oe']])
+        slug = slugify(name, allow_unicode=True)
     
         # Erstellt ein neues Artikel-Objekt mit den übergebenen Daten
         product = Product(name=name, slug=slug, description=description, quantity=quantity, category=category, available=quantity)
@@ -215,7 +215,7 @@ class ProductManagement(APIView):
         product = Product.objects.get(id=product_id)
         noImageChange = request.data.get('noImageChange')
         product.name = request.data['name']
-        product.slug = slugify(product.name, replacements=[['Ü', 'UE'], ['ü', 'ue'],['Ä', 'AE'], ['ä', 'ae'], ['Ö', 'OE'], ['ö', 'oe']])
+        product.slug = slugify(product.name, allow_unicode=True)
         product.description = request.data['description']
         product.quantity = request.data['quantity']
         product.available = request.data['available']

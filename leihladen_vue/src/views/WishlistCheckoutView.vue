@@ -48,7 +48,7 @@ import axios from 'axios'
 import QRCode from 'qrcode'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-
+import { toast } from "bulma-toast";
 export default {
     name: 'WishlistCheckout',
     components: {
@@ -72,6 +72,15 @@ export default {
 
         this.createQRCode(this.clientId)
         this.createWishlist(qrCodeText)
+
+        toast({
+            message: `Wunschliste wurde erstellt`,
+            type: "is-success",
+            dismissible: true,
+            pauseOnHover: true,
+            duration: 4000,
+            position: "bottom-right",
+        });
 
     },
     methods: {

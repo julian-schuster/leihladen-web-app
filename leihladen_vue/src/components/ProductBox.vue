@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-3-desktop is-6-tablet">
+  <router-link :to="product.get_absolute_url" class="column is-3-desktop is-6-tablet">
     <div class="box highlight">
       <div class="columns is-centered is-mobile">
         <div class="column is-12 is-9-mobile">
@@ -10,18 +10,22 @@
       </div>
       <div class="product-info">
         <div class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</div>
-        <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ product.date_added }}</div>
+        <div class="subtitle is-6 has-text-centered" v-if="$route.path === '/'">Hinzugefügt am: {{ product.date_added }}
+        </div>
         <div class="columns">
-          <div class="column details">
-            <router-link :to="product.get_absolute_url" class="button is-info is-light">
-              <span class="icon"><i class="fas fa-info-circle"></i></span>
-              <span>Details</span>
-            </router-link>
+          <div class="column details has-text-centered">
+            <p class="subtitle is-5" v-if="product.available == 0" style="color:red; font-size: 14pt; margin-bottom:5%"><i
+                class="fas fa-times-circle"></i>
+              {{ product.available }} verfügbar</p>
+            <p class="subtitle is-5" v-else style="color:green;font-size: 14pt;  margin-bottom:5%"><i
+                class="fas fa-check-circle"></i>
+              {{ product.available }} verfügbar
+            </p>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>

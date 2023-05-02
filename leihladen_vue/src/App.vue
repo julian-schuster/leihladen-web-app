@@ -13,7 +13,7 @@
       </div>
       <div class="navbar-menu" id="navbar-menu" v-bind:class="{ 'is-active': showMobileMenu }">
         <div class="navbar-start">
-          <div class="navbar-item" v-if="$route.path !== '/'">
+          <div class="navbar-item">
             <form method="get" action="/search">
               <div class="field has-addons">
                 <div class="control">
@@ -166,8 +166,6 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          //Wenn Fehler auftritt zurück auf Startseite leiten
-          this.$router.push("/")
         });
     },
   },

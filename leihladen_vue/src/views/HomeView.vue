@@ -1,10 +1,12 @@
 <template>
   <div class="container">
-    <div class="columns is-centered">
+    <div class="columns">
       <div class="column is-5">
         <figure class="image">
           <img class="is-rounded" style="width: 60%; height: 60%;" src="@/assets/leihladen_logo.png">
         </figure>
+      </div>
+      <div class="column is-7" style="margin-top:5%">
         <h1 class="title is-2">Willkommen im Leihladen</h1>
         <h2 class="subtitle is-4">leihen statt kaufen - teilen statt besitzen</h2>
         <form method="get" action="/search">
@@ -22,13 +24,11 @@
           </div>
         </form>
       </div>
-      <div class="column is-7">
-        <div style="margin-top:19.3%">
-          <h1 class="title is-4">Neueste Artikel</h1>
-          <div class="columns">
-            <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
-          </div>
-        </div>
+    </div>
+    <div class="column is-12">
+      <h1 class="title is-4">Neueste Artikel</h1>
+      <div class="columns is-multiline">
+        <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
       </div>
     </div>
     <hr>
@@ -139,8 +139,8 @@ export default {
 }
 
 .highlight:hover {
-  border-color: #398378;
-  transform: scale(1.1);
+  /* border-color: #398378; */
+  transform: scale(1.05);
   background-color: rgb(245, 245, 245);
 }
 </style>
