@@ -39,10 +39,8 @@ export default {
         let url = window.location.search.substring(1)
         let params = new URLSearchParams(url)
 
-        if (params.get('query')) {
-            this.query = params.get('query')
-            this.performSearch()
-        }
+        this.query = params.get('query')
+        this.performSearch()
     },
     methods: {
         async performSearch() {

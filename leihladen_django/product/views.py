@@ -64,10 +64,11 @@ def search(request):
 
     if query:
         products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     else:
-        return Response({"products": []})
+        products = Product.objects.all()
+    
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetCategories(APIView):
     #API-Endpunkt der alle Kategorien zurückgibt.
