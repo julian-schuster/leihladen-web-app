@@ -282,18 +282,6 @@ export default {
             this.selectedCard = card;
             this.currentPage = 1
         },
-        paginatedWishlists(page) {
-            const startIndex = (page - 1) * this.itemsPerPage;
-            return this.wishlists.slice(startIndex, startIndex + this.itemsPerPage);
-        },
-        paginatedProducts(page) {
-            const startIndex = (page - 1) * this.itemsPerPage;
-            return this.products.slice(startIndex, startIndex + this.itemsPerPage);
-        },
-        paginatedBorrowedProducts(page, borrowedProducts) {
-            const startIndex = (page - 1) * this.itemsPerPage;
-            return borrowedProducts.slice(startIndex, startIndex + this.itemsPerPage);
-        },
         onPageChange(page) {
             this.currentPage = page;
         },

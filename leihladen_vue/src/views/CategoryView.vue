@@ -4,7 +4,11 @@
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">{{ category.name }}</h2>
       </div>
-      <ProductBox v-for="product in category.products" v-bind:key="product.id" v-bind:product="product" />
+      <ProductBox v-for="product in visibleProducts" v-bind:key="product.id" v-bind:product="product" />
+      <div class="column is-12">
+        <Pagination v-if="category.products.length > 8" :totalItems="category.products.length"
+          :itemsPerPage="itemsPerPage" :currentPage="currentPage" :totalPages="totalPages" @input="onPageChange" />
+      </div>
     </div>
   </div>
 </template>
@@ -13,6 +17,7 @@
 import axios from "axios";
 import { toast } from "bulma-toast";
 import ProductBox from "@/components/ProductBox";
+import Pagination from '@/components/Pagination.vue'
 
 export default {
   name: "Category",
@@ -20,10 +25,13 @@ export default {
     return {
       category: {
         products: [],
+
       },
+      currentPage: 1,
+      itemsPerPage: 8,
     };
   },
-  components: { ProductBox },
+  components: { ProductBox, Pagination },
   mounted() {
     this.getCategory();
   },
@@ -60,6 +68,28 @@ export default {
         });
       this.$store.commit("setIsLoading", false);
     },
+    onPageChange(page) {
+      this.currentPage = page;
+    },
   },
+  watch: {
+    totalPages(newTotal, oldTotal) {
+      if (newTotal === 1 && oldTotal > 1) {
+        this.currentPage = 1;
+      } else if (this.currentPage > newTotal) {
+        this.currentPage = newTotal;
+      }
+    }
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.category.products.length / this.itemsPerPage);
+    },
+    visibleProducts() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.category.products.slice(start, end);
+    }
+  }
 };
 </script>

@@ -5,7 +5,11 @@
                 <h1 class="title">Suche</h1>
                 <h2 class="is-size-5 has-text-grey">Suchbegriff: "{{ query }}"</h2>
             </div>
-            <ProductBox v-for="product in products" v-bind:key="product.id" v-bind:product="product" />
+            <ProductBox v-for="product in visibleProducts" v-bind:key="product.id" v-bind:product="product" />
+            <div class="column is-12">
+                <Pagination v-if="products.length > 8" :totalItems="products.length" :itemsPerPage="itemsPerPage"
+                    :currentPage="currentPage" :totalPages="totalPages" @input="onPageChange" />
+            </div>
         </div>
     </div>
 </template>
@@ -13,16 +17,20 @@
 <script>
 import axios from 'axios'
 import ProductBox from '@/components/ProductBox.vue'
+import Pagination from '@/components/Pagination.vue'
 
 export default {
     name: 'Search',
     components: {
-        ProductBox
+        ProductBox,
+        Pagination
     },
     data() {
         return {
             products: [],
-            query: ''
+            query: '',
+            currentPage: 1,
+            itemsPerPage: 8,
         }
     },
     mounted() {
@@ -47,6 +55,28 @@ export default {
                     console.log(error);
                 })
             this.$store.commit('setIsLoading', false)
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+        },
+    },
+    watch: {
+        totalPages(newTotal, oldTotal) {
+            if (newTotal === 1 && oldTotal > 1) {
+                this.currentPage = 1;
+            } else if (this.currentPage > newTotal) {
+                this.currentPage = newTotal;
+            }
+        }
+    },
+    computed: {
+        totalPages() {
+            return Math.ceil(this.products.length / this.itemsPerPage);
+        },
+        visibleProducts() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.products.slice(start, end);
         }
     }
 }

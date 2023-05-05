@@ -5,26 +5,29 @@
                 <h1 class="title has-text-centered">Übersicht und QR-Code der Wunschliste</h1>
             </div>
             <div class="column is-12 box">
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Artikel</th>
-                            <th class="has-text-centered">Anzahl</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-                            <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
-                            <td class="has-text-centered">{{ item.quantity }}</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td class="has-text-centered">{{ wishlistTotalLength }}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="table-container">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Artikel</th>
+                                <th class="has-text-centered">Anzahl</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+                                <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
+                                </td>
+                                <td class="has-text-centered">{{ item.quantity }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td class="has-text-centered">{{ wishlistTotalLength }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
             <div class="column is-12 box center-box">
                 <h2 class="subtitle">QR-Code</h2>
@@ -172,6 +175,18 @@ export default {
 </script>
 
 <style scoped>
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0 10px;
+}
+
+@media (min-width: 769px) {
+    .table-container {
+        padding: 0 20px;
+    }
+}
+
 @media (max-width: 768px) {
     .column {
         padding: 0;

@@ -3,7 +3,7 @@
         <div class="columns is-centered">
             <div class="column is-12">
                 <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
-                <div class="table-container">
+                <div class="table-container box">
                     <table class="table is-fullwidth">
                         <thead>
                             <tr>
@@ -50,7 +50,7 @@
             </div>
         </div>
         <hr>
-        <div>
+        <div class="box">
             <h4>Verlauf</h4>
             <div v-for="entry in log" :key="entry.product.id" class="log-entry">
                 <span class="time">{{ entry.time }}</span>: {{ entry.message }}
@@ -115,6 +115,19 @@ export default {
         },
         updateProductAvailability(id, value) {
             const product = this.products.find(p => p.id === id);
+
+            if (!product) {
+                toast({
+                    message: `Dieser Artikel befindet sich nicht mehr im System.`,
+                    type: "is-danger",
+                    dismissible: true,
+                    pauseOnHover: true,
+                    duration: 4000,
+                    position: "bottom-right",
+                });
+
+                return
+            }
             const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
             if (window.confirm(confirmationMessage)) {
 
