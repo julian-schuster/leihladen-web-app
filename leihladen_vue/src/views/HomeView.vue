@@ -128,7 +128,7 @@ export default {
   }
 
   .title {
-    font-size: 18px;
+    font-size: 18pt;
     text-align: center;
   }
 
@@ -141,6 +141,12 @@ export default {
 @media screen and (min-width: 768px) {
   .field.has-addons.has-addons-centered .control input {
     width: 500px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .field.has-addons {
+    justify-content: center;
   }
 }
 

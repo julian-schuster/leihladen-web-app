@@ -24,10 +24,10 @@
         <div class="thumbnails thumbnail" v-if="images.length > 1">
           <div class="columns is-multiline is-centered">
             <div class="column is-12-mobile is-4-tablet is-3-desktop"
-              v-for="(image, index) in        product.get_images       ">
+              v-for="(image, index) in          product.get_images         ">
               <figure class="image is-3by2 highlight">
                 <a @click="currentIndex = index; updatePreview()">
-                  <img v-bind:src=" image.url " alt="Produktbild">
+                  <img v-bind:src="image.url" alt="Produktbild">
                 </a>
               </figure>
             </div>
@@ -40,10 +40,10 @@
           <p class="subtitle is-5">{{ product.name }}</p>
           <hr>
           <label class="label" for="category">Kategorie</label>
-          <p class="subtitle is-5" v-if=" product.get_category_name "><a
-              :href=" `/${product.get_category_name.toLowerCase()}` "
+          <p class="subtitle is-5" v-if="product.get_category_name"><a
+              :href="`/${product.get_category_name.toLowerCase()}`"
               style="  text-decoration: none; color: hsl(0, 0%, 29%);">{{
-              product.get_category_name }}</a></p>
+                product.get_category_name }}</a></p>
           <hr>
           <label class="label" for="description">Beschreibung</label>
           <p class="subtitle is-5">{{ product.description }}</p>
@@ -55,7 +55,7 @@
           <p class="subtitle is-5">{{ product.quantity }}</p>
           <hr>
           <label class="label" for="wishlist_add">Verfügbarkeit</label>
-          <p class="subtitle is-5" v-if=" product.available == 0 " style="color:red"><i class="fas fa-times-circle"></i>
+          <p class="subtitle is-5" v-if="product.available == 0" style="color:red"><i class="fas fa-times-circle"></i>
             {{ product.available }} verfügbar</p>
           <p class="subtitle is-5" v-else style="color:green"><i class="fas fa-check-circle"></i>
             {{ product.available }} verfügbar
@@ -64,11 +64,11 @@
           <label class="label" for="wishlist_add">Zur Wunschliste hinzufügen </label>
           <div class="field has-addons">
             <div class="control">
-              <input type="number" class="input is-rounded" min="1" :max=" product.quantity " v-model=" quantity "
+              <input type="number" class="input is-rounded" min="1" :max="product.quantity" v-model="quantity"
                 placeholder="Menge">
             </div>
             <div class="control">
-              <a class="button" @click=" addToWishlist ">
+              <a class="button" @click="addToWishlist">
                 <span class="icon"><i class="fas fa-plus" style="color:#398378;"></i></span>
               </a>
             </div>
@@ -148,7 +148,7 @@ export default {
       if (filteredProduct.length === 0) {
         if (this.product.quantity < this.quantity) {
           toast({
-            message: `Die Gesamtmenge des Artikels "${this.product.name}" auf Ihrer Wunschliste entspricht bereits dem Bestand.`,
+            message: `Sie können nicht mehr Artikel zur Wunschliste hinzufügen, als aktuell im Bestand sind.`,
             type: "is-danger",
             dismissible: true,
             pauseOnHover: true,
@@ -229,5 +229,22 @@ export default {
 .thumbnail img {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .label {
+    text-align: center;
+  }
+
+  .subtitle {
+    text-align: center;
+  }
+
+  .field.has-addons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }
 </style>

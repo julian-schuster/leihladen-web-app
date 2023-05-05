@@ -4,16 +4,27 @@
             <div class="column is-12">
                 <h1 class="title has-text-centered">Wunschliste Scannen</h1>
             </div>
-            <div class="column is-6 is-centered">
+            <div class="column is-6-desktop is-12-mobile is-centered">
                 <div class="box">
                     <p class="error">{{ error }}</p>
                     <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
                         <div class="lds-dual-ring"></div>
                     </div>
+                    <p class="error" v-if="noFrontCamera">
+                        Sie scheinen keine Frontkamera an Ihrem Gerät zu haben.
+                    </p>
+                    <p class="error" v-if="noRearCamera">
+                        Sie scheinen keine Rückkamera an Ihrem Gerät zu haben.
+                    </p>
                     <qrcode-stream :camera="camera" @decode="onDecode" @init="onInit" v-show="show"></qrcode-stream>
                 </div>
+                <div class="has-text-centered">
+                    <button class="button is-info" @click="switchCamera"
+                        v-if="isMobile() === 'rear' || isMobile() === 'front'">Kamera
+                        wechseln</button>
+                </div>
             </div>
-            <div class="column is-12">
+            <div class="column is-12" v-if="wishlist.items.length > 0">
                 <h3 class="has-text-centered">Wunschliste: {{ wishlist.client_id }}</h3>
                 <div class="table-container">
                     <table class="table is-fullwidth">
@@ -88,7 +99,9 @@ export default {
                 client_id: '',
             },
             products: [],
-            camera: 'auto',
+            camera: this.isMobile(),
+            noRearCamera: false,
+            noFrontCamera: false,
             error: '',
             show: true,
             log: []
@@ -100,6 +113,33 @@ export default {
         this.getProducts()
     },
     methods: {
+        isMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                return 'rear'
+            } else {
+                return 'auto'
+            }
+        },
+        checkIsMobile() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                return 'true'
+            } else {
+                return 'false'
+            }
+        },
+        switchCamera() {
+            switch (this.camera) {
+                case 'front':
+                    this.camera = 'rear'
+                    break
+                case 'rear':
+                    this.camera = 'front'
+                    break
+                case 'pause':
+                    this.camera = this.isMobile()
+                    break
+            }
+        },
         onDecode(decodedString) {
             const client_id = decodedString
             axios.get(`/api/v1/wishlist/${client_id}/`)
@@ -111,10 +151,12 @@ export default {
                 .catch(error => {
                     console.error(error)
                 })
-            this.turnCameraOn()
+            // setTimeout(() => {
+            this.turnCameraOn();
+            // }, 500);
         },
         turnCameraOn() {
-            this.camera = 'auto'
+            this.camera = this.isMobile()
         },
         turnCameraOff() {
             this.show = false
@@ -130,6 +172,17 @@ export default {
             try {
                 await promise
             } catch (error) {
+                const triedFrontCamera = this.camera === 'front'
+                const triedRearCamera = this.camera === 'rear'
+                const cameraMissingError = error.name === 'OverconstrainedError'
+
+                if (triedRearCamera && cameraMissingError) {
+                    this.noRearCamera = true
+                }
+
+                if (triedFrontCamera && cameraMissingError) {
+                    this.noFrontCamera = true
+                }
                 if (error.name === 'NotAllowedError') {
                     this.error = "ERROR: Sie müssen der Kamera eine Zugriffsberechtigung erteilen"
                 } else if (error.name === 'NotFoundError') {

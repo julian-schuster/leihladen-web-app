@@ -6,8 +6,10 @@
 
             <a @click="incrementQuanitity(item)" style="color:green">+</a>
         </td>
+        <td class="has-text-centered">{{ item.product.quantity }}</td>
         <td>
             <span v-for="product in products" :key="product.id">
+
                 <div v-if="item.product.name === product.name">
                     <div v-if="product.available == 0" style="color:red" class="has-text-centered"> {{ product.available }}
                     </div>

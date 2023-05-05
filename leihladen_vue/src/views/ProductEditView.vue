@@ -75,8 +75,8 @@
                             <label class="label">Bilder</label>
                             <div class="drag-and-drop has-text-centered control">
                                 <div class="box">
-                                    <input id="image" class="file-input" type="file" accept="image/jpeg, image/jpg"
-                                        @change="handleFileUpload" multiple />
+                                    <input id="image" class="file-input" type="file"
+                                        accept="image/jpeg, image/jpg, image/png" @change="handleFileUpload" multiple />
                                     <div class="drag-text">
                                         <i class="fas fa-cloud-upload-alt fa-2x"></i>
                                         <h3 class="title is-4">Bilder hierher ziehen oder klicken</h3>
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                             <p class="help is-danger" v-if="!validImages">
-                                Bitte laden Sie Bilddateien (jpg, jpeg) hoch.
+                                Bitte laden Sie Bilddateien (jpg, jpeg, png) hoch.
                             </p>
                         </div>
                         <div class="control">

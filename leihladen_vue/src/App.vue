@@ -12,7 +12,7 @@
         </a>
       </div>
       <div class="navbar-menu" id="navbar-menu" v-bind:class="{ 'is-active': showMobileMenu }">
-        <div class="navbar-start">
+        <div class="navbar-start is-hidden-touch">
           <div class="navbar-item">
             <form method="get" action="/search">
               <div class="field has-addons">
@@ -30,11 +30,27 @@
             </form>
           </div>
         </div>
-        <div class="navbar-end">
-          <!-- Start Mobile Menu Start -->
-          <div class="navbar-item is-hidden-desktop" v-show="showMobileMenu">
+        <!-- Start Mobile Menu Start -->
+        <div class="has-text-centered is-hidden-desktop" v-show="showMobileMenu"
+          style="margin-top: 10px; margin-bottom: 10px;">
+          <form method="get" action="/search">
+            <div class="field has-addons" style="justify-content: center;">
+              <div class="control">
+                <input type="text" class="input" placeholder="Nach Artikel suchen" name="query">
+              </div>
+              <div class="control">
+                <button class="button">
+                  <span class="icon">
+                    <i class="fas fa-search" style="color:#398378;"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="is-flex is-justify-content-center" style="display: flex; flex-wrap: wrap;">
             <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
-              class="navbar-item">
+              class="category-link">
               <span class="icon" v-if="category.name == 'Garten'" style="color:green"><i
                   class="fas fa-seedling"></i></span>
               <span class="icon" v-if="category.name == 'Sport'"><i class="fas fa-futbol"></i></span>
@@ -43,10 +59,13 @@
                   class="fas fa-home"></i></span>
               <span class="icon" v-if="category.name == 'Spiele'" style="color:purple"><i
                   class="fas fa-dice-six"></i></span>
-              <span>{{ category.name }}</span>
+              {{ category.name }}
             </a>
           </div>
-          <!-- Ende Mobile Menu -->
+          <hr>
+        </div>
+        <!-- Ende Mobile Menu -->
+        <div class="navbar-end">
           <div class="navbar-item has-text-centered">
             <div class="buttons is-flex is-justify-content-center is-align-items-center">
               <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
@@ -247,6 +266,7 @@ footer {
   .footer {
     font-size: 14px;
   }
+
 }
 
 .navbutton {
@@ -261,5 +281,11 @@ footer {
 .input:focus {
   border-color: #398378;
   box-shadow: 0 0 10px 2px rgba(57, 131, 120, 0.5);
+}
+
+.category-link {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-top: 8px;
 }
 </style>
