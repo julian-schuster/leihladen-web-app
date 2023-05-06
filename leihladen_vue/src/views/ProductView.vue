@@ -14,12 +14,8 @@
     </nav>
     <div class="columns">
       <div class="column is-7">
-        <div class="preview">
-          <figure class="image is-4by3 thumbnail is-hidden-mobile">
-            <a style="cursor: default;">
-              <img v-bind:src="currentPreview" alt="Produktbild">
-            </a>
-          </figure>
+        <div class="image has-text-centered is-hidden-mobile">
+          <VueMagnifier :src="currentPreview" v-if="currentPreview" width="400px" height="400px" />
         </div>
         <div class="thumbnails thumbnail" v-if="images.length > 1">
           <div class="columns is-multiline is-centered">
@@ -83,9 +79,13 @@
 <script>
 import axios from "axios";
 import { toast } from "bulma-toast";
-
+import VueMagnifier from '@websitebeaver/vue-magnifier'
+import '@websitebeaver/vue-magnifier/styles.css'
 export default {
   name: "Product",
+  components: {
+    VueMagnifier
+  },
   data() {
     return {
       product: {},
