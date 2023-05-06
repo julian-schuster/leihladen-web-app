@@ -126,7 +126,7 @@
                                                                     <i class="fa fa-edit"></i>
                                                                 </router-link>
 
-                                                                <span @click="deleteProduct(product.id)"
+                                                                <span @click="deleteProduct(product.id, product)"
                                                                     class="delete-wrapper">
                                                                     <i class="fa fa-trash delete-icon"></i>
                                                                 </span>
@@ -217,14 +217,14 @@
                                                                     <a @click="category.editing = true">
                                                                         <i class="fa fa-edit"></i>
                                                                     </a>
-                                                                    <span @click="deleteCategory(category.id)"
+                                                                    <span @click="deleteCategory(category)"
                                                                         class="delete-wrapper">
                                                                         <i class="fa fa-trash delete-icon"></i>
                                                                     </span>
                                                                 </div>
                                                                 <div v-else>
                                                                     <button class="button is-small"
-                                                                        @click="updateCategory(category.id, category)">
+                                                                        @click="updateCategory(category)">
                                                                         <i class="fa fa-check"></i>
                                                                     </button>
                                                                     <button class="button is-small"
@@ -269,7 +269,7 @@
                                                 </span>
                                                 <span>{{ showAddCategory ? 'Abbrechen' : 'Kategorie hinzufügen' }}</span>
                                             </button>
-                                            <span v-if="showAddCategory">
+                                            <div v-if="showAddCategory">
                                                 <div class="field">
                                                     <label class="label">Kategorienamen eingeben:</label>
                                                     <div class="control">
@@ -281,7 +281,7 @@
                                                     :disabled="categoryName === ''"><span class="icon"><i
                                                             class="fas fa-save"></i></span> <span>Speichern</span>
                                                 </button>
-                                            </span>
+                                            </div>
                                             <router-link to="/wishlist/scan" class="button">
                                                 <span class="icon"><i class="fas fa-qrcode"
                                                         style="color: #EFA00B;"></i></span>
@@ -356,33 +356,60 @@ export default {
                 .post(`/api/v1/category/`, { categoryName: this.categoryName })
                 .then((response) => {
                     this.getCategories()
+
+                    toast({
+                        message: `Kategorie '${this.categoryName}' wurde hinzugefügt.`,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+
                 })
                 .catch((error) => {
                     console.log(error);
                 });
 
         },
-        deleteCategory(id) {
-            if (confirm("Sind Sie sicher, dass Sie diese Kategorie löschen möchten?")) {
+        deleteCategory(category) {
+            if (confirm(`Sind Sie sicher, dass Sie Kategorie '${category.name}' löschen möchten?`)) {
                 axios
-                    .delete(`/api/v1/category/${id}`)
+                    .delete(`/api/v1/category/${category.id}`)
                     .then((response) => {
                         this.getCategories()
+
+                        toast({
+                            message: `Kategorie '${category.name}' wurde entfernt.`,
+                            type: "is-success",
+                            dismissible: true,
+                            pauseOnHover: true,
+                            duration: 4000,
+                            position: "bottom-right",
+                        });
                     })
                     .catch((error) => {
                         console.log(error);
                     });
             }
         },
-        updateCategory(id, category) {
+        updateCategory(category) {
 
-            console.log(category);
             category.editing = false;
 
             axios
-                .put(`/api/v1/category/`, { id: id, newName: category.newName })
+                .put(`/api/v1/category/`, { id: category.id, newName: category.newName })
                 .then((response) => {
                     this.getCategories()
+
+                    toast({
+                        message: `Kategorie '${category.name}' wurde zu '${category.newName}' umbenannt.`,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
                 })
                 .catch((error) => {
                     console.log(error);
@@ -433,8 +460,8 @@ export default {
         onPageChange(page) {
             this.currentPage = page;
         },
-        deleteProduct(id) {
-            if (confirm("Sind Sie sicher, dass Sie diesen Artikel löschen möchten?")) {
+        deleteProduct(id, product) {
+            if (confirm(`Sind Sie sicher, dass Sie Artikel '${product.name}' löschen möchten?`)) {
                 axios
                     .delete(`/api/v1/product/${id}`)
                     .then((response) => {
@@ -443,7 +470,7 @@ export default {
                         this.products = this.products.filter(product => product.id !== id);
 
                         toast({
-                            message: "Artikel wurde entfernt",
+                            message: `Artikel '${product.name}' wurde entfernt.`,
                             type: "is-success",
                             dismissible: true,
                             pauseOnHover: true,
