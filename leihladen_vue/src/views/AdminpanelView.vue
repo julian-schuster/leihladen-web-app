@@ -373,7 +373,7 @@ export default {
 
         },
         deleteCategory(category) {
-            if (confirm(`Sind Sie sicher, dass Sie Kategorie '${category.name}' löschen möchten?`)) {
+            if (confirm(`Sind Sie sicher, dass Sie Kategorie '${category.name}' löschen möchten? ACHTUNG: Alle Artikel in dieser Kategorie werden auch entfernt.`)) {
                 axios
                     .delete(`/api/v1/category/${category.id}`)
                     .then((response) => {
