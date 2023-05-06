@@ -3,11 +3,12 @@ from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 
 class Category(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True, max_length=255)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('id',)
     
     def __str__(self):
         return self.name
@@ -16,6 +17,7 @@ class Category(models.Model):
         return f'/{self.slug}/'
 
 class Product(models.Model):
+    id = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True, max_length=255)

@@ -48,6 +48,11 @@ export default {
     },
     mounted() {
         document.title = 'Admin Login | Leihladen'
+
+        if (this.$store.state.isAuthenticated) {
+            this.$router.push("/adminpanel")
+        }
+
     },
     methods: {
         async submitForm() {

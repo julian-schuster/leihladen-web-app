@@ -77,6 +77,40 @@ class GetCategories(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class CategoryManagement(APIView):
+    permission_classes = [IsAuthenticated]
+    #API-Endpunkt der eine neue Kategorie erstellt, bearbeitet und entfernt
+
+    #Neue Kategorie erstellen
+    def post(self, request):
+        categoryName = request.data.get('categoryName')
+        categorySlug = slugify(categoryName, allow_unicode=True)
+        category = Category(name=categoryName, slug=categorySlug)
+        category.save()
+        return Response(status=status.HTTP_201_CREATED)
+      
+
+    #Kategorie bearbeiten
+    def put(self, request):
+        categoryId = request.data.get('id')
+        categoryNewName = request.data.get('newName')
+        category = Category.objects.get(id=categoryId)
+        category.name = categoryNewName
+        category.slug = slugify(categoryNewName)
+        category.save()
+        return Response(status=status.HTTP_200_OK)
+
+    #Kategorie löschen
+    def delete(self, request, id):
+        try:
+            category = Category.objects.get(id=id)
+            category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Product.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class GetWishlist(APIView):
     #API-Endpunkt der die Wunschliste eines bestimmten Benutzers zurückgibt.
     def get(self, request, client_id, format=None):

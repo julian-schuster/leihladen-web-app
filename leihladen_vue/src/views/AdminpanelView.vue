@@ -38,17 +38,19 @@
                                 <p class="subtitle">Artikel ausgeliehen</p>
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box ">
-                                <p class="title"><i class="fas fa-chart-pie" style="color: #3498DB;"></i> {{
-                                    calculateUtilization }}%</p>
-                                <p class="subtitle">Auslastung</p>
+                        <div class="tile is-parent" @click="showCard('categories')">
+                            <article class="tile is-child box tile-box"
+                                :class="{ 'selected': selectedCard === 'categories' }">
+                                <p class="title"><i class="fa fa-folder-open" style="color: #a278f0fd;"></i>
+                                    {{ this.categories.length }}
+                                </p>
+                                <p class="subtitle">Kategorien</p>
                             </article>
                         </div>
                     </div>
                 </section>
 
-                <div class="columns">
+                <div class="columns is-multiline">
                     <div class="column is-6">
                         <section class="info-tiles">
                             <div>
@@ -70,8 +72,8 @@
                                                     <thead>
                                                         <tr>
 
-                                                            <th>ID:</th>
-                                                            <th>Erstellt am:</th>
+                                                            <th>ID</th>
+                                                            <th>Erstellt am</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -173,6 +175,72 @@
                                                     @input="onPageChange" />
                                             </div>
                                         </div>
+                                        <div class="card" v-else-if="selectedCard === 'categories'">
+                                            <div class="card-content">
+                                                <p class="title has-text-centered">Kategorien</p>
+                                                <div class="field">
+                                                    <p class="control has-icons-left">
+                                                        <input class="input" type="text" placeholder="Suche Kategorie"
+                                                            v-model="searchCategoriesQuery">
+                                                        <span class="icon is-small is-left">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <table class="table is-fullwidth">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(category, index) in paginatedCategories" :key="index">
+                                                            <td>
+                                                                <div v-if="!category.editing">
+                                                                    <router-link :to="category.name.toLowerCase()">
+                                                                        {{ category.name }}
+                                                                    </router-link>
+                                                                </div>
+                                                                <div v-else>
+                                                                    <div class="field">
+                                                                        <div class="control">
+                                                                            <input class="input" type="text" maxlength="30"
+                                                                                v-model="category.newName"
+                                                                                :placeholder="`${category.name}`">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="has-text-right">
+                                                                <div v-if="!category.editing">
+                                                                    <a @click="category.editing = true">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
+                                                                    <span @click="deleteCategory(category.id)"
+                                                                        class="delete-wrapper">
+                                                                        <i class="fa fa-trash delete-icon"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div v-else>
+                                                                    <button class="button is-small"
+                                                                        @click="updateCategory(category.id, category)">
+                                                                        <i class="fa fa-check"></i>
+                                                                    </button>
+                                                                    <button class="button is-small"
+                                                                        @click="category.editing = false">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <Pagination v-if="totalCategoriesPages > 1"
+                                                    :totalItems="filteredCategories.length" :itemsPerPage="itemsPerPage"
+                                                    :currentPage="currentPage" @input="onPageChange" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -190,11 +258,33 @@
                                     <div class="buttons">
                                         <div class="column is-12">
                                             <router-link to="/product/create" class="button">
-                                                <span class="icon"><i class="fas fa-plus" style="color: green;"></i> </span>
+                                                <span class="icon"><i class="fas fa-plus" style="color: #A9DF9C;"></i>
+                                                </span>
                                                 <span> Artikel hinzufügen</span>
                                             </router-link>
+                                            <button class="button" @click="showAddCategory = !showAddCategory">
+                                                <span class="icon">
+                                                    <i :class="showAddCategory ? 'fas fa-times' : 'fas fa-plus'"
+                                                        :style="{ color: showAddCategory ? 'red' : '#a278f0fd' }"></i>
+                                                </span>
+                                                <span>{{ showAddCategory ? 'Abbrechen' : 'Kategorie hinzufügen' }}</span>
+                                            </button>
+                                            <span v-if="showAddCategory">
+                                                <div class="field">
+                                                    <label class="label">Kategorienamen eingeben:</label>
+                                                    <div class="control">
+                                                        <input class="input" type="text" maxlength="30"
+                                                            v-model="categoryName">
+                                                    </div>
+                                                </div>
+                                                <button class="button" @click="saveCategory"
+                                                    :disabled="categoryName === ''"><span class="icon"><i
+                                                            class="fas fa-save"></i></span> <span>Speichern</span>
+                                                </button>
+                                            </span>
                                             <router-link to="/wishlist/scan" class="button">
-                                                <span class="icon"><i class="fas fa-qrcode" style="color: blue;"></i></span>
+                                                <span class="icon"><i class="fas fa-qrcode"
+                                                        style="color: #EFA00B;"></i></span>
                                                 <span>Wunschliste Scannen</span>
                                             </router-link>
                                             <button @click="logout()" class="button">
@@ -203,6 +293,21 @@
                                             </button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card" style=" align-items: center; justify-content: center;">
+                            <header class="card-header">
+                                <p class="card-header-title is-centered">
+                                    Auslastung
+                                </p>
+                            </header>
+                            <div class="card-content">
+                                <div class="content">
+                                    <div class="title has-text-centered"><i class="fas fa-chart-pie"
+                                            style="color: #3498DB;"></i> {{
+                                                calculateUtilization }}%</div>
                                 </div>
                             </div>
                         </div>
@@ -227,6 +332,7 @@ export default {
         return {
             products: [],
             wishlists: [],
+            categories: [],
             wishlistCount: 0,
             productsAvailable: 0,
             productsNotAvailable: 0,
@@ -237,9 +343,51 @@ export default {
             searchWishlistQuery: '',
             searchProductQuery: '',
             searchNotAvailableProductQuery: '',
+            searchCategoriesQuery: '',
+            showAddCategory: false,
+            categoryName: "",
         }
     },
     methods: {
+        saveCategory() {
+            this.showAddCategory = false;
+
+            axios
+                .post(`/api/v1/category/`, { categoryName: this.categoryName })
+                .then((response) => {
+                    this.getCategories()
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+        },
+        deleteCategory(id) {
+            if (confirm("Sind Sie sicher, dass Sie diese Kategorie löschen möchten?")) {
+                axios
+                    .delete(`/api/v1/category/${id}`)
+                    .then((response) => {
+                        this.getCategories()
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        },
+        updateCategory(id, category) {
+
+            console.log(category);
+            category.editing = false;
+
+            axios
+                .put(`/api/v1/category/`, { id: id, newName: category.newName })
+                .then((response) => {
+                    this.getCategories()
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         logout() {
             axios.defaults.headers.common["Authorization"] = ""
 
@@ -307,13 +455,24 @@ export default {
                         console.log(error);
                     });
             }
-        }
+        },
+        getCategories() {
+            axios
+                .get(`/api/v1/categories`)
+                .then((response) => {
+                    this.categories = response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     },
     mounted() {
         document.title = 'Adminpanel | Leihladen'
         this.$store.commit("setIsLoading", true);
         this.getProducts();
         this.getWishlists();
+        this.getCategories();
 
     },
     watch: {
@@ -406,6 +565,25 @@ export default {
             const startIndex = (this.currentPage - 1) * this.itemsPerPage
             return this.filteredNotAvailableProducts.slice(startIndex, startIndex + this.itemsPerPage)
         },
+        filteredCategories() {
+            const searchQuery = this.searchCategoriesQuery.toLowerCase();
+            this.currentPage = 1
+
+            if (!searchQuery) {
+                return this.categories
+            }
+
+            return this.categories.filter((category) => {
+                return category.name.toLowerCase().includes(searchQuery);
+            });
+        },
+        totalCategoriesPages() {
+            return Math.ceil(this.filteredCategories.length / this.itemsPerPage);
+        },
+        paginatedCategories() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            return this.filteredCategories.slice(startIndex, startIndex + this.itemsPerPage)
+        }
     }
 }
 </script>
