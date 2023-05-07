@@ -30,7 +30,8 @@
                     </div>
                     <div class="field">
                         <label class="label">Bilder</label>
-                        <div class="drag-and-drop has-text-centered control">
+                        <div class="drag-and-drop has-text-centered control highlight" @dragover="handleDragOver"
+                            @dragleave="handleDragLeave" @drop="handleDrop">
                             <div class="box">
                                 <input id="image" class="file-input" type="file" accept="image/jpeg, image/jpg, image/png"
                                     @change="handleFileUpload" multiple />
@@ -107,6 +108,17 @@ export default {
         this.getCategories()
     },
     methods: {
+        handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+            event.currentTarget.classList.add("dragging-over");
+        },
+        handleDragLeave(event) {
+            event.currentTarget.classList.remove("dragging-over");
+        },
+        handleDrop(event) {
+            event.currentTarget.classList.remove("dragging-over");
+        },
         async getCategories() {
             await axios
                 .get(`/api/v1/categories`)
@@ -261,5 +273,23 @@ export default {
 .images-container {
     display: flex;
     justify-content: space-between;
+}
+
+.highlight {
+    border: 2px solid transparent;
+    transition: border-color 0.3s, transform 0.3s;
+}
+
+.highlight:hover {
+    border-color: #398378;
+    transform: scale(1.05);
+    background-color: rgb(245, 245, 245);
+}
+
+.drag-and-drop.dragging-over {
+    border: 2px solid #398378;
+    transform: scale(1.05);
+    background-color: rgb(245, 245, 245);
+
 }
 </style>

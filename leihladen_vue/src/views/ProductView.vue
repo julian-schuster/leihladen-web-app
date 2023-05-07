@@ -175,16 +175,28 @@ export default {
         }
       }
 
-      this.$store.commit("addToWishlist", item);
+      if (item.quantity > 0) {
+        this.$store.commit("addToWishlist", item);
 
-      toast({
-        message: `Der Artikel "${this.product.name}" wurde ${this.quantity}x zur Wunschliste hinzugefügt`,
-        type: "is-success",
-        dismissible: true,
-        pauseOnHover: true,
-        duration: 4000,
-        position: "bottom-right",
-      });
+        toast({
+          message: `Der Artikel "${this.product.name}" wurde ${this.quantity}x zur Wunschliste hinzugefügt`,
+          type: "is-success",
+          dismissible: true,
+          pauseOnHover: true,
+          duration: 4000,
+          position: "bottom-right",
+        });
+      } else if (item.quantity == 0) {
+        toast({
+          message: `Die Stückzahl muss mindestens 1 betragen.`,
+          type: "is-danger",
+          dismissible: true,
+          pauseOnHover: true,
+          duration: 4000,
+          position: "bottom-right",
+        });
+      }
+
     },
   }
 };
