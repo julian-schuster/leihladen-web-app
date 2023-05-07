@@ -222,15 +222,14 @@
                                                                         <i class="fa fa-trash delete-icon"></i>
                                                                     </span>
                                                                 </div>
-                                                                <div v-else>
-                                                                    <button class="button is-small"
-                                                                        @click="updateCategory(category)">
+                                                                <div v-else style="margin-top:10px; white-space: nowrap;">
+                                                                    <a @click="updateCategory(category)"
+                                                                        style="margin-right: 15px;">
                                                                         <i class="fa fa-check"></i>
-                                                                    </button>
-                                                                    <button class="button is-small"
-                                                                        @click="category.editing = false">
+                                                                    </a>
+                                                                    <a @click="category.editing = false">
                                                                         <i class="fa fa-times"></i>
-                                                                    </button>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -256,41 +255,51 @@
                             <div class="card-content">
                                 <div class="content">
                                     <div class="buttons">
-                                        <div class="column is-12">
-                                            <router-link to="/product/create" class="button">
-                                                <span class="icon"><i class="fas fa-plus" style="color: #A9DF9C;"></i>
-                                                </span>
-                                                <span> Artikel hinzufügen</span>
-                                            </router-link>
-                                            <button class="button" @click="showAddCategory = !showAddCategory">
-                                                <span class="icon">
-                                                    <i :class="showAddCategory ? 'fas fa-times' : 'fas fa-plus'"
-                                                        :style="{ color: showAddCategory ? 'red' : '#a278f0fd' }"></i>
-                                                </span>
-                                                <span>{{ showAddCategory ? 'Abbrechen' : 'Kategorie hinzufügen' }}</span>
-                                            </button>
-                                            <div v-if="showAddCategory">
-                                                <div class="field">
-                                                    <label class="label">Kategorienamen eingeben:</label>
-                                                    <div class="control">
-                                                        <input class="input" type="text" maxlength="30"
-                                                            v-model="categoryName">
-                                                    </div>
-                                                </div>
-                                                <button class="button" @click="saveCategory"
-                                                    :disabled="categoryName && categoryName === ''"><span class="icon"><i
-                                                            class="fas fa-save"></i></span> <span>Speichern</span>
+                                        <div class="column is-12 has-text-centered">
+                                            <span>
+                                                <router-link to="/product/create" class="button">
+                                                    <span class="icon"><i class="fas fa-plus" style="color: #A9DF9C;"></i>
+                                                    </span>
+                                                    <span> Artikel hinzufügen</span>
+                                                </router-link>
+                                            </span>
+                                            <span>
+                                                <button class="button" @click="showAddCategory = !showAddCategory">
+                                                    <span class="icon">
+                                                        <i :class="showAddCategory ? 'fas fa-times' : 'fas fa-plus'"
+                                                            :style="{ color: showAddCategory ? 'red' : '#a278f0fd' }"></i>
+                                                    </span>
+                                                    <span>{{ showAddCategory ? 'Abbrechen' : 'Kategorie hinzufügen'
+                                                    }}</span>
                                                 </button>
-                                            </div>
-                                            <router-link to="/wishlist/scan" class="button">
-                                                <span class="icon"><i class="fas fa-qrcode"
-                                                        style="color: #EFA00B;"></i></span>
-                                                <span>Wunschliste scannen</span>
-                                            </router-link>
-                                            <button @click="logout()" class="button">
-                                                <span class="icon"><i class="fas fa-sign-out-alt"
-                                                        style="color: red;"></i></span> <span> Logout</span>
-                                            </button>
+                                                <div v-if="showAddCategory">
+                                                    <div class="field">
+                                                        <label class="label">Kategorienamen eingeben:</label>
+                                                        <div class="control">
+                                                            <input class="input" type="text" maxlength="30"
+                                                                v-model="categoryName">
+                                                        </div>
+                                                    </div>
+                                                    <button class="button" @click="saveCategory"
+                                                        :disabled="categoryName && categoryName === ''"><span
+                                                            class="icon"><i class="fas fa-save"></i></span>
+                                                        <span>Speichern</span>
+                                                    </button>
+                                                </div>
+                                            </span>
+                                            <span>
+                                                <router-link to="/wishlist/scan" class="button">
+                                                    <span class="icon"><i class="fas fa-qrcode"
+                                                            style="color: #EFA00B;"></i></span>
+                                                    <span>Wunschliste scannen</span>
+                                                </router-link>
+                                            </span>
+                                            <span>
+                                                <button @click="logout()" class="button">
+                                                    <span class="icon"><i class="fas fa-sign-out-alt"
+                                                            style="color: red;"></i></span> <span> Logout</span>
+                                                </button>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -644,13 +653,39 @@ export default {
     display: inline-flex;
     align-items: center;
     width: 200px;
+    margin-right: 7px;
+    margin-top: 7px;
 }
 
 .buttons .button i {
     margin-left: 0.5em;
 }
 
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    white-space: nowrap;
+    padding: 0.5rem;
+}
+
+.button i {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    align-items: center;
+}
+
 .product-name {
     word-break: break-all;
+}
+
+a:hover i.fa-check {
+    color: green;
+}
+
+a:hover i.fa-times {
+    color: red;
 }
 </style>

@@ -93,6 +93,7 @@ export default {
                 })
                 .catch(error => {
                     console.error(error)
+                    this.$router.push("/")
                 })
         },
         getProducts() {
@@ -128,6 +129,7 @@ export default {
 
                 return
             }
+
             const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
             if (window.confirm(confirmationMessage)) {
 
