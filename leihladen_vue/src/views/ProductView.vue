@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="product.name">
     <nav class="breadcrumb" aria-label="breadcrumbs">
       <ul>
         <li><a href="/"><span class="icon"><i class="fas fa-home"></i></span></a></li>

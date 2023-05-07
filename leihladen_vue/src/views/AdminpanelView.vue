@@ -278,14 +278,14 @@
                                                     </div>
                                                 </div>
                                                 <button class="button" @click="saveCategory"
-                                                    :disabled="categoryName === ''"><span class="icon"><i
+                                                    :disabled="categoryName && categoryName === ''"><span class="icon"><i
                                                             class="fas fa-save"></i></span> <span>Speichern</span>
                                                 </button>
                                             </div>
                                             <router-link to="/wishlist/scan" class="button">
                                                 <span class="icon"><i class="fas fa-qrcode"
                                                         style="color: #EFA00B;"></i></span>
-                                                <span>Wunschliste Scannen</span>
+                                                <span>Wunschliste scannen</span>
                                             </router-link>
                                             <button @click="logout()" class="button">
                                                 <span class="icon"><i class="fas fa-sign-out-alt"
@@ -643,6 +643,7 @@ export default {
 .buttons .button {
     display: inline-flex;
     align-items: center;
+    width: 200px;
 }
 
 .buttons .button i {
