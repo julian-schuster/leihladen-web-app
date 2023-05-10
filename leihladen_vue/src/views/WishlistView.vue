@@ -16,6 +16,8 @@
                                 <th class="has-text-centered">Anzahl</th>
                                 <th class="has-text-centered">Bestand</th>
                                 <th class="has-text-centered">Verfügbar</th>
+                                <th class="has-text-centered">Kaution</th>
+                                <th class="has-text-centered">Leihgebühr</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -31,7 +33,19 @@
             <div class="column is-12 box center-box" v-if="wishlistTotalLength">
                 <h4 class="subtitle">Zusammenfassung</h4>
                 <div>{{ wishlistTotalLength }} Artikel</div>
+                <div>
+                    Gesamtkaution: {{ currencyFormatter.format(totalDeposit) }}
+                </div>
+                <div>
+                    Gesamtleihgebühr: {{ currencyFormatter.format(totalFee) }}
+                </div>
                 <hr>
+                <p>Bitte beachten Sie, dass Ihre Wunschliste keine Reservierung darstellt und die Verfügbarkeit der Artikel
+                    sich kurzfristig ändern kann.</p>
+                <p>Die Kaution und Leihgebühr werden nur für verfügbare Artikel erhoben.
+                    Sobald Sie einen Artikel zurückgeben, wird Ihre Kaution zurückerstattet.</p>
+                <p>Ihre Wunschliste wird erst im System vermerkt, sobald Sie auf 'Wunschliste abschließen' klicken.</p>
+
                 <div> <router-link to="/wishlist/checkout" class="button">
                         <span class="icon"><i class="fas fa-check-circle" style="color:green"></i></span>
                         <span>Wunschliste abschließen</span>
@@ -73,7 +87,24 @@ export default {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.quantity
             }, 0)
-        }
+        },
+        totalDeposit() {
+            return this.wishlist.items.reduce((acc, curVal) => {
+                return acc += curVal.product.deposit * curVal.quantity
+            }, 0)
+        },
+        totalFee() {
+            return this.wishlist.items.reduce((acc, curVal) => {
+                return acc += curVal.product.fee * curVal.quantity
+            }, 0)
+        },
+        currencyFormatter() {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+            });
+        },
     }
 }
 </script>

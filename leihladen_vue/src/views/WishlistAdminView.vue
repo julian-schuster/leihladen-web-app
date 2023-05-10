@@ -11,6 +11,8 @@
                                 <th class="has-text-centered">Anzahl</th>
                                 <th class="has-text-centered">Bestand</th>
                                 <th class="has-text-centered">Verfügbar</th>
+                                <th class="has-text-centered">Kaution</th>
+                                <th class="has-text-centered">Leihgebühr</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -26,6 +28,8 @@
                                     style="color:red">{{ getProductAvailable(item.product.id) }}</td>
                                 <td class="has-text-centered" v-else style="color:green">{{
                                     getProductAvailable(item.product.id) }}</td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(item.product.deposit) }}</td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(item.product.fee) }}</td>
                                 <td class="has-text-right">
                                     <a class="button is-success is-light is-small"
                                         @click="updateProductAvailability(item.product.id, 1)">
@@ -83,6 +87,15 @@ export default {
 
         this.getProducts()
         this.getWishlist(this.wishlist_client_id)
+    },
+    computed: {
+        currencyFormatter() {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+            });
+        },
     },
     methods: {
         getWishlist() {

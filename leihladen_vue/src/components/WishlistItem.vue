@@ -5,14 +5,18 @@
                 style="padding-right:10px; padding-left:5px; color: red;">-</a>{{ item.quantity }}
             <a @click="incrementQuanitity(item)" style="color:green">+</a>
         </td>
-        <td class="has-text-centered">{{ getProductCount(item.product.id) }}</td>
+
+        <td class="has-text-centered">{{ product.quantity }}</td>
+
         <td>
-            <div v-if="getProductAvailable(item.product.id) == 0" style="color:red" class="has-text-centered"> {{
-                getProductAvailable(item.product.id) }}
+            <div v-if="product.available == 0" style="color:red" class="has-text-centered"> {{
+                product.available }}
             </div>
-            <div v-else style="color:green" class="has-text-centered"> {{ getProductAvailable(item.product.id) }}
+            <div v-else style="color:green" class="has-text-centered"> {{ product.available }}
             </div>
         </td>
+        <td class="has-text-centered">{{ currencyFormatter.format(item.product.deposit) }}</td>
+        <td class="has-text-centered">{{ currencyFormatter.format(item.product.fee) }}</td>
         <td><button class="delete" @click="removeFromWishlist(item)" style="background-color: red;"></button></td>
     </tr>
 </template>
@@ -29,20 +33,20 @@ export default {
     data() {
         return {
             item: this.initialItem,
-            products: []
+            products: [],
+            product: []
         }
     },
     mounted() {
-        this.getProducts()
+        this.getProduct()
     },
     methods: {
         getItemTotal(item) {
             return item.quantity
         },
         decrementQuanitity(item) {
-            const product = this.products.find(p => p.id === item.product.id);
 
-            if (!product) {
+            if (!this.product) {
                 toast({
                     message: `Dieser Artikel befindet sich nicht mehr im System.`,
                     type: "is-danger",
@@ -82,9 +86,8 @@ export default {
 
         },
         incrementQuanitity(item) {
-            const product = this.products.find(p => p.id === item.product.id);
 
-            if (!product) {
+            if (!this.product) {
                 toast({
                     message: `Dieser Artikel befindet sich nicht mehr im System.`,
                     type: "is-danger",
@@ -97,7 +100,7 @@ export default {
                 return
             }
 
-            if (item.quantity < product.quantity) {
+            if (item.quantity < this.product.quantity) {
                 item.quantity += 1
                 this.updateWishlist()
 
@@ -130,14 +133,15 @@ export default {
                 });
             }
         },
-        async getProducts() {
-            await axios
-                .get(`/api/v1/products`)
+        async getProduct() {
+            axios
+                .get(`/api/v1/products` + this.initialItem.product.get_absolute_url)
                 .then((response) => {
-                    this.products = response.data.products
+                    this.product = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
+
                 });
         },
         getProductAvailable(productId) {
@@ -147,6 +151,15 @@ export default {
         getProductCount(productId) {
             const product = this.products.find(p => p.id === productId);
             return product ? product.quantity : '-';
+        },
+    },
+    computed: {
+        currencyFormatter() {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+            });
         },
     }
 }

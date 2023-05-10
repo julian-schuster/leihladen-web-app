@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="container" v-if="!$store.state.isLoading">
         <form @submit.prevent="updateProduct">
             <div class="columns">
                 <div class="column is-half">
@@ -189,6 +192,7 @@ export default {
         };
     },
     mounted() {
+        this.$store.commit("setIsLoading", true);
         this.getProduct();
         this.getCategories();
     },
@@ -198,6 +202,7 @@ export default {
                 .get(`/api/v1/categories`)
                 .then((response) => {
                     this.categories = response.data;
+                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);

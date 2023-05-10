@@ -47,13 +47,13 @@
             <div class="columns">
               <div class="column is-6">
                 <div class="field">
-                  <label class="label">Gewicht:</label>
+                  <label class="label">Gewicht</label>
                   <div class="control">
                     <span>{{ product.weight }}</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label class="label">Dimension:</label>
+                  <label class="label">Dimension</label>
                   <div class="control">
                     <span>{{ product.dimension }}</span>
                   </div>
@@ -61,13 +61,13 @@
               </div>
               <div class="column is-6">
                 <div class="field">
-                  <label class="label">Kaution:</label>
+                  <label class="label">Kaution</label>
                   <div class="control">
                     <span>{{ product.deposit }}€</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label class="label">Leihgebühr:</label>
+                  <label class="label">Leihgebühr</label>
                   <div class="control">
                     <span>{{ product.fee }}€</span>
                   </div>
@@ -77,7 +77,26 @@
             <div class="columns">
               <div class="column is-6">
                 <div class="field">
-                  <label class="label">Hinzugefügt am:</label>
+                  <label class="label">Kleinteile</label>
+                  <div class="control">
+                    <span v-if="product.smallPieces">Ja</span>
+                    <span v-else>Nein</span>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Bestand</label>
+                  <div class="control">
+                    <span>{{ product.quantity }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Hinzugefügt am</label>
                   <div class="control">
                     <span>{{ product.date_added }}</span>
                   </div>
@@ -85,7 +104,7 @@
               </div>
               <div class="column is-6">
                 <div class="field">
-                  <label class="label">Verfügbarkeit:</label>
+                  <label class="label">Verfügbarkeit</label>
                   <div class="control">
                     <span v-if="product.available == 0" style="color:red"><i class="fas fa-times-circle"></i> Nicht
                       verfügbar</span>

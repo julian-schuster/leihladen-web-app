@@ -266,7 +266,6 @@ footer {
   .footer {
     font-size: 14px;
   }
-
 }
 
 .navbutton {

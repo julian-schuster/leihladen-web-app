@@ -10,19 +10,30 @@
                         <thead>
                             <tr>
                                 <th>Artikel</th>
+                                <th class="has-text-centered">Kaution</th>
+                                <th class="has-text-centered">Leihgebühr</th>
                                 <th class="has-text-centered">Anzahl</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+
                                 <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
                                 </td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(item.product.deposit) }}</td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(item.product.fee) }}</td>
                                 <td class="has-text-centered">{{ item.quantity }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td></td>
+                                <td class="has-text-centered">
+                                    {{ currencyFormatter.format(totalDeposit) }}
+                                </td>
+                                <td class="has-text-centered">
+                                    {{ currencyFormatter.format(totalFee) }}
+                                </td>
                                 <td class="has-text-centered">{{ wishlistTotalLength }}</td>
                             </tr>
                         </tfoot>
@@ -52,17 +63,21 @@ import QRCode from 'qrcode'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { toast } from "bulma-toast";
+
+
+
 export default {
     name: 'WishlistCheckout',
     components: {
         QRCode
     },
     data() {
+
         return {
             wishlist: {
                 items: []
             },
-            clientId: ''
+            clientId: '',
         }
     },
     mounted() {
@@ -130,8 +145,14 @@ export default {
             doc.text(`Erstellt am: ${date}`, doc.internal.pageSize.getWidth() - 60, 30);
 
             // Füge eine Tabelle hinzu
-            const headers = [['Artikel', 'Anzahl']];
-            const data = this.wishlist.items.map(item => [item.product.name, item.quantity]);
+            const headers = [['Artikel', 'Kaution', 'Gebühr', 'Anzahl']];
+            let totalDeposit = 0;
+            let totalFee = 0;
+            const data = this.wishlist.items.map(item => {
+                totalDeposit += item.product.deposit * item.quantity;
+                totalFee += item.product.fee * item.quantity;
+                return [item.product.name, item.product.deposit + ' €', item.product.fee + ' €', item.quantity];
+            });
             doc.autoTable({
                 head: headers,
                 body: data,
@@ -139,11 +160,19 @@ export default {
                 margin: { top: 40 },
             });
 
+            // Füge die Gesamtkaution hinzu
+            doc.setFontSize(12);
+            doc.text(`Gesamtkaution: ${totalDeposit.toFixed(2)} €`, 10, doc.autoTable.previous.finalY + 10);
+
+            // Füge die Gesamtleihgebühr hinzu
+            doc.setFontSize(12);
+            doc.text(`Gesamtleihgebühr: ${totalFee.toFixed(2)} €`, 10, doc.autoTable.previous.finalY + 20);
+
             // Füge den QR-Code hinzu
             QRCode.toDataURL(this.clientId, { errorCorrectionLevel: 'L' }, function (err, url) {
                 if (err) console.error(err);
-                doc.addImage(url, 'PNG', 20, doc.autoTable.previous.finalY + 10, 30, 30);
-                doc.text('Bitte zeigen Sie den QR-Code im Leihladen vor.', 60, doc.autoTable.previous.finalY + 30);
+                doc.addImage(url, 'PNG', 20, doc.autoTable.previous.finalY + 40, 30, 30);
+                doc.text('Bitte zeigen Sie den QR-Code im Leihladen vor.', 60, doc.autoTable.previous.finalY + 60);
 
                 // Füge den Footer hinzu
                 const contactInfo = 'Kontakt:\nMusterstraße 123, 12345 Musterstadt\ninfo@leihladen.de\n0123 / 456 789';
@@ -158,18 +187,31 @@ export default {
             });
         }
 
-
-
-
-
-
     },
     computed: {
         wishlistTotalLength() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.quantity
             }, 0)
-        }
+        },
+        totalDeposit() {
+            return this.wishlist.items.reduce((acc, curVal) => {
+                return acc += curVal.product.deposit * curVal.quantity
+            }, 0)
+        },
+        totalFee() {
+            return this.wishlist.items.reduce((acc, curVal) => {
+                return acc += curVal.product.fee * curVal.quantity
+            }, 0)
+        },
+        currencyFormatter() {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+            });
+        },
+
     }
 }
 </script>

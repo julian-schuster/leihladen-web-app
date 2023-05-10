@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="container" v-if="!$store.state.isLoading">
         <div class="columns is-centered">
             <div class="column is-half">
                 <h2 class="title has-text-centered">Artikel hinzufügen</h2>
@@ -155,6 +158,7 @@ export default {
     },
     mounted() {
         document.title = "Artikel hinzufügen | Leihladen";
+        this.$store.commit("setIsLoading", true);
         this.getCategories()
     },
     methods: {
@@ -174,6 +178,7 @@ export default {
                 .get(`/api/v1/categories`)
                 .then((response) => {
                     this.categories = response.data;
+                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);

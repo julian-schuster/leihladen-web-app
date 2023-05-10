@@ -65,18 +65,17 @@
               <h2 class="title is-4 has-text-centered">3. Artikel ausleihen und zurückgeben</h2>
               <div class="has-text-centered"> <span class="icon" style="margin-bottom:20px"><i class="fas fa-share fa-2x"
                     style="color: #398378;"></i></span></div>
-              <p>Wenn Sie im Leihladen ankommen, zeigen Sie einfach den QR-Code vor und die Mitarbeiter werden Ihnen die
-                Artikel aus Ihrer Wunschliste aushändigen.
-                Preis und Ausleihdauer werden vor Ort besprochen. Um den Prozess der Rückgabe zu erleichtern zeigen Sie
-                wieder den QR-Code der benutzen Wunschliste vor.
-                Artikel können auch ohne QR-Code ausgeliehen und zurückgegeben werden.
+              <p>Bei Ihrer Ankunft im Leihladen zeigen Sie einfach den QR-Code Ihrer Wunschliste vor und unsere
+                Mitarbeiter werden Ihnen die gewünschten Artikel aushändigen. Die Höhe der Kaution, Leihgebühr und Dauer
+                der Leihe werden vor Ort festgelegt. Um die Rückgabe zu erleichtern, zeigen Sie erneut den QR-Code Ihrer
+                Wunschliste vor. Beachten Sie jedoch, dass Sie Artikel auch ohne QR-Code ausleihen und zurückgeben können.
+                Sobald Sie einen Artikel zurückgegeben haben, erhalten Sie Ihre Kaution zurück.
               </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
