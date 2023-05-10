@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from .models import Product, Category, Wishlist
 from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
+import base64
 
 class Products(APIView):
     # API-Endpunkt, um alle Produkte abzurufen.
@@ -29,16 +30,16 @@ class LatestProductsList(APIView):
 
 
 class ProductDetail(APIView):
-    # API-Endpunkt, um ein bestimmtes Produkt abzurufen.
     def get_object(self, category_slug, product_slug):
-        #Hilfsfunktion, um das Produkt anhand des Kategorie-Slugs und des Produkt-Slugs zu finden.
+        # Hilfsfunktion, um das Produkt anhand der Kategorie-Slugs und des Produkt-Slugs zu finden.
         try: 
-            return Product.objects.filter(category__slug=category_slug).get(slug=product_slug)
+            return Product.objects.filter(categories__slug__in=category_slug).get(slug=product_slug)
         except Product.DoesNotExist:
             raise Http404
 
     def get(self, request, category_slug, product_slug, format=None):
-        # GET-Request, um ein Produkt anhand des Kategorie-Slugs und des Produkt-Slugs abzurufen.
+        # GET-Request, um ein Produkt anhand der Kategorie-Slugs und des Produkt-Slugs abzurufen.
+        category_slug = category_slug.split(',')
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -203,6 +204,12 @@ class ProductManagement(APIView):
 
     #POST-Request um ein Artikel hinzuzufügen
     def post(self, request):
+        id = request.data.get('id')
+
+        # Überprüfen, ob die ID bereits vorhanden ist
+        if Product.objects.filter(id=id).exists():
+            return Response({'error': 'Ein Artikel mit dieser ID existiert bereits.'}, status=status.HTTP_409_CONFLICT)
+        
         name = request.data.get('name')
         description = request.data.get('description')
         quantity = request.data.get('quantity')
@@ -210,26 +217,46 @@ class ProductManagement(APIView):
         image2 = request.data.get('image2')
         image3 = request.data.get('image3')
         image4 = request.data.get('image4')
-        category_id = request.data.get('category')
+        categories = request.data.get('categories')
+        dimension = request.data.get('dimension')
+        weight = request.data.get('weight')
+        deposit = request.data.get('deposit')
+        fee = request.data.get('fee')
+        smallPieces = request.data.get('smallPieces')
 
-        # Holt die Kategorie mit der gegebenen ID aus der Datenbank
-        category = Category.objects.get(id=category_id)
+        # Konvertiere die Kategorien-IDs in eine Liste von Ganzzahlen
+        categories = [int(cat_id) for cat_id in categories.split(',')]
+
+        # Holt die Kategorien mit den gegebenen IDs aus der Datenbank
+        categories_objs = Category.objects.filter(id__in=categories)
         
         slug = slugify(name, allow_unicode=True)
-    
+
+        if smallPieces == 'true':
+            smallPieces = True
+        else :
+            smallPieces = False
+
         # Erstellt ein neues Artikel-Objekt mit den übergebenen Daten
-        product = Product(name=name, slug=slug, description=description, quantity=quantity, category=category, available=quantity)
+        product = Product(id=id, name=name, slug=slug, description=description, quantity=quantity, dimension=dimension, weight=weight, deposit=deposit, fee=fee, smallPieces=smallPieces)
         product.save()
+
+        # Fügt dem Artikel die ausgewählten Kategorien hinzu
+        product.categories.add(*categories_objs)
 
         # Fügt optional Bilder hinzu
         if image:
             product.image = image
+            product.images.append(image.name)
         if image2:
             product.image2 = image2
+            product.images.append(image2.name)
         if image3:
             product.image3 = image3
+            product.images.append(image3.name)
         if image4:
             product.image4 = image4
+            product.images.append(image4.name)
 
         product.save()
 
@@ -248,36 +275,57 @@ class ProductManagement(APIView):
     def put(self, request):
         product_id = request.data.get('id')
         product = Product.objects.get(id=product_id)
-        noImageChange = request.data.get('noImageChange')
         product.name = request.data['name']
         product.slug = slugify(product.name, allow_unicode=True)
         product.description = request.data['description']
         product.quantity = request.data['quantity']
         product.available = request.data['available']
-        category_id = request.data['category']
-        category = Category.objects.get(id=category_id)
-        product.category = category
+        categories = request.data['categories']
+        product.dimension = request.data['dimension']
+        product.weight = request.data['weight']
+        product.smallPieces = request.data['smallPieces']
+        product.deposit = request.data['deposit']
+        product.fee = request.data['fee']
+        noImageChange = request.data.get('noImageChange')
+
+        # Konvertiere die Kategorien-IDs in eine Liste von Ganzzahlen
+        categories = [int(cat_id) for cat_id in categories.split(',')]
+
+        # Holt die Kategorien mit den gegebenen IDs aus der Datenbank
+        categories_objs = Category.objects.filter(id__in=categories)
+
+        product.categories.set(categories_objs)
+
+        if product.smallPieces == 'true':
+            product.smallPieces = True
+        else :
+            product.smallPieces = False
 
 
         # Fügt optional Bilder hinzu oder entfernt vorhandene Bilder
         if request.data.get('image') is not None:
+            product.images = []
             product.image = request.data['image']
+            product.images.append(request.data['image'].name)
         if request.data.get('image2') is not None:
             product.image2 = request.data['image2']
+            product.images.append(request.data['image2'].name)
         else:
             if not noImageChange:
                 product.image2 = None
         if request.data.get('image3') is not None:
             product.image3 = request.data['image3']
+            product.images.append(request.data['image3'].name)
         else:
             if not noImageChange:
                 product.image3 = None
         if request.data.get('image4') is not None:
             product.image4 = request.data['image4']
+            product.images.append(request.data['image4'].name)
         else:
             if not noImageChange:
                 product.image4 = None
-
+                
         product.save()
 
         serializer = ProductSerializer(product)

@@ -16,10 +16,10 @@
           <div class="column details has-text-centered">
             <p class="subtitle is-5" v-if="product.available == 0" style="color:red; font-size: 14pt; margin-bottom:5%"><i
                 class="fas fa-times-circle"></i>
-              {{ product.available }} verfügbar</p>
+              Nicht verfügbar</p>
             <p class="subtitle is-5" v-else style="color:green;font-size: 14pt;  margin-bottom:5%"><i
                 class="fas fa-check-circle"></i>
-              {{ product.available }} verfügbar
+              Verfügbar
             </p>
           </div>
         </div>

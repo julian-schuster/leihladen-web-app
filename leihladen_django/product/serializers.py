@@ -12,11 +12,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "description",
             "get_image",
             "get_images",
-            "get_category_name",
+            "get_category_names",
             "quantity",
             "available",
-            "category",
+            "categories",
             "date_added",
+            "dimension",
+            "fee",
+            "deposit",
+            "weight",
+            "smallPieces"
         )
 
 class CategorySerializer(serializers.ModelSerializer):

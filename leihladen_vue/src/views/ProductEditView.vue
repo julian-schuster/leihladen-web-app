@@ -7,32 +7,32 @@
 
                         <div class="column is-12"
                             v-if="(product.get_images && product.get_images.length == 1) || (onlyOneImage)">
-                            <figure class="image is-square highlight">
-                                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
+                            <figure class="image is-square">
+                                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0]"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6" v-else>
                             <figure class="image is-3by2">
-                                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0].url"
+                                <img v-bind:src="product.get_images && product.get_images[0] && product.get_images[0]"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
                             <figure class="image is-3by2" v-if="product.get_images && product.get_images[1]">
-                                <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1].url"
+                                <img v-bind:src="product.get_images && product.get_images[1] && product.get_images[1]"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
                             <figure class="image is-3by2" v-if="product.get_images && product.get_images[2]">
-                                <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2].url"
+                                <img v-bind:src="product.get_images && product.get_images[2] && product.get_images[2]"
                                     alt="Produktbild">
                             </figure>
                         </div>
                         <div class="column is-6">
                             <figure class="image is-3by2" v-if="product.get_images && product.get_images[3]">
-                                <img v-bind:src="product.get_images && product.get_images[3] && product.get_images[3].url"
+                                <img v-bind:src="product.get_images && product.get_images[3] && product.get_images[3]"
                                     alt="Produktbild">
                             </figure>
                         </div>
@@ -40,24 +40,67 @@
                 </div>
                 <div class="column is-half">
                     <div class="content">
-                        <h1 class="title is-3">
-                            <label class="label" for="name">Name</label>
-                            <input class="input" v-model="product.name" maxlength="30" required>
-                        </h1>
+                        <div class="field">
+                            <div class="control">
+                                <label class="label" for="id">Inventarnummer</label>
+                                <input class="input" v-model="product.id" maxlength="10" disabled style="width: 150px;">
+                            </div>
+                        </div>
+
+                        <div class="field" style="margin-right:10px">
+                            <div class="control">
+                                <label class="label" for="name">Name</label>
+                                <input class="input" v-model="product.name" maxlength="30" required style="width: 310px;">
+                            </div>
+                        </div>
                         <p class="subtitle is-5">
                             <label class="label" for="description">Beschreibung</label>
-                            <textarea class="textarea input" v-model="product.description" maxlength="255"
-                                required></textarea>
+                            <textarea class="textarea input" v-model="product.description" required></textarea>
                         </p>
-                        <div class="field">
-                            <label class="label" for="category">Kategorie</label>
-                            <div class="select">
-                                <select v-model="product.category" required>
-                                    <option value="">Bitte wählen</option>
-                                    <option v-for="category in categories" :key="category.id" :value="category.id">
-                                        {{ category.name }}
-                                    </option>
-                                </select>
+                        <div class="field has-addons" style="display: flex;">
+                            <div class="field" style="margin-right: 10px; width: 150px;">
+                                <label class="label" for="categories">Kategorien</label>
+                                <div class="select is-multiple">
+                                    <select multiple v-model="product.categories" required>
+                                        <option v-for="category in categories" :key="category.id" :value="category.id">
+                                            {{ category.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field is-flex">
+                                <div class="control has-text-centered is-align-items-center is-justify-content-center">
+                                    <label class="label" for="smallPieces">Kleinteile</label>
+                                    <input type="checkbox" v-model="product.smallPieces" style="margin-top:14px">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field has-addons" style="display: flex;">
+                            <div class="field">
+                                <div class="control" style="margin-right: 10px; width: 150px;">
+                                    <label class="label" for="dimension">Dimension</label>
+                                    <input class="input" v-model="product.dimension" required>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control" style="width: 150px;">
+                                    <label class="label" for="weight">Gewicht</label>
+                                    <input class="input" v-model="product.weight" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field has-addons" style="display: flex;">
+                            <div class="field">
+                                <div class="control" style="margin-right: 10px; width: 150px;">
+                                    <label class="label" for="deposit">Kaution</label>
+                                    <input type="number" class="input" v-model="product.deposit" required step="0.01">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control" style="width: 150px;">
+                                    <label class="label" for="fee">Leihgebühr</label>
+                                    <input type="number" class="input" v-model="product.fee" required step="0.01">
+                                </div>
                             </div>
                         </div>
                         <div class="field has-addons" style="display: flex;">
@@ -121,6 +164,7 @@ export default {
     data() {
         return {
             product: {
+                id: '',
                 name: '',
                 description: '',
                 image1: null,
@@ -128,7 +172,12 @@ export default {
                 image3: null,
                 image4: null,
                 quantity: 0,
-                category: '',
+                categories: [],
+                deposit: 0,
+                fee: 0,
+                weight: '',
+                dimension: '',
+                smallPieces: false
             },
             categories: [],
             file1: null,
@@ -192,16 +241,12 @@ export default {
             formData.append('description', this.product.description);
             formData.append('quantity', this.product.quantity);
             formData.append('available', this.product.available);
-            formData.append('category', this.product.category);
-
-            let categoryId = this.product.category;
-            let categoryName = "";
-            for (let i = 0; i < this.categories.length; i++) {
-                if (this.categories[i].id == categoryId) {
-                    categoryName = this.categories[i].name;
-                    break;
-                }
-            }
+            formData.append('categories', this.product.categories);
+            formData.append('dimension', this.product.dimension);
+            formData.append('smallPieces', this.product.smallPieces);
+            formData.append('weight', this.product.weight);
+            formData.append('deposit', this.product.deposit);
+            formData.append('fee', this.product.fee);
 
             if (this.file1) {
                 formData.append('image', this.file1);
@@ -239,11 +284,11 @@ export default {
                     });
 
                     if (this.file1) {
-                        this.product.get_images[0].url = URL.createObjectURL(this.file1);
+                        this.product.get_images[0] = URL.createObjectURL(this.file1);
                     }
 
                     if (this.file2) {
-                        this.product.get_images[1].url = URL.createObjectURL(this.file2);
+                        this.product.get_images[1] = URL.createObjectURL(this.file2);
                     } else if (!this.file1 && !this.file2 && !this.file3 && !this.file4) {
 
                     } else {
@@ -251,7 +296,7 @@ export default {
                     }
 
                     if (this.file3) {
-                        this.product.get_images[2].url = URL.createObjectURL(this.file3);
+                        this.product.get_images[2] = URL.createObjectURL(this.file3);
                     } else if (!this.file1 && !this.file2 && !this.file3 && !this.file4) {
 
                     } else {
@@ -259,7 +304,7 @@ export default {
                     }
 
                     if (this.file4) {
-                        this.product.get_images[3].url = URL.createObjectURL(this.file4);
+                        this.product.get_images[3] = URL.createObjectURL(this.file4);
                     } else if (!this.file1 && !this.file2 && !this.file3 && !this.file4) {
 
                     } else {

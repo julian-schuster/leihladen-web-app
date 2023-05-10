@@ -29,7 +29,7 @@
     <div class="column is-12">
       <h1 class="title is-4">Neueste Artikel</h1>
       <div class="columns is-multiline">
-        <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
+        <ProductBox v-for="product in latestProducts" v-bind:key="product.inventarnummer" v-bind:product="product" />
       </div>
     </div>
     <hr>
@@ -103,6 +103,7 @@ export default {
 
       await axios
         .get("/api/v1/latest-products/")
+
         .then((response) => {
           this.latestProducts = response.data;
         })

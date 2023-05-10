@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(allow_unicode=True, max_length=255)
+    slug = models.SlugField(allow_unicode=True, max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ('id',)  #Kategorien nach ID aufsteigend sortieren
@@ -19,51 +19,60 @@ class Category(models.Model):
         return f'/{self.slug}/'
 
 class Product(models.Model):
-    id = models.AutoField(primary_key=True)
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, max_length=10, unique=True)
     name = models.CharField(max_length=255)
-    slug = models.SlugField(allow_unicode=True, max_length=255)
+    slug = models.SlugField(allow_unicode=True, max_length=255, blank=True, null=True)
+    categories = models.ManyToManyField(Category, related_name='products', blank=True)
     description = models.TextField(blank=True, null=True)
+    dimension = models.CharField(max_length=20, blank=True, null=True)
+    weight = models.CharField(max_length=20, blank=True, null=True)
+    smallPieces = models.BooleanField(default=False)
+    deposit = models.CharField(max_length=10, blank=True, null=True)
+    fee = models.CharField(max_length=10,blank=True, null=True)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image2 = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image3 = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image4 = models.ImageField(upload_to='uploads/', blank=True, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-    quantity = models.IntegerField(default = 1, validators=[MinValueValidator(0)])
-    available = models.IntegerField(default = 1, validators=[MinValueValidator(0)])
+    images = models.JSONField(default=list, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    quantity = models.IntegerField(default=1, validators=[MinValueValidator(0)])
+    available = models.IntegerField(default=1, validators=[MinValueValidator(0)])
 
     class Meta:
-        ordering = ('-date_added',)  #Artikel nach Datum absteigend sortieren.
+        ordering = ('-date_added',)
 
     def __str__(self):
-        return self.name  #Gibt den Namen des Objekts als Zeichenfolge zurück.
+        return self.id
 
     def clean(self):
-        if self.available > self.quantity:  #Überprüft, ob die verfügbare Menge größer ist als die Gesamtmenge.
-            raise ValidationError("Die verfügbare Menge kann nicht größer sein als die Gesamtmenge.")  
-        
+        if self.available > self.quantity:
+            raise ValidationError("Die verfügbare Menge kann nicht größer sein als die Gesamtmenge.")
+
     def get_absolute_url(self):
-        return f'/{self.category.slug}/{self.slug}/'  #Gibt die absolute URL des Objekts zurück, die aus dem Slug des übergeordneten Kategorie-Objekts und dem eigenen Slug besteht.
+        if len(self.categories.all()) > 1:
+            return f'/{self.categories.all()[1].slug}/{self.slug}/'
+        else:
+            return f'/{self.categories.all()[0].slug}/{self.slug}/'
 
     def get_image(self):
         if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url  #Gibt die URL des Hauptbildes zurück.
-        return '' 
+            return 'http://127.0.0.1:8000' + self.image.url
+        if self.images:
+            return 'http://127.0.0.1:8000/media/uploads/' + self.images[0]
+        return {}
 
     def get_images(self):
         images = []
-        if self.image:
-            images.append({'url': 'http://127.0.0.1:8000' + self.image.url})  # Fügt das Hauptbild in die Liste der Bilder hinzu.
-        if self.image2:
-            images.append({'url': 'http://127.0.0.1:8000' + self.image2.url})  # Fügt das zweite Bild in die Liste der Bilder hinzu.
-        if self.image3:
-            images.append({'url': 'http://127.0.0.1:8000' + self.image3.url})  # Fügt das dritte Bild in die Liste der Bilder hinzu.
-        if self.image4:
-            images.append({'url': 'http://127.0.0.1:8000' + self.image4.url})  # Fügt das vierte Bild in die Liste der Bilder hinzu.
-        return images  #Gibt die Liste der Bilder zurück.
+        for image in self.images:
+            images.append({'http://127.0.0.1:8000/media/uploads/' + image})
+        return images
 
-    def get_category_name(self):
-        return self.category.name  #Gibt den Namen der übergeordneten Kategorie des Objekts zurück.
+    def get_category_names(self):
+        category_names = []
+        for category in self.categories.all():
+            category_names.append(category.name)
+        return category_names
+
 
     
 class Wishlist(models.Model):

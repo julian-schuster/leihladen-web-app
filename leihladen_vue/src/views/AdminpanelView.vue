@@ -104,36 +104,41 @@
                                                         </span>
                                                     </p>
                                                 </div>
-                                                <table class="table is-fullwidth">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Anzahl</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr v-for="(product, index) in paginatedFilteredProducts"
-                                                            :key="index">
-                                                            <td>
-                                                                <router-link v-bind:to="product.get_absolute_url">
-                                                                    <div class="product-name">{{ product.name }}</div>
-                                                                </router-link>
-                                                            </td>
-                                                            <td>{{ product.quantity }}</td>
-                                                            <td class="has-text-right">
-                                                                <router-link :to="product.get_absolute_url + 'edit'">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </router-link>
+                                                <div class="table-container">
+                                                    <table class="table is-hoverable is-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 15%;">ID</th>
+                                                                <th style="width: 60%;">Name</th>
+                                                                <th style="width: 10%;">Anzahl</th>
+                                                                <th style="width: 15%;"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="(product, index) in paginatedFilteredProducts"
+                                                                :key="index">
+                                                                <td>{{ product.id }}</td>
+                                                                <td>
+                                                                    <router-link v-bind:to="product.get_absolute_url">
+                                                                        <div class="product-name">{{ product.name }}</div>
+                                                                    </router-link>
+                                                                </td>
+                                                                <td>{{ product.quantity }}</td>
+                                                                <td class="has-text-right">
+                                                                    <router-link :to="product.get_absolute_url + 'edit'">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </router-link>
+                                                                    <span @click="deleteProduct(product)"
+                                                                        class="delete-wrapper">
+                                                                        <i class="fa fa-trash delete-icon"></i>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
-                                                                <span @click="deleteProduct(product.id, product)"
-                                                                    class="delete-wrapper">
-                                                                    <i class="fa fa-trash delete-icon"></i>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+
                                                 <Pagination v-if="totalProductPages > 1"
                                                     :totalItems="filteredProducts.length" :itemsPerPage="itemsPerPage"
                                                     :currentPage="currentPage" @input="onPageChange" />
@@ -154,13 +159,16 @@
                                                 <table class="table is-fullwidth">
                                                     <thead>
                                                         <tr>
-                                                            <th>Artikel</th>
-                                                            <th>Anzahl</th>
+                                                            <th style="width: 15%;">ID</th>
+                                                            <th style="width: 60%;">Name</th>
+                                                            <th style="width: 10%;">Anzahl</th>
+                                                            <th style="width: 15%;"></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr v-for="(product, index) in paginatedFilteredNotAvailableProducts"
                                                             :key="index">
+                                                            <td>{{ product.id }}</td>
                                                             <td> <router-link v-bind:to="product.get_absolute_url">
                                                                     <div class="product-name">{{ product.name }}</div>
                                                                 </router-link>
@@ -456,7 +464,7 @@ export default {
                 .then((response) => {
                     this.wishlists = response.data.wishlists;
                     this.wishlistCount = response.data.count;
-                    this.$store.commit("setIsLoading", false);
+
                 })
                 .catch((error) => {
                     console.log(error);
@@ -469,14 +477,15 @@ export default {
         onPageChange(page) {
             this.currentPage = page;
         },
-        deleteProduct(id, product) {
+        deleteProduct(product) {
+            console.log(product);
             if (confirm(`Sind Sie sicher, dass Sie Artikel '${product.name}' löschen möchten?`)) {
                 axios
-                    .delete(`/api/v1/product/${id}`)
+                    .delete(`/api/v1/product/${product.id}`)
                     .then((response) => {
                         console.log(response);
 
-                        this.products = this.products.filter(product => product.id !== id);
+                        this.products = this.getProducts()
 
                         toast({
                             message: `Artikel '${product.name}' wurde entfernt.`,
@@ -497,6 +506,7 @@ export default {
                 .get(`/api/v1/categories`)
                 .then((response) => {
                     this.categories = response.data;
+                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -572,8 +582,9 @@ export default {
             }
 
             return this.products.filter((product) => {
-                return product.name.toLowerCase().includes(searchQuery);
+                return product.name.toLowerCase().includes(searchQuery) || product.id.toLowerCase().includes(searchQuery);
             });
+
         },
         totalProductPages() {
             return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
@@ -591,7 +602,7 @@ export default {
             }
 
             return this.filterNotAvailableProducts.filter((product) => {
-                return product.name.toLowerCase().includes(searchQuery);
+                return product.name.toLowerCase().includes(searchQuery) || product.id.toLowerCase().includes(searchQuery);
             });
         },
         totalNotAvailableProductPages() {
@@ -678,7 +689,7 @@ export default {
 }
 
 .product-name {
-    word-break: break-all;
+    white-space: nowrap;
 }
 
 a:hover i.fa-check {
@@ -687,5 +698,22 @@ a:hover i.fa-check {
 
 a:hover i.fa-times {
     color: red;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .table thead tr th {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+
+    .table tbody tr td {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
 }
 </style>

@@ -1,4 +1,7 @@
 <template>
+    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+        <div class="lds-dual-ring"></div>
+    </div>
     <div class="container page-wishlist is-fullheight" v-if="!$store.state.isLoading">
         <div class="columns is-multiline">
             <div class="column is-12 has-text-centered">
