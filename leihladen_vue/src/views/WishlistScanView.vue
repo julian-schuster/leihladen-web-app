@@ -30,6 +30,7 @@
                     <table class="table is-fullwidth">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Artikel</th>
                                 <th class="has-text-centered">Anzahl</th>
                                 <th class="has-text-centered">Bestand</th>
@@ -42,6 +43,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
+                                <td>{{ item.product.id }}</td>
                                 <td>
                                     <router-link :to="item.product.get_absolute_url">{{ item.product.name
                                     }}</router-link>

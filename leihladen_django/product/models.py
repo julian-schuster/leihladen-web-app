@@ -8,7 +8,7 @@ class Category(models.Model):
     slug = models.SlugField(allow_unicode=True, max_length=255, blank=True, null=True)
 
     class Meta:
-        ordering = ('id',)  #Kategorien nach ID aufsteigend sortieren
+        ordering = ('name',)  #Kategorien nach ID aufsteigend sortieren
 
     #Eine Zeichenkette zurückgeben, die den Namen der Kategorie enthält
     def __str__(self):
@@ -56,7 +56,7 @@ class Product(models.Model):
 
     def get_image(self):
         if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
+            return 'http://127.0.0.1:8000/media/uploads/' + self.image.url
         if self.images:
             return 'http://127.0.0.1:8000/media/uploads/' + self.images[0]
         return {}

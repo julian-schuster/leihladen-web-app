@@ -46,14 +46,14 @@ try:
         except sqlite3.IntegrityError as e:
             print(str(e))
 
-        categories = ['Alles', 'Haushalt', 'Sonstiges', 'Kinder', 'Spiele', 'Geräte', 'Garten', 'Werkzeug', '8', 'Instrumente', 'Diverses']
-
+        #0,1,2,3,4,5,6,7,8,9,10
+        categories = ['Alle', 'Haushalt', 'Sonstiges', 'Kinder', 'Spiele', 'Büro', 'Garten', 'Werkzeug', '8', 'Instrumente', 'Diverses']
+        
         for category_num in product['kategorien']:
             category_num = int(category_num)
 
             category = categories[category_num]
             slug = category.lower().replace(" ", "-")
-
             cursor.execute("SELECT id FROM product_category WHERE name=?", (category,))
             result = cursor.fetchone()
 

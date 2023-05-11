@@ -9,6 +9,7 @@
                     <table class="table is-fullwidth">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Artikel</th>
                                 <th class="has-text-centered">Kaution</th>
                                 <th class="has-text-centered">Leihgebühr</th>
@@ -17,7 +18,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="item in wishlist.items" v-bind:key="item.product.id">
-
+                                <td>{{ item.product.id }}</td>
                                 <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link>
                                 </td>
                                 <td class="has-text-centered">{{ currencyFormatter.format(item.product.deposit) }}</td>
@@ -27,6 +28,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
+                                <td></td>
                                 <td></td>
                                 <td class="has-text-centered">
                                     {{ currencyFormatter.format(totalDeposit) }}
@@ -145,13 +147,13 @@ export default {
             doc.text(`Erstellt am: ${date}`, doc.internal.pageSize.getWidth() - 60, 30);
 
             // Füge eine Tabelle hinzu
-            const headers = [['Artikel', 'Kaution', 'Gebühr', 'Anzahl']];
+            const headers = [['ID', 'Artikel', 'Kaution', 'Gebühr', 'Anzahl']];
             let totalDeposit = 0;
             let totalFee = 0;
             const data = this.wishlist.items.map(item => {
                 totalDeposit += item.product.deposit * item.quantity;
                 totalFee += item.product.fee * item.quantity;
-                return [item.product.name, item.product.deposit + ' €', item.product.fee + ' €', item.quantity];
+                return [item.product.id, item.product.name, item.product.deposit + ' €', item.product.fee + ' €', item.quantity];
             });
             doc.autoTable({
                 head: headers,

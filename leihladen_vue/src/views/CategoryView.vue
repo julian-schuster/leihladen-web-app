@@ -1,5 +1,8 @@
 <template>
-  <div class="page-category container">
+  <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+    <div class="lds-dual-ring"></div>
+  </div>
+  <div class="container" v-if="!$store.state.isLoading">
     <div class="columns is-multiline">
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">{{ category.name }}</h2>
@@ -33,6 +36,7 @@ export default {
   },
   components: { ProductBox, Pagination },
   mounted() {
+    this.$store.commit("setIsLoading", true);
     this.getCategory();
   },
   watch: {
@@ -46,13 +50,12 @@ export default {
     async getCategory() {
       const categorySlug = this.$route.params.category_slug;
 
-      this.$store.commit("setIsLoading", true);
-
       axios
         .get(`/api/v1/products/${categorySlug}/`)
         .then((response) => {
           this.category = response.data;
           document.title = this.category.name + " | Leihladen";
+          this.$store.commit("setIsLoading", false);
         })
         .catch((error) => {
           console.log(error);
@@ -69,7 +72,7 @@ export default {
           this.$router.push("/")
 
         });
-      this.$store.commit("setIsLoading", false);
+
     },
     onPageChange(page) {
       this.currentPage = page;

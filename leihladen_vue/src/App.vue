@@ -84,15 +84,25 @@
                       <div class="dropdown-item">
                         <a v-for="category in categories" :key="category.id" :href="`/${category.name.toLowerCase()}`"
                           class="navbar-item">
-                          <span class="icon" v-if="category.name == 'Garten'" style="color:green"><i
-                              class="fas fa-seedling"></i></span>
-                          <span class="icon" v-if="category.name == 'Sport'"><i class="fas fa-futbol"></i></span>
-                          <span class="icon" v-if="category.name == 'Werkzeug'" style="color:black"><i
-                              class="fas fa-cog"></i></span>
-                          <span class="icon" v-if="category.name == 'Haushalt'" style="color:orange"><i
+                          <span class="icon" v-if="category.name == 'Alle'"><i class="fas fa-list"></i></span>
+                          <span class="icon" v-if="category.name == 'Haushalt'" style="color: #FFA500"><i
                               class="fas fa-home"></i></span>
-                          <span class="icon" v-if="category.name == 'Spiele'" style="color:purple"><i
-                              class="fas fa-dice-six"></i></span>
+                          <span class="icon" v-if="category.name == 'Sonstiges'" style="color: #808080"><i
+                              class="fas fa-th"></i></span>
+                          <span class="icon" v-if="category.name == 'Kinder'" style="color: #FF69B4"><i
+                              class="fas fa-child"></i></span>
+                          <span class="icon" v-if="category.name == 'Spiele'" style="color: #9400D3"><i
+                              class="fas fa-gamepad"></i></span>
+                          <span class="icon" v-if="category.name == 'Büro'" style="color: #4169E1"><i
+                              class="fas fa-briefcase"></i></span>
+                          <span class="icon" v-if="category.name == 'Garten'" style="color: #008000"><i
+                              class="fas fa-leaf"></i></span>
+                          <span class="icon" v-if="category.name == 'Werkzeug'" style="color: #000000"><i
+                              class="fas fa-tools"></i></span>
+                          <span class="icon" v-if="category.name == 'Instrumente'" style="color: #FFD700"><i
+                              class="fas fa-guitar"></i></span>
+                          <span class="icon" v-if="category.name == 'Diverses'" style="color: #808000"><i
+                              class="fas fa-question"></i></span>
                           <span>{{ category.name }}</span>
                         </a>
                       </div>
@@ -172,9 +182,11 @@ export default {
       axios.defaults.headers.common['Authorization'] = ""
     }
   },
+  created() {
+    this.getCategories()
+  },
   mounted() {
     this.wishlist = this.$store.state.wishlist
-    this.getCategories()
   },
   methods: {
     getCategories() {
