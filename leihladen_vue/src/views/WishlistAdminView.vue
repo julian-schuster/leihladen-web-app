@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="container" v-if="!$store.state.isLoading">
         <div class="columns is-centered">
             <div class="column is-12">
                 <h3 class="has-text-centered">Wunschliste: {{ wishlist_client_id }}</h3>
@@ -83,6 +86,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.commit("setIsLoading", true);
         this.wishlist_client_id = this.$route.params.client_id;
         document.title = 'Wunschliste ' + this.wishlist_client_id + '| Leihladen'
 
@@ -116,6 +120,7 @@ export default {
                 .get(`/api/v1/products`)
                 .then((response) => {
                     this.products = response.data.products
+                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);

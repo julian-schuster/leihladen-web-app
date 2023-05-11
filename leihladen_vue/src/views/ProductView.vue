@@ -36,6 +36,7 @@
       <div class="column is-6">
         <div class="content">
           <h1 class="title">{{ product.name }}</h1>
+          <h5 class="subtitle" style="color: grey;">{{ product.id }}</h5>
           <hr>
           <div class="field">
             <div class="control">
@@ -53,7 +54,7 @@
                   </div>
                 </div>
                 <div class="field">
-                  <label class="label">Dimension</label>
+                  <label class="label">Abmessung</label>
                   <div class="control">
                     <span>{{ product.dimension }}</span>
                   </div>

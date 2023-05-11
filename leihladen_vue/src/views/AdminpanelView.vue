@@ -299,7 +299,7 @@
                                                 <router-link to="/wishlist/scan" class="button">
                                                     <span class="icon"><i class="fas fa-qrcode"
                                                             style="color: #EFA00B;"></i></span>
-                                                    <span>Wunschliste scannen</span>
+                                                    <span>Artikel/Wunschliste Scannen</span>
                                                 </router-link>
                                             </span>
                                             <span>
@@ -478,7 +478,6 @@ export default {
             this.currentPage = page;
         },
         deleteProduct(product) {
-            console.log(product);
             if (confirm(`Sind Sie sicher, dass Sie Artikel '${product.name}' löschen möchten?`)) {
                 axios
                     .delete(`/api/v1/product/${product.id}`)
@@ -540,11 +539,7 @@ export default {
             }
         },
         calculateBorrowedProducts() {
-            let borrowedCount = 0;
-            this.products.forEach((product) => {
-                borrowedCount += product.quantity - product.available;
-            });
-            return borrowedCount;
+            return this.products.reduce((borrowedCount, product) => borrowedCount + (product.quantity - product.available), 0);
         },
         filterNotAvailableProducts() {
             return this.products.filter((product) => {
@@ -663,7 +658,7 @@ export default {
 .buttons .button {
     display: inline-flex;
     align-items: center;
-    width: 200px;
+    width: 250px;
     margin-right: 7px;
     margin-top: 7px;
 }

@@ -23,7 +23,11 @@
                         v-if="isMobile() === 'rear' || isMobile() === 'front'">Kamera
                         wechseln</button>
                 </div>
+                <div class="has-text-centered">Scannen Sie einen QR-Code mit der ID einer Wunschliste oder eines Artikels,
+                    um weitere Informationen zu erhalten.
+                </div>
             </div>
+
             <div class="column is-12" v-if="wishlist.items.length > 0">
                 <h3 class="has-text-centered">Wunschliste: {{ wishlist.client_id }}</h3>
                 <div class="table-container box">
@@ -84,6 +88,56 @@
                     </div>
                 </div>
             </div>
+            <div class="column is-12" v-if="product !== null && Object.keys(product).length > 0">
+                <h3 class="has-text-centered">Artikel: {{ product.id }}</h3>
+                <div class="table-container box">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Artikel</th>
+                                <th class="has-text-centered">Anzahl</th>
+                                <th class="has-text-centered">Bestand</th>
+                                <th class="has-text-centered">Verfügbar</th>
+                                <th class="has-text-centered">Kaution</th>
+                                <th class="has-text-centered">Leihgebühr</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td> <router-link :to="product.get_absolute_url"> {{ product.name }}</router-link></td>
+                                <td class="has-text-centered">{{ product.quantity }}</td>
+                                <td class="has-text-centered">{{ getProductCount(product.id) }}</td>
+                                <td class="has-text-centered" v-if="getProductAvailable(product.id) == 0" style="color:red">
+                                    {{ getProductAvailable(product.id) }}</td>
+                                <td class="has-text-centered" v-else style="color:green">{{
+                                    getProductAvailable(product.id) }}</td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(product.deposit) }}</td>
+                                <td class="has-text-centered">{{ currencyFormatter.format(product.fee) }}</td>
+                                <td class="has-text-right">
+                                    <a class="button is-success is-light is-small"
+                                        @click="updateProductAvailability(product.id, 1)">
+                                        <span class="icon">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                                <td class="has-text-right">
+                                    <a class="button is-danger is-light is-small"
+                                        @click="updateProductAvailability(product.id, -1)">
+                                        <span class="icon">
+                                            <i class="fas fa-minus"></i>
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -111,7 +165,8 @@ export default {
             noFrontCamera: false,
             error: '',
             show: true,
-            log: []
+            log: [],
+            product: []
         }
     },
     mounted() {
@@ -156,19 +211,76 @@ export default {
                     break
             }
         },
+        getProduct(id) {
+            axios
+                .get(`/api/v1/product/${id}`)
+                .then((response) => {
+                    this.product = response.data
+                    this.turnCameraOff()
+
+                    toast({
+                        message: `Artikel erfolgreich gescannt.`,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+
+                    toast({
+                        message: `Es wurde kein Artikel mit dieser ID im System gefunden.`,
+                        type: "is-danger",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+                });
+        },
         onDecode(decodedString) {
             const client_id = decodedString
-            axios.get(`/api/v1/wishlist/${client_id}/`)
-                .then(response => {
-                    this.wishlist = JSON.parse(response.data.qr_code_text);
-                    this.wishlist.client_id = client_id
-                    this.turnCameraOff()
-                })
-                .catch(error => {
-                    console.error(error)
-                })
 
-            this.turnCameraOn();
+            if (decodedString) {
+                // Wenn der Decoded String eine ID im Format "INXXXXX" ist, also ein Artikel
+                if (decodedString.match(/^IN\d{5}$/)) {
+                    this.getProduct(decodedString);
+                    this.turnCameraOn();
+                } else {
+                    axios.get(`/api/v1/wishlist/${client_id}/`)
+                        .then(response => {
+                            this.wishlist = JSON.parse(response.data.qr_code_text);
+                            this.wishlist.client_id = client_id
+                            this.turnCameraOff()
+                        })
+                        .catch(error => {
+                            console.error(error)
+
+                            toast({
+                                message: `Es wurde keine Wunschliste mit dieser ID gefunden.`,
+                                type: "is-danger",
+                                dismissible: true,
+                                pauseOnHover: true,
+                                duration: 4000,
+                                position: "bottom-right",
+                            });
+                        })
+
+                    this.turnCameraOn();
+
+                    toast({
+                        message: `Wunschliste erfolgreich gescannt.`,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+
+                }
+            }
 
         },
         turnCameraOn() {

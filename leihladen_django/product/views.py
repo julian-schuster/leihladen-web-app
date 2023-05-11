@@ -199,6 +199,16 @@ class ProductAvailability(APIView):
 
         
 class ProductManagement(APIView):
+
+    def get(self, request, id):
+        try:
+            product = Product.objects.get(id=id)
+            # Serialize the product to JSON
+            serialized_product = ProductSerializer(product).data
+            return Response(serialized_product, status=status.HTTP_200_OK)
+        except Product.DoesNotExist:
+            return Response({'error': 'Product not found.'}, status=status.HTTP_404_NOT_FOUND)
+
     #API-Endpunkt um Artikel hinzuzufügen, Artikel zu entfernen und Artikeln zu bearbeiten.
     permission_classes = [IsAuthenticated]
 

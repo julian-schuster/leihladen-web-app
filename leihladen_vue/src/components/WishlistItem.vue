@@ -1,13 +1,12 @@
 <template>
     <tr>
+        <td>{{ item.product.id }}</td>
         <td><router-link :to="item.product.get_absolute_url">{{ item.product.name }}</router-link></td>
         <td class="has-text-centered" style="white-space: nowrap;"><a @click="decrementQuanitity(item)"
                 style="padding-right:10px; padding-left:5px; color: red;">-</a>{{ item.quantity }}
             <a @click="incrementQuanitity(item)" style="color:green">+</a>
         </td>
-
         <td class="has-text-centered">{{ product.quantity }}</td>
-
         <td>
             <div v-if="product.available == 0" style="color:red" class="has-text-centered"> {{
                 product.available }}
@@ -60,18 +59,24 @@ export default {
             }
 
             item.quantity -= 1
+
             if (item.quantity === 0) {
-                this.$emit('removeFromWishlist', item)
+                const confirmationMessage = `Möchten Sie den Artikel "${item.product.name}" wirklich von Ihrer Wunschliste entfernen?`;
+                if (window.confirm(confirmationMessage)) {
+                    this.$emit('removeFromWishlist', item)
 
-                toast({
-                    message: `"${item.product.name}" wurde von Ihrer Wunschliste entfernt`,
-                    type: "is-success",
-                    dismissible: true,
-                    pauseOnHover: true,
-                    duration: 4000,
-                    position: "bottom-right",
-                });
-
+                    toast({
+                        message: `"${item.product.name}" wurde von Ihrer Wunschliste entfernt`,
+                        type: "is-success",
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 4000,
+                        position: "bottom-right",
+                    });
+                } else {
+                    item.quantity = 1
+                    return
+                }
             }
             this.updateWishlist()
 
@@ -143,14 +148,6 @@ export default {
                     console.log(error);
 
                 });
-        },
-        getProductAvailable(productId) {
-            const product = this.products.find(p => p.id === productId);
-            return product ? product.available : '-';
-        },
-        getProductCount(productId) {
-            const product = this.products.find(p => p.id === productId);
-            return product ? product.quantity : '-';
         },
     },
     computed: {

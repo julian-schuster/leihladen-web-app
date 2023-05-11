@@ -49,7 +49,7 @@
                     <div class="field has-addons" style="display: flex;">
                         <div class="field">
                             <div class="control" style="margin-right: 10px; width: 150px;">
-                                <label class="label" for="dimension">Dimension</label>
+                                <label class="label" for="dimension">Abmessung</label>
                                 <input class="input" v-model="product.dimension" required>
                             </div>
                         </div>

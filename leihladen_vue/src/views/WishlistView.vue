@@ -12,6 +12,7 @@
                     <table class="table is-fullwidth" v-if="wishlistTotalLength">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Artikel</th>
                                 <th class="has-text-centered">Anzahl</th>
                                 <th class="has-text-centered">Bestand</th>

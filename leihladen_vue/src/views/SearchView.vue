@@ -1,9 +1,12 @@
 <template>
-    <div class="container">
+    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+        <div class="lds-dual-ring"></div>
+    </div>
+    <div class="container" v-if="!$store.state.isLoading">
         <div class="columns is-multiline">
             <div class="column is-12">
-                <h1 class="title">Suche</h1>
-                <h2 class="is-size-5 has-text-grey">Suchbegriff: "{{ query }}"</h2>
+                <h1 class="title has-text-centered">Suche</h1>
+                <h2 class="is-size-5 has-text-grey has-text-centered">Suchbegriff: "{{ query }}"</h2>
             </div>
             <ProductBox v-for="product in visibleProducts" v-bind:key="product.id" v-bind:product="product" />
             <div class="column is-12">
@@ -34,6 +37,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.commit("setIsLoading", true);
         document.title = 'Suche | Leihladen'
 
         let url = window.location.search.substring(1)
@@ -49,6 +53,7 @@ export default {
             await axios.post('/api/v1/products/search/', { 'query': this.query })
                 .then(response => {
                     this.products = response.data
+                    this.$store.commit("setIsLoading", false);
                 }).catch(error => {
                     console.log(error);
                 })
