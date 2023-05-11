@@ -33,7 +33,7 @@ class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
         # Hilfsfunktion, um das Produkt anhand der Kategorie-Slugs und des Produkt-Slugs zu finden.
         try: 
-            return Product.objects.filter(categories__slug__in=category_slug).get(slug=product_slug)
+            return Product.objects.filter(categories__slug__in=category_slug).get(id=product_slug)
         except Product.DoesNotExist:
             raise Http404
 
@@ -199,6 +199,8 @@ class ProductAvailability(APIView):
 
         
 class ProductManagement(APIView):
+    #API-Endpunkt um Artikel hinzuzufügen, Artikel zu entfernen und Artikeln zu bearbeiten.
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         try:
@@ -208,9 +210,6 @@ class ProductManagement(APIView):
             return Response(serialized_product, status=status.HTTP_200_OK)
         except Product.DoesNotExist:
             return Response({'error': 'Product not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    #API-Endpunkt um Artikel hinzuzufügen, Artikel zu entfernen und Artikeln zu bearbeiten.
-    permission_classes = [IsAuthenticated]
 
     #POST-Request um ein Artikel hinzuzufügen
     def post(self, request):

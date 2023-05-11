@@ -447,6 +447,7 @@ export default {
                 .get(`/api/v1/products`)
                 .then((response) => {
                     this.products = response.data.products
+
                     if (response.data.quantity) {
                         this.productsTotal = response.data.quantity;
                     } else {
@@ -500,8 +501,8 @@ export default {
                     });
             }
         },
-        getCategories() {
-            axios
+        async getCategories() {
+            await axios
                 .get(`/api/v1/categories`)
                 .then((response) => {
                     this.categories = response.data;

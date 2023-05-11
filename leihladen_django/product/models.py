@@ -50,9 +50,9 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         if len(self.categories.all()) > 1:
-            return f'/{self.categories.all()[1].slug}/{self.slug}/'
+            return f'/{self.categories.all()[1].slug}/{self.id}/'
         else:
-            return f'/{self.categories.all()[0].slug}/{self.slug}/'
+            return f'/{self.categories.all()[0].slug}/{self.id}/'
 
     def get_image(self):
         if self.image:
@@ -67,14 +67,6 @@ class Product(models.Model):
             images.append({'http://127.0.0.1:8000/media/uploads/' + image})
         return images
 
-    def get_category_names(self):
-        category_names = []
-        for category in self.categories.all():
-            category_names.append(category.name)
-        return category_names
-
-
-    
 class Wishlist(models.Model):
     id = models.AutoField(primary_key=True)
     qr_code_text = models.TextField(blank=True, null=True)

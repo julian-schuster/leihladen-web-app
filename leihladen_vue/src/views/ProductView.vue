@@ -16,14 +16,19 @@
       <div class="column is-6">
         <div class="column is-12">
           <div class="image has-text-centered" v-if="!this.isMobile()">
-            <div class="responsive-image-container">
-              <VueMagnifier :src="currentPreview" v-if="currentPreview" />
+            <div class="image">
+              <VueMagnifier :src="currentPreview" v-if="currentPreview" width="500" />
             </div>
           </div>
-          <div class="thumbnails thumbnail" v-if="images.length > 1 || this.isMobile()">
+          <div class="image has-text-centered" v-if="this.isMobile() && images.length == 1">
+            <div class="image">
+              <img :src="currentPreview" v-if="currentPreview">
+            </div>
+          </div>
+          <div class="thumbnails thumbnail" v-if="images.length > 1">
             <div class="columns is-multiline is-centered">
-              <div class="column is-12-mobile is-6-tablet is-3-desktop" v-for="(image, index) in images">
-                <figure class="image is-3by2 highlight">
+              <div class="column is-12-mobile is-6-tablet is-4-desktop" v-for="(image, index) in images">
+                <figure class="image is-5by4 highlight">
                   <a @click="currentIndex = index; updatePreview()">
                     <img v-bind:src="image" alt="Produktbild">
                   </a>
@@ -64,13 +69,13 @@
                 <div class="field">
                   <label class="label">Kaution</label>
                   <div class="control">
-                    <span>{{ product.deposit }}€</span>
+                    <span>{{ currencyFormatter.format(product.deposit) }}</span>
                   </div>
                 </div>
                 <div class="field">
                   <label class="label">Leihgebühr</label>
                   <div class="control">
-                    <span>{{ product.fee }}€</span>
+                    <span>{{ currencyFormatter.format(product.fee) }}</span>
                   </div>
                 </div>
               </div>
@@ -162,6 +167,7 @@ export default {
     this.getProduct();
   },
   methods: {
+
     updatePreview() {
       this.currentPreview = this.product.get_images[this.currentIndex];
     },
@@ -264,6 +270,15 @@ export default {
         });
       }
 
+    },
+  },
+  computed: {
+    currencyFormatter() {
+      return new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+      });
     },
   }
 };
