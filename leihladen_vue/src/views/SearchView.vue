@@ -6,7 +6,31 @@
         <div class="columns is-multiline">
             <div class="column is-12">
                 <h1 class="title has-text-centered">Suche</h1>
-                <h2 class="is-size-5 has-text-grey has-text-centered">Suchbegriff: "{{ query }}"</h2>
+                <h2 class="is-size-5 has-text-grey has-text-centered">Suchbegriff: "{{ query }}" ({{ this.products.length
+                }} Produkte)</h2>
+                <h2></h2>
+
+            </div>
+            <div class="column is-12">
+                <div class="field">
+                    <label class="label">Sortieren nach:</label>
+                    <div class="control">
+                        <div class="select" style="margin-right:5px">
+                            <select v-model="sortBy" @change="sortByCriteria">
+                                <option value="date_added">Hinzugefügt am</option>
+                                <option value="name">Name</option>
+                                <option value="deposit">Kaution</option>
+                                <option value="fee">Leigehbühr</option>
+                            </select>
+                        </div>
+                        <div class="select">
+                            <select v-model="sortDirection" @change="sortByCriteria">
+                                <option value="asc">Aufsteigend</option>
+                                <option value="desc">Absteigend</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <ProductBox v-for="product in visibleProducts" v-bind:key="product.id" v-bind:product="product" />
             <div class="column is-12">
@@ -21,7 +45,6 @@
 import axios from 'axios'
 import ProductBox from '@/components/ProductBox.vue'
 import Pagination from '@/components/Pagination.vue'
-
 export default {
     name: 'Search',
     components: {
@@ -34,6 +57,8 @@ export default {
             query: '',
             currentPage: 1,
             itemsPerPage: 8,
+            sortBy: 'date_added',
+            sortDirection: 'asc'
         }
     },
     mounted() {
@@ -58,9 +83,32 @@ export default {
                     console.log(error);
                 })
             this.$store.commit('setIsLoading', false)
+            this.sortByCriteria();
         },
         onPageChange(page) {
             this.currentPage = page;
+        },
+        sortByCriteria() {
+            let sortFactor = 1;
+            if (this.sortDirection === 'desc') {
+                sortFactor = -1;
+            }
+            switch (this.sortBy) {
+                case 'name':
+                    this.products.sort((a, b) => sortFactor * a.name.localeCompare(b.name));
+                    break;
+                case 'deposit':
+                    this.products.sort((a, b) => sortFactor * (a.deposit - b.deposit));
+                    break;
+                case 'fee':
+                    this.products.sort((a, b) => sortFactor * (a.fee - b.fee));
+                    break;
+                default:
+                    this.products.sort((a, b) => sortFactor * (new Date(b.date_added) - new Date(a.date_added)));
+                    break;
+            }
+
+            this.currentPage = 1
         },
     },
     watch: {

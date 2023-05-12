@@ -62,12 +62,23 @@ class CategoryDetail(APIView):
 @api_view(['POST'])
 def search(request):
     query = request.data.get('query', '')
+    sort_by = request.data.get('sort', None)
 
     if query:
         products = Product.objects.filter(Q(name__icontains=query))
     else:
         products = Product.objects.all()
-    
+
+    if sort_by:
+        if sort_by == 'date_added':
+            products = products.order_by('-date_added')
+        elif sort_by == 'name':
+            products = products.order_by('name')
+        elif sort_by == 'deposit':
+            products = products.order_by('deposit')
+        elif sort_by == 'fee':
+            products = products.order_by('fee')
+
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

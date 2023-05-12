@@ -10,7 +10,11 @@
       </div>
       <div class="product-info">
         <div class="title is-size-4-desktop is-size-5-mobile is-clipped has-text-centered">{{ product.name }}</div>
-        <div class="subtitle is-6 has-text-centered" v-if="$route.path === '/'">Hinzugefügt am: {{ product.date_added }}
+        <div class="subtitle is-6 has-text-centered" style="margin-bottom: 5%;">Kaution: {{
+          currencyFormatter.format(product.deposit) }}</div>
+        <div class="subtitle is-6 has-text-centered" style="margin-bottom: 5%;">Leihgebühr: {{
+          currencyFormatter.format(product.fee) }}</div>
+        <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ product.date_added }}
         </div>
         <div class="columns">
           <div class="column details has-text-centered">
@@ -44,6 +48,15 @@ export default {
   mounted() {
     this.product.date_added = new Date(this.product.date_added).toLocaleDateString();
   },
+  computed: {
+    currencyFormatter() {
+      return new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+      });
+    },
+  }
 
 };
 </script>
