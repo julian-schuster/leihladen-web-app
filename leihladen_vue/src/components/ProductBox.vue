@@ -77,10 +77,11 @@ export default {
 
 .highlight {
   border: 2px solid transparent;
+  border-style: solid;
+  border-color: rgb(228, 224, 224);
 }
 
 .highlight:hover {
-  border-color: #398378;
   background-color: rgb(245, 245, 245);
 }
 
