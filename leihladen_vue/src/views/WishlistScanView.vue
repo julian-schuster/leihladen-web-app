@@ -23,7 +23,7 @@
                         v-if="isMobile() === 'rear' || isMobile() === 'front'">Kamera
                         wechseln</button>
                 </div>
-                <div class="has-text-centered">Scannen Sie einen QR-Code mit der ID einer Wunschliste oder eines Artikels,
+                <div class="has-text-centered">Scannen Sie den QR-Code einer Wunschliste oder eines Artikels,
                     um weitere Informationen zu erhalten.
                 </div>
             </div>

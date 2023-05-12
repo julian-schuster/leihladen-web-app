@@ -6,8 +6,8 @@
     <div class="columns is-multiline">
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered">{{ category.name }}</h2>
-        <h2 class="is-size-5 has-text-grey has-text-centered"> ({{ this.category.products.length
-        }} Produkte)</h2>
+        <h2 class="is-size-5 has-text-grey has-text-centered"> {{ this.category.products.length
+        }} Artikel</h2>
       </div>
       <div class="column is-12">
         <div class="field">

@@ -17,7 +17,7 @@
             <form method="get" action="/search">
               <div class="field has-addons">
                 <div class="control">
-                  <input type="text" class="input" placeholder="Nach Artikel suchen" name="query">
+                  <input type="text" class="input" placeholder="Nach Artikel suchen" maxlength="30" name="query">
                 </div>
                 <div class="control">
                   <button class="button">
@@ -36,7 +36,7 @@
           <form method="get" action="/search">
             <div class="field has-addons" style="justify-content: center;">
               <div class="control">
-                <input type="text" class="input" placeholder="Nach Artikel suchen" name="query">
+                <input type="text" class="input" placeholder="Nach Artikel suchen" maxlength="30" name="query">
               </div>
               <div class="control">
                 <button class="button">
@@ -293,7 +293,6 @@ footer {
 
 .navbutton {
   margin-right: 10px;
-
 }
 
 .burger-icon {

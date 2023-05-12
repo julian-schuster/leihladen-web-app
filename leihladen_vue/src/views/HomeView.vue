@@ -8,11 +8,11 @@
       </div>
       <div class="column is-7" style="margin-top:5%">
         <h1 class="title is-2">Willkommen im Leihladen</h1>
-        <h2 class="subtitle is-4">leihen statt kaufen - teilen statt besitzen</h2>
+        <h2 class="subtitle is-5" style="color:grey">leihen statt kaufen - teilen statt besitzen</h2>
         <form method="get" action="/search">
           <div class="field has-addons">
             <div class="control" style="width: 80%;">
-              <input type="text" class="input is-rounded" placeholder="Nach Artikel suchen" name="query">
+              <input type="text" class="input is-rounded" placeholder="Nach Artikel suchen" maxlength="30" name="query">
             </div>
             <div class="control">
               <button class="button">
@@ -43,7 +43,7 @@
               <div class="has-text-centered"> <span class="icon" style="margin-bottom:20px"><i class="fas fa-list fa-2x"
                     style="color: #EFA00B;"></i></span></div>
 
-              <p>Suchen Sie nach den Artikeln, die Sie ausleihen möchten. Sobald Sie einen Artikel gefunden haben, den
+              <p>Suchen Sie nach Artikeln, die Sie ausleihen möchten. Sobald Sie einen Artikel gefunden haben, den
                 Sie ausleihen möchten, klicken Sie auf die Schaltfläche 'Zur Wunschliste hinzufügen'. Sie können so
                 viele Artikel wie Sie möchten zur Wunschliste hinzufügen.</p>
             </div>
@@ -54,10 +54,9 @@
               <div class="has-text-centered"> <span class="icon" style="margin-bottom:20px"><i
                     class="fas fa-qrcode fa-2x"></i></span></div>
               <p>Wenn Sie mit dem Hinzufügen von Artikeln zur Wunschliste fertig sind, gehen Sie zur Wunschliste und
-                überprüfen Sie, ob alle Artikel korrekt sind. Wenn alles stimmt, können Sie die Wunschliste abschließen
+                überprüfen, ob alle Artikel korrekt sind. Wenn alles stimmt, können Sie die Wunschliste abschließen
                 und erhalten einen QR-Code. Sie können den QR-Code entweder auf Ihrem Smartphone speichern, die
-                Wunschlisten Seite offen haben
-                oder die Wunschliste ausdrucken und zum Leihladen bringen.</p>
+                Wunschlisten Seite offen haben oder die Wunschliste ausdrucken und zum Leihladen bringen.</p>
             </div>
           </div>
           <div class="column is-12-mobile is-4-desktop">
@@ -68,8 +67,8 @@
               <p>Bei Ihrer Ankunft im Leihladen zeigen Sie einfach den QR-Code Ihrer Wunschliste vor und unsere
                 Mitarbeiter werden Ihnen die gewünschten Artikel aushändigen. Die Höhe der Kaution, Leihgebühr und Dauer
                 der Leihe werden vor Ort festgelegt. Um die Rückgabe zu erleichtern, zeigen Sie erneut den QR-Code Ihrer
-                Wunschliste vor. Beachten Sie jedoch, dass Sie Artikel auch ohne QR-Code ausleihen und zurückgeben können.
-                Sobald Sie einen Artikel zurückgegeben haben, erhalten Sie Ihre Kaution zurück.
+                Wunschliste vor. Sie können Artikel auch ohne QR-Code ausleihen und zurückgeben.
+                Am Ende der Leihe erhalten sie die Kaution zurück.
               </p>
             </div>
           </div>

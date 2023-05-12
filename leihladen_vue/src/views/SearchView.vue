@@ -5,9 +5,9 @@
     <div class="container" v-if="!$store.state.isLoading">
         <div class="columns is-multiline">
             <div class="column is-12">
-                <h1 class="title has-text-centered">Suche</h1>
-                <h2 class="is-size-5 has-text-grey has-text-centered">Suchbegriff: "{{ query }}" ({{ this.products.length
-                }} Produkte)</h2>
+                <h1 class="title has-text-centered">Suchergebnisse</h1>
+                <h2 class="is-size-5 has-text-grey has-text-centered">Suchbegriff: "{{ query }}"</h2>
+                <h2 class="is-size-5 has-text-grey has-text-centered">{{ this.products.length }} Artikel</h2>
             </div>
             <div class="column is-12">
                 <div class="field">

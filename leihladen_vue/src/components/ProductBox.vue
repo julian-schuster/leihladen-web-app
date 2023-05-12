@@ -63,9 +63,9 @@ export default {
 
 <style scoped>
 .image {
-  margin-top: -1.25rem;
-  margin-left: -1.25rem;
-  margin-right: -1.25rem;
+  margin-top: -0.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
 }
 
 .is-clipped {
