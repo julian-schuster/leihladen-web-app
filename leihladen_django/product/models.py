@@ -8,7 +8,7 @@ class Category(models.Model):
     slug = models.SlugField(allow_unicode=True, max_length=255, blank=True, null=True)
 
     class Meta:
-        ordering = ('name',)  #Kategorien nach ID aufsteigend sortieren
+        ordering = ('name',)  #Kategorien nach name aufsteigend sortieren
 
     #Eine Zeichenkette zurückgeben, die den Namen der Kategorie enthält
     def __str__(self):
@@ -39,21 +39,25 @@ class Product(models.Model):
     available = models.IntegerField(default=1, validators=[MinValueValidator(0)])
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('id',) #Artikel nach id aufsteigend sortieren
 
+    #ID des Artikels als String zurückgeben
     def __str__(self):
         return self.id
 
+    #Validierung ob Verfügbarkeit größer ist als Stückzahl
     def clean(self):
         if self.available > self.quantity:
             raise ValidationError("Die verfügbare Menge kann nicht größer sein als die Gesamtmenge.")
 
+    #Gibt die absolute URL des Artikels zurück. Bildet sich aus dem category-slug und der ID des Artikels
     def get_absolute_url(self):
         if len(self.categories.all()) > 1:
             return f'/{self.categories.all()[1].slug}/{self.id}/'
         else:
             return f'/{self.categories.all()[0].slug}/{self.id}/'
 
+    #Gibt die URL des Bildes oder der Bilder des Artikels zurück
     def get_image(self):
         if self.image:
             return 'http://127.0.0.1:8000' + self.image.url
@@ -61,6 +65,7 @@ class Product(models.Model):
             return 'http://127.0.0.1:8000/media/uploads/' + self.images[0]
         return {}
 
+    #Gibt éin Array der Bildernamen des Artikels zurück
     def get_images(self):
         images = []
         for image in self.images:
@@ -74,7 +79,7 @@ class Wishlist(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ('-date_added',) #Wunschliste nach Dateum absteigend sortieren.
+        ordering = ('-date_added',) #Wunschliste nach Datum absteigend sortieren
         
     def __str__(self):
-        return f"Wishlist {self.id}" #Gibt die ID der Wunschliste als Zeichenfolge zurück.
+        return f"Wishlist {self.id}" #Gibt die ID der Wunschliste als Zeichenfolge zurück
