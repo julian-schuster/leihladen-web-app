@@ -4,6 +4,10 @@ Entstanden im Rahmen meiner Masterthesis "Digitalisierungsprozesse in der Sharin
 
 Live-Demo: https://leihladen.schuster-julian.de/
 
+username: admin
+
+passwort: leihladen123
+
 # Installation Vue
 
 In leihladen_vue navigieren:
