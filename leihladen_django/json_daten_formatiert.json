@@ -1562,6 +1562,23 @@
             ]
         },
         {
+            "inventarnummer": "IN00093",
+            "bezeichnung": "Lötpistole für Reparaturen u. Bastelarbeiten, Tiffany",
+            "beschreibung": "Die Lötpistole ist ein handliches Werkzeug für schnelle Reparaturen und für Bastelarbeiten. Durch die Form liegt es gut in der Hand, es verfügt über eine kurze Aufwärmzeit. Nur mit gedrücktem Taster arbeitet die Pistole; andernfalls bleibt sie kalt.",
+            "dimension": "ca. 50 cm lang",
+            "gewicht": "7 kg",
+            "kleinteil": "nein",
+            "kaution": "5.00",
+            "kosten": "2.00",
+            "bilder": [
+                "IN00093.jpg"
+            ],
+            "kategorien": [
+                7,
+                0
+            ]
+        },
+        {
             "inventarnummer": "IN00094",
             "bezeichnung": "Akkuhandstaubsauger für Möbel und Auto",
             "beschreibung": "Akkuhandstaubsauger für Möbel und Auto",
@@ -2529,7 +2546,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00176.jpg"
             ],
@@ -2546,7 +2563,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00174.jpg"
             ],
@@ -2563,7 +2580,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00168.jpg"
             ],
@@ -2580,7 +2597,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00166.jpg"
             ],
@@ -2597,7 +2614,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00165.jpg"
             ],
@@ -2614,7 +2631,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00164.jpg"
             ],
@@ -2631,7 +2648,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00163.jpg"
             ],
@@ -2648,7 +2665,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00162.jpg"
             ],
@@ -2665,7 +2682,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00178.jpg"
             ],
@@ -2681,8 +2698,8 @@
             "dimension": "Dimension",
             "gewicht": "Gewicht",
             "kleinteil": "ja",
-            "kaution": "5 ",
-            "kosten": "2 ",
+            "kaution": "5",
+            "kosten": "2",
             "bilder": [
                 "IN00184.jpg"
             ],
@@ -2718,7 +2735,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00187.jpg"
             ],
@@ -2786,7 +2803,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00192.jpg"
             ],
@@ -2804,29 +2821,13 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00194.jpg"
             ],
             "kategorien": [
                 0,
                 6
-            ]
-        },
-        {
-            "inventarnummer": "IN00193",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00193.jpg"
-            ],
-            "kategorien": [
-                0
             ]
         },
         {
@@ -2837,7 +2838,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00151.jpg"
             ],
@@ -2846,118 +2847,7 @@
                 6
             ]
         },
-        {
-            "inventarnummer": "IN00175",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00175.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00147",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00147.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00146",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00146.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00149",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00149.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00140",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00140.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00150",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00150.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
-        {
-            "inventarnummer": "IN00170",
-            "bezeichnung": "Die Bezeichnung",
-            "beschreibung": "Die Beschreibung",
-            "dimension": "Dimension",
-            "gewicht": "Gewicht",
-            "kleinteil": "ja",
-            "kaution": "10.0",
-            "kosten": "2.00 ",
-            "bilder": [
-                "IN00170.jpg"
-            ],
-            "kategorien": [
-                0
-            ]
-        },
+
         {
             "inventarnummer": "IN00169",
             "bezeichnung": "Winkelschleifer",
@@ -2966,7 +2856,7 @@
             "gewicht": "Gewicht",
             "kleinteil": "ja",
             "kaution": "10.0",
-            "kosten": "2.00 ",
+            "kosten": "2.00",
             "bilder": [
                 "IN00169.jpg"
             ],
