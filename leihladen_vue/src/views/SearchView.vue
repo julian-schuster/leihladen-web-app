@@ -23,8 +23,10 @@
                         </div>
                         <div class="select">
                             <select v-model="sortDirection" @change="sortByCriteria">
-                                <option value="asc">Aufsteigend</option>
-                                <option value="desc">Absteigend</option>
+                                <option value="asc" v-if="sortBy == 'date_added'">Neueste</option>
+                                <option value="desc" v-if="sortBy == 'date_added'">Älteste</option>
+                                <option value="asc" v-if="sortBy != 'date_added'">Aufsteigend</option>
+                                <option value="desc" v-if="sortBy != 'date_added'">Absteigend</option>
                             </select>
                         </div>
                     </div>
