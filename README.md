@@ -63,6 +63,16 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+Admin Account erstellen:
+```
+python manage.py createsuperuser
+```
+
+(optional) Datenbank mit Daten füllen:
+```
+python loadIntoDB.py
+```
+
 Django development Server starten:
 ```
 python manage.py runserver
