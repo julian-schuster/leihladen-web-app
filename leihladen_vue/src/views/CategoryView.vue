@@ -61,11 +61,13 @@ export default {
   },
   components: { ProductBox, Pagination },
   mounted() {
+    // Die isLoading-Flag im globalen Store auf true setzen, um einen Ladeindikator anzuzeigen
     this.$store.commit("setIsLoading", true);
     this.getCategory();
   },
   watch: {
     $route(to, from) {
+      // Wenn die Route zu einer Kategorie-Seite führt, getCategory() aufrufen, um die Kategorieinformationen zu aktualisieren
       if (to.name === "Category") {
         this.getCategory();
       }
@@ -80,7 +82,10 @@ export default {
         .then((response) => {
           this.category = response.data;
           document.title = this.category.name + " | Leihladen";
+          // Stoppen des Lade-Spinners
           this.$store.commit("setIsLoading", false);
+
+          // Sortieren der Produkte nach den gewählten Kriterien
           this.sortByCriteria();
         })
         .catch((error) => {
@@ -96,7 +101,6 @@ export default {
           });
 
           this.$router.push("/")
-
         });
     },
     onPageChange(page) {
@@ -104,43 +108,49 @@ export default {
     },
     sortByCriteria() {
       let sortFactor = 1;
-      if (this.sortDirection === 'desc') {
+      if (this.sortDirection === 'desc') { // Wenn die Sortierrichtung absteigend ist, wird der Sortierfaktor negativ gesetzt.
         sortFactor = -1;
       }
-      switch (this.sortBy) {
+      switch (this.sortBy) { // Je nach ausgewähltem Sortierkriterium wird die Liste der Produkte sortiert.
         case 'name':
-          this.category.products.sort((a, b) => sortFactor * a.name.localeCompare(b.name));
+          this.category.products.sort((a, b) => sortFactor * a.name.localeCompare(b.name)); // Sortiert die Produkte nach dem Namen.
           break;
         case 'deposit':
-          this.category.products.sort((a, b) => sortFactor * (a.deposit - b.deposit));
+          this.category.products.sort((a, b) => sortFactor * (a.deposit - b.deposit)); // Sortiert die Produkte nach der Kaution.
           break;
         case 'fee':
-          this.category.products.sort((a, b) => sortFactor * (a.fee - b.fee));
+          this.category.products.sort((a, b) => sortFactor * (a.fee - b.fee)); // Sortiert die Produkte nach der Gebühr.
           break;
         default:
-          this.category.products.sort((a, b) => sortFactor * (new Date(b.date_added) - new Date(a.date_added)));
+          this.category.products.sort((a, b) => sortFactor * (new Date(b.date_added) - new Date(a.date_added))); // Sortiert die Produkte nach dem Hinzufügungsdatum.
           break;
       }
 
-      this.currentPage = 1
-    },
+      this.currentPage = 1 // Setzt die aktuelle Seite auf die erste Seite, wenn die Sortierung geändert wird.
+    }
   },
   watch: {
     totalPages(newTotal, oldTotal) {
+      // Überprüft, ob es nur eine Seite gibt und die aktuelle Seite mehr als 1 ist
       if (newTotal === 1 && oldTotal > 1) {
         this.currentPage = 1;
-      } else if (this.currentPage > newTotal) {
+      }
+      // Überprüft, ob die aktuelle Seite außerhalb des Bereichs der Seitenzahl liegt
+      else if (this.currentPage > newTotal) {
         this.currentPage = newTotal;
       }
     }
   },
   computed: {
+    // Berechnet die Gesamtzahl der Seiten
     totalPages() {
       return Math.ceil(this.category.products.length / this.itemsPerPage);
     },
     visibleProducts() {
+      // Bestimmt den Start- und Endindex der sichtbaren Produkte
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
+      // Gibt eine neue Liste mit den sichtbaren Produkten zurück
       return this.category.products.slice(start, end);
     }
   }

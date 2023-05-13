@@ -367,13 +367,17 @@ export default {
     },
     methods: {
         saveCategory() {
+            // Setze die Flag 'showAddCategory' auf false, um das Formular zum Hinzufügen einer Kategorie auszublenden.
             this.showAddCategory = false;
 
+            // Sende eine POST-Anfrage an die API, um eine neue Kategorie zu erstellen.
             axios
                 .post(`/api/v1/category/`, { categoryName: this.categoryName })
                 .then((response) => {
+                    // Rufe die Methode 'getCategories' auf, um die Liste der Kategorien zu aktualisieren.
                     this.getCategories()
 
+                    //Erfolgsmeldung
                     toast({
                         message: `Kategorie '${this.categoryName}' wurde hinzugefügt.`,
                         type: "is-success",
@@ -387,15 +391,19 @@ export default {
                 .catch((error) => {
                     console.log(error);
                 });
-
         },
+
         deleteCategory(category) {
+            // Fordere eine Bestätigung vom Benutzer an, bevor die Kategorie gelöscht wird.
             if (confirm(`Sind Sie sicher, dass Sie Kategorie '${category.name}' löschen möchten? ACHTUNG: Alle Artikel in dieser Kategorie werden auch entfernt.`)) {
+                // Sende eine DELETE-Anfrage an die API, um die ausgewählte Kategorie zu löschen.
                 axios
                     .delete(`/api/v1/category/${category.id}`)
                     .then((response) => {
+                        // Rufe die Methode 'getCategories' auf, um die Liste der Kategorien zu aktualisieren.
                         this.getCategories()
 
+                        // Erfolgsmeldung
                         toast({
                             message: `Kategorie '${category.name}' wurde entfernt.`,
                             type: "is-success",
@@ -410,15 +418,19 @@ export default {
                     });
             }
         },
-        updateCategory(category) {
 
+        updateCategory(category) {
+            // Setze die Flag 'editing' auf false, um den Bearbeitungsmodus zu deaktivieren.
             category.editing = false;
 
+            // Sende eine PUT-Anfrage an die API, um den Namen der ausgewählten Kategorie zu aktualisieren.
             axios
                 .put(`/api/v1/category/`, { id: category.id, newName: category.newName })
                 .then((response) => {
+                    // Rufe die Methode 'getCategories' auf, um die Liste der Kategorien zu aktualisieren.
                     this.getCategories()
 
+                    // Erfolgsmeldung
                     toast({
                         message: `Kategorie '${category.name}' wurde zu '${category.newName}' umbenannt.`,
                         type: "is-success",
@@ -435,11 +447,15 @@ export default {
         logout() {
             axios.defaults.headers.common["Authorization"] = ""
 
+            // Entfernen des JWT-Tokens, des Benutzernamens und der Benutzer-ID aus dem lokalen Speicher
             localStorage.removeItem("token")
             localStorage.removeItem("username")
             localStorage.removeItem("userid")
 
+            // Entfernen des Tokens aus dem Vuex Store
             this.$store.commit('removeToken')
+
+            // Umleiten des Benutzers auf die Startseite
             this.$router.push('/')
         },
         async getProducts() {
@@ -448,11 +464,14 @@ export default {
                 .then((response) => {
                     this.products = response.data.products
 
+                    // Überprüfen, ob die API-Antwort die Gesamtzahl der Produkte enthält
                     if (response.data.quantity) {
                         this.productsTotal = response.data.quantity;
                     } else {
                         this.productsTotal = 0
                     }
+
+                    // Speichern der Anzahl verfügbarer Produkte
                     this.productsAvailable = response.data.available_count
                 })
                 .catch((error) => {
@@ -464,8 +483,8 @@ export default {
                 .get(`/api/v1/wishlists`)
                 .then((response) => {
                     this.wishlists = response.data.wishlists;
+                    // Speichern der Anzahl der Wunschlisten des Benutzers
                     this.wishlistCount = response.data.count;
-
                 })
                 .catch((error) => {
                     console.log(error);
@@ -479,14 +498,17 @@ export default {
             this.currentPage = page;
         },
         deleteProduct(product) {
+            // Dialog-Box, um zu bestätigen, ob das Produkt wirklich gelöscht werden soll
             if (confirm(`Sind Sie sicher, dass Sie Artikel '${product.name}' löschen möchten?`)) {
                 axios
                     .delete(`/api/v1/product/${product.id}`)
                     .then((response) => {
                         console.log(response);
 
+                        // Aktualisieren der Produkte-Liste nach dem Löschen
                         this.products = this.getProducts()
 
+                        // Erfolgsmeldung
                         toast({
                             message: `Artikel '${product.name}' wurde entfernt.`,
                             type: "is-success",
@@ -505,7 +527,10 @@ export default {
             await axios
                 .get(`/api/v1/categories`)
                 .then((response) => {
+                    // Kategorien in Variable speichern
                     this.categories = response.data;
+
+                    // Laden-Status auf false setzen
                     this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
@@ -514,39 +539,47 @@ export default {
         },
     },
     mounted() {
+        // Titel der Seite
         document.title = 'Adminpanel | Leihladen'
+        // Laden-Status true setzen
         this.$store.commit("setIsLoading", true);
+        // Lädt die Produkte, Wunschlisten und Kategorien
         this.getProducts();
         this.getWishlists();
         this.getCategories();
-
     },
     watch: {
+        // Überwacht die Gesamtzahl der Seiten
         totalPages(newTotal, oldTotal) {
+            // Setzt die aktuelle Seite auf 1, wenn nur eine Seite vorhanden ist
             if (newTotal === 1 && oldTotal > 1) {
                 this.currentPage = 1;
-            } else if (this.currentPage > newTotal) {
+            }
+            // Setzt die aktuelle Seite auf die letzte Seite, wenn die aktuelle Seite größer als die Gesamtzahl ist
+            else if (this.currentPage > newTotal) {
                 this.currentPage = newTotal;
             }
         }
     },
     computed: {
+        // Berechne die Auslastung in Prozent
         calculateUtilization() {
             if (this.productsTotal === 0) {
                 return 0;
             } else {
+
                 const utilization = (this.productsTotal - this.productsAvailable) / this.productsTotal * 100;
                 return utilization.toFixed(2);
             }
         },
+        // Reduziere das Array der Produkte auf die Anzahl ausgeliehener Produkte und gib sie zurück
         calculateBorrowedProducts() {
             return this.products.reduce((borrowedCount, product) => borrowedCount + (product.quantity - product.available), 0);
         },
         filterNotAvailableProducts() {
+            // Filtere die Produkte, die nicht verfügbar sind
             return this.products.filter((product) => {
-                // Differenz zwischen count und available berechnen
                 product.difference = product.quantity - product.available;
-                // Produkt zurückgeben, wenn count und available unterschiedlich sind
                 return product.quantity !== product.available;
             });
         },
@@ -554,19 +587,25 @@ export default {
             const searchQuery = this.searchWishlistQuery.toLowerCase();
             this.currentPage = 1
 
+            // Falls kein Suchbegriff vorhanden ist, gib die gesamte Wunschliste zurück
             if (!searchQuery) {
                 return this.wishlists
             }
 
+            // Filtere die Wunschliste nach dem Suchbegriff und gib das Ergebnis zurück
             return this.wishlists.filter((wishlist) => {
+                // Konvertiere die client_id des Eintrags in Kleinbuchstaben und prüfe, ob der Suchbegriff darin enthalten ist
                 return wishlist.client_id.toLowerCase().includes(searchQuery);
             });
         },
         totalWishlistPages() {
+            // Anzahl der Seiten für die paginierte Darstellung berechnen
             return Math.ceil(this.filteredWishlists.length / this.itemsPerPage);
         },
         paginatedFilteredWishlists() {
+            // Start-Index für das aktuelle Seitenfenster berechnen
             const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            // Ausschnitt der gefilterten Wunschlisten zurückgeben
             return this.filteredWishlists.slice(startIndex, startIndex + this.itemsPerPage)
         },
         filteredProducts() {
@@ -578,34 +617,43 @@ export default {
             }
 
             return this.products.filter((product) => {
+                // Produkte filtern, deren Name oder ID den Suchbegriff enthält
                 return product.name.toLowerCase().includes(searchQuery) || product.id.toLowerCase().includes(searchQuery);
             });
 
         },
         totalProductPages() {
+            // Anzahl der Seiten für die paginierte Darstellung berechnen
             return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
         },
         paginatedFilteredProducts() {
-            const startIndex = (this.currentPage - 1) * this.itemsPerPage
-            return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage)
+            // Index des ersten Elements auf der aktuellen Seite berechnen
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            // Ausschnitt der Produkte für die aktuelle Seite zurückgeben
+            return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
         },
         filteredNotAvailableProducts() {
             const searchQuery = this.searchNotAvailableProductQuery.toLowerCase();
-            this.currentPage = 1
+            this.currentPage = 1;
 
             if (!searchQuery) {
-                return this.filterNotAvailableProducts
+                // Wenn keine Suche durchgeführt wird, alle nicht verfügbaren Produkte zurückgeben
+                return this.filterNotAvailableProducts;
             }
 
+            // Filtern nach Produkten, deren Name oder ID den Suchbegriff enthält
             return this.filterNotAvailableProducts.filter((product) => {
                 return product.name.toLowerCase().includes(searchQuery) || product.id.toLowerCase().includes(searchQuery);
             });
         },
         totalNotAvailableProductPages() {
+            // Anzahl der Seiten für die paginierte Darstellung berechnen
             return Math.ceil(this.filteredNotAvailableProducts.length / this.itemsPerPage);
         },
         paginatedFilteredNotAvailableProducts() {
+            // Berechnen des Startindex für die paginierte Darstellung
             const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            // Rückgabe der Produkte für die aktuelle Seite
             return this.filteredNotAvailableProducts.slice(startIndex, startIndex + this.itemsPerPage)
         },
         filteredCategories() {
@@ -613,20 +661,25 @@ export default {
             this.currentPage = 1
 
             if (!searchQuery) {
+                // Wenn keine Suchanfrage vorhanden ist, alle Kategorien zurückgeben
                 return this.categories
             }
 
+            // Kategorien filtern, die den Suchbegriff enthalten
             return this.categories.filter((category) => {
                 return category.name.toLowerCase().includes(searchQuery);
             });
         },
         totalCategoriesPages() {
+            // Anzahl der Seiten für die paginierte Darstellung berechnen
             return Math.ceil(this.filteredCategories.length / this.itemsPerPage);
         },
         paginatedCategories() {
+            // Berechnen des Startindex für die paginierte Darstellung
             const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            // Rückgabe der Kategorien für die aktuelle Seite
             return this.filteredCategories.slice(startIndex, startIndex + this.itemsPerPage)
-        }
+        },
     }
 }
 </script>

@@ -87,14 +87,15 @@ export default {
     },
     mounted() {
         this.$store.commit("setIsLoading", true);
+        //client id aus url holen
         this.wishlist_client_id = this.$route.params.client_id;
         document.title = 'Wunschliste ' + this.wishlist_client_id + '| Leihladen'
-
-
+        //Produkte und Wishlist holen
         this.getProducts()
         this.getWishlist(this.wishlist_client_id)
     },
     computed: {
+        //Währung formatieren
         currencyFormatter() {
             return new Intl.NumberFormat('de-DE', {
                 style: 'currency',
@@ -104,6 +105,7 @@ export default {
         },
     },
     methods: {
+        //Wunschliste des clients mit der client_id holen
         getWishlist() {
             axios.get(`/api/v1/wishlist/${this.wishlist_client_id}/`)
                 .then(response => {
@@ -115,6 +117,7 @@ export default {
                     this.$router.push("/")
                 })
         },
+        //Alle Artikel holen
         getProducts() {
             axios
                 .get(`/api/v1/products`)
@@ -126,14 +129,17 @@ export default {
                     console.log(error);
                 });
         },
+        //Verfügbarkeit des Artikels ermitteln
         getProductAvailable(productId) {
             const product = this.products.find(p => p.id === productId);
             return product ? product.available : '-';
         },
+        //Stückzahl des Artikels ermitteln
         getProductCount(productId) {
             const product = this.products.find(p => p.id === productId);
             return product ? product.quantity : '-';
         },
+        //Verfügbarkeit aktualisieren
         updateProductAvailability(id, value) {
             const product = this.products.find(p => p.id === id);
 
@@ -152,11 +158,11 @@ export default {
 
             const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
             if (window.confirm(confirmationMessage)) {
-
+                //Route zum bearbeiten von Verfügbarkeiten eines Artikels
                 axios.put(`/api/v1/product/${id}/availability/`, { value: value })
                     .then(response => {
-
                         const updatedProduct = response.data;
+                        //Artikel-Response in this.products finden
                         const index = this.products.findIndex(p => p.id === updatedProduct.id);
                         if (index > -1) {
                             this.products.splice(index, 1, updatedProduct);
@@ -166,11 +172,13 @@ export default {
                             wishlistItem.product = updatedProduct;
                         }
 
+                        //Eintrag für den Verlauf erzeugen
                         const logEntry = {
                             product: updatedProduct,
                             message: `Verfügbarkeit für Artikel "${updatedProduct.name}" um ${Math.abs(value)} ${value > 0 ? 'erhöht' : 'verringert'}.`,
                             time: new Date().toLocaleTimeString()
                         };
+                        //Neuer Eintrag auf Verlauf pushen
                         this.log.push(logEntry);
 
                         toast({
@@ -199,7 +207,6 @@ export default {
             }
         },
     },
-
 }
 </script>
 

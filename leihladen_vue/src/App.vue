@@ -182,11 +182,14 @@ export default {
     };
   },
   beforeCreate() {
+    //LocalStorage initialisieren -> ClientID setzen/holen, Wunschliste holen usw.
     this.$store.commit("initializeStore");
     this.$store.commit("initializeClient");
 
+    //Prüfen ob der Client ein admin token hat
     const token = this.$store.state.token
 
+    //Wenn ja Token in headers setzen -> Wichtig um ihn als Admin zu kennzeichnen!
     if (token) {
       axios.defaults.headers.common['Authorization'] = "Token " + token
     } else {
@@ -194,13 +197,16 @@ export default {
     }
   },
   created() {
+    //Bei jedem Seitenaufruf Kategorien holen
     this.getCategories()
   },
   mounted() {
+    //Client Wunschliste aus localStorage holen
     this.wishlist = this.$store.state.wishlist
   },
   methods: {
     getCategories() {
+      //API Route zum holen aller Kategorien
       axios
         .get(`/api/v1/categories`)
         .then((response) => {
@@ -212,6 +218,7 @@ export default {
     },
   },
   computed: {
+    //Berechnet Anzahl der Artikel auf der Wunschliste um sie in der navbar anzuzeigen
     wishlistTotalLength() {
       let totalLength = 0;
 

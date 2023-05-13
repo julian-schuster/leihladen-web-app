@@ -40,12 +40,16 @@ export default {
         this.getProduct()
     },
     methods: {
+        // Gibt die Anzahl eines Produkts zurück
         getItemTotal(item) {
             return item.quantity
         },
+
+        // Verringert die Menge eines Artikels in der Wunschliste um 1
         decrementQuanitity(item) {
 
             if (!this.product) {
+                // Fehlermeldung anzeigen, wenn das Produkt nicht verfügbar ist
                 toast({
                     message: `Dieser Artikel befindet sich nicht mehr im System.`,
                     type: "is-danger",
@@ -61,10 +65,12 @@ export default {
             item.quantity -= 1
 
             if (item.quantity === 0) {
+                // Bestätigungsnachricht anzeigen, bevor ein Artikel aus der Wunschliste entfernt wird
                 const confirmationMessage = `Möchten Sie den Artikel "${item.product.name}" wirklich von Ihrer Wunschliste entfernen?`;
                 if (window.confirm(confirmationMessage)) {
                     this.$emit('removeFromWishlist', item)
 
+                    // Bestätigungsnachricht anzeigen, wenn der Artikel erfolgreich entfernt wurde
                     toast({
                         message: `"${item.product.name}" wurde von Ihrer Wunschliste entfernt`,
                         type: "is-success",
@@ -80,6 +86,7 @@ export default {
             }
             this.updateWishlist()
 
+            // Bestätigungsnachricht anzeigen, wenn die Menge eines Artikels erfolgreich reduziert wurde
             toast({
                 message: `Anzahl von Artikel "${item.product.name}" um 1 verringert.`,
                 type: "is-success",
@@ -90,9 +97,12 @@ export default {
             });
 
         },
+
+        // Erhöht die Menge eines Artikels in der Wunschliste um 1
         incrementQuanitity(item) {
 
             if (!this.product) {
+                // Fehlermeldung anzeigen, wenn das Produkt nicht verfügbar ist
                 toast({
                     message: `Dieser Artikel befindet sich nicht mehr im System.`,
                     type: "is-danger",
@@ -109,6 +119,7 @@ export default {
                 item.quantity += 1
                 this.updateWishlist()
 
+                // Bestätigungsnachricht anzeigen, wenn die Menge eines Artikels erfolgreich erhöht wurde
                 toast({
                     message: `Anzahl von Artikel "${item.product.name}" um 1 erhöht.`,
                     type: "is-success",
@@ -120,9 +131,13 @@ export default {
             }
 
         },
+
+        // Aktualisiert die Wunschliste in localStorage
         updateWishlist() {
             localStorage.setItem('wishlist', JSON.stringify(this.$store.state.wishlist))
         },
+
+        // Entfernt einen Artikel aus der Wunschliste
         removeFromWishlist(item) {
             const confirmationMessage = `Möchten Sie den Artikel "${item.product.name}" wirklich von Ihrer Wunschliste entfernen?`;
             if (window.confirm(confirmationMessage)) {
@@ -138,6 +153,7 @@ export default {
                 });
             }
         },
+        // Produkt von der API holen und es in this.product speichern
         async getProduct() {
             axios
                 .get(`/api/v1/products` + this.initialItem.product.get_absolute_url)
@@ -151,6 +167,7 @@ export default {
         },
     },
     computed: {
+        // Formatierung für Währungen im deutschen Format
         currencyFormatter() {
             return new Intl.NumberFormat('de-DE', {
                 style: 'currency',

@@ -93,15 +93,17 @@ export default {
   mounted() {
     this.getLatestProducts();
 
+    // Setzt den Titel der Seite
     document.title = "Startseite | Leihladen";
   },
+  // Ruft die neuesten Produkte vom Server ab
   methods: {
     async getLatestProducts() {
+      // Setzt den Ladezustand auf "true"
       this.$store.commit("setIsLoading", true);
 
       await axios
         .get("/api/v1/latest-products/")
-
         .then((response) => {
           this.latestProducts = response.data;
         })
@@ -109,9 +111,11 @@ export default {
           console.log(error);
         });
 
+      // Setzt den Ladezustand auf "false"
       this.$store.commit("setIsLoading", false);
     },
   },
+
 };
 </script>
 

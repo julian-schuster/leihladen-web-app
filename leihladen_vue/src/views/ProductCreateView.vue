@@ -157,35 +157,43 @@ export default {
         };
     },
     mounted() {
+        // Setzt den Titel der Seite und zeigt den Ladebildschirm an
         document.title = "Artikel hinzufügen | Leihladen";
         this.$store.commit("setIsLoading", true);
-        this.getCategories()
+
+        // Holt die Kategorien von der API
+        this.getCategories();
     },
     methods: {
+        // Wird aufgerufen, wenn ein Element über das Feld gezogen wird
         handleDragOver(event) {
             event.preventDefault();
             event.dataTransfer.dropEffect = "copy";
             event.currentTarget.classList.add("dragging-over");
         },
+
+        // Wird aufgerufen, wenn ein Element das Feld verlässt
         handleDragLeave(event) {
             event.currentTarget.classList.remove("dragging-over");
         },
+
+        // Wird aufgerufen, wenn ein Element auf das Feld fallen gelassen wird
         handleDrop(event) {
             event.currentTarget.classList.remove("dragging-over");
         },
+
+        // Holt die Kategorien von der API
         async getCategories() {
-            await axios
-                .get(`/api/v1/categories`)
-                .then((response) => {
-                    this.categories = response.data;
-                    this.$store.commit("setIsLoading", false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            try {
+                const response = await axios.get(`/api/v1/categories`);
+                this.categories = response.data;
+                this.$store.commit("setIsLoading", false);
+            } catch (error) {
+                console.log(error);
+            }
         },
         submitForm() {
-
+            // Überprüfen, ob ein Bild hochgeladen wurde
             if (!this.isImageUploaded) {
                 toast({
                     message: "Bitte laden Sie mindestens ein Bild hoch.",
@@ -198,6 +206,7 @@ export default {
                 return;
             }
 
+            // Überprüfen, ob die eingegebene Menge größer als 0 ist
             if (this.product.quantity <= 0) {
                 toast({
                     message: "Bitte geben Sie eine Anzahl größer als 0 ein.",
@@ -210,6 +219,7 @@ export default {
                 return;
             }
 
+            // Erstellen des Formular-Datenobjekts und Hinzufügen der Produktdaten und des Bildes
             const formData = new FormData();
             formData.append('id', this.product.id);
             formData.append('name', this.product.name);
@@ -223,6 +233,7 @@ export default {
             formData.append('smallPieces', this.product.smallPieces);
             formData.append('image', this.file1);
 
+            // Hinzufügen von bis zu drei weiteren Bildern, falls vorhanden
             if (this.file2) {
                 formData.append('image2', this.file2);
             }
@@ -232,10 +243,11 @@ export default {
             if (this.file4) {
                 formData.append('image4', this.file4);
             }
+
+            // Senden des Formulars an die API
             axios
                 .post(`/api/v1/product/`, formData)
                 .then((response) => {
-                    console.log(response.data);
 
                     toast({
                         message: `Artikel "${this.product.name}" wurde ${this.product.quantity}x hinzugefügt`,
@@ -246,6 +258,7 @@ export default {
                         position: "bottom-right",
                     });
 
+                    // Zurücksetzen der Formulardaten
                     this.product.name = '';
                     this.product.description = '';
                     this.product.categories = [];
@@ -276,10 +289,15 @@ export default {
                     });
                 });
         },
+
         handleFileUpload(event) {
+            // Die ausgewählten Dateien werden in der "files" Variable gespeichert
             const files = event.target.files;
+
+            // Nur diese Dateiendungen sind erlaubt
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
+            // Die Variablen für alle Dateien und dazugehörigen Bilder werden zurückgesetzt
             this.file1 = null;
             this.product.image1 = null;
             this.file2 = null;
@@ -289,19 +307,23 @@ export default {
             this.file4 = null;
             this.product.image4 = null;
 
-
+            // Für jede ausgewählte Datei
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
+                // Prüfen, ob die Dateiendung erlaubt ist
                 if (!allowedExtensions.exec(file.name)) {
+                    // Wenn nicht, wird "validImages" auf "false" gesetzt
                     this.validImages = false;
                     return;
                 } else {
                     this.validImages = true;
                 }
+
                 if (i === 0) {
+                    // Die Variable "file1" wird mit der ausgewählten Datei befüllt
                     this.file1 = file;
                     this.product.image1 = URL.createObjectURL(file);
-                    this.isImageUploaded = true
+                    this.isImageUploaded = true;
                 } else if (i === 1) {
                     this.file2 = file;
                     this.product.image2 = URL.createObjectURL(file);
@@ -314,6 +336,8 @@ export default {
                 }
             }
         },
+
+        // Diese Funktion prüft, ob mindestens eine Datei ausgewählt wurde
         validateImages() {
             if (this.file1 || this.file2 || this.file3 || this.file4) {
                 return true;

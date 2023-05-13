@@ -163,11 +163,12 @@ export default {
     };
   },
   mounted() {
+    //URL in sections gliedern
     this.sections = this.getSections();
     this.getProduct();
   },
   methods: {
-
+    //"Hauptbild" setzen
     updatePreview() {
       this.currentPreview = this.product.get_images[this.currentIndex];
     },
@@ -178,6 +179,7 @@ export default {
     getUrl(index) {
       return '/' + this.sections.slice(0, index + 1).join('/') + '/';
     },
+    //Prüfen ob client mobile ist
     isMobile() {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true
@@ -188,9 +190,11 @@ export default {
     getProduct() {
       this.$store.commit("setIsLoading", true);
 
+      //slugs aus url holen
       const category_slug = this.$route.params.category_slug;
       const product_slug = this.$route.params.product_slug;
 
+      //Artikel aus API holen
       axios
         .get(`/api/v1/products/${category_slug}/${product_slug}/`)
         .then((response) => {
@@ -203,18 +207,21 @@ export default {
         .catch((error) => {
           console.log(error);
           //Wenn Fehler auftritt zurück auf Startseite leiten
-          // this.$router.push("/")
+          this.$router.push("/")
         });
 
       this.$store.commit("setIsLoading", false);
     },
+    // Artikel zur Wunschliste hinzufügen
     addToWishlist() {
       const item = {
         product: this.product,
         quantity: this.quantity,
       };
 
+      //UserWishlist aus localstorage holen
       const localUserWishlist = JSON.parse(JSON.stringify(this.$store.state.wishlist));
+      //filtern ob der Artikel schon auf der Wunschliste ist
       const filteredProduct = localUserWishlist.items.filter(item => item.product.id == this.product.id);
 
       // Überprüfen, ob die Gesamtmenge des Artikels ausreicht, um den Artikel zur Wunschliste hinzuzufügen
@@ -273,6 +280,7 @@ export default {
     },
   },
   computed: {
+    //Währung umformatieren in deutsches Format
     currencyFormatter() {
       return new Intl.NumberFormat('de-DE', {
         style: 'currency',

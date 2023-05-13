@@ -63,16 +63,19 @@ export default {
         this.$store.commit("setIsLoading", true);
         document.title = 'Suche | Leihladen'
 
+        // url holen
         let url = window.location.search.substring(1)
         let params = new URLSearchParams(url)
 
+        //query aus url holen
         this.query = params.get('query')
+        //suchen
         this.performSearch()
     },
     methods: {
         async performSearch() {
             this.$store.commit('setIsLoading', true)
-
+            //Artikel suchen anhand von query
             await axios.post('/api/v1/products/search/', { 'query': this.query })
                 .then(response => {
                     this.products = response.data
@@ -86,31 +89,34 @@ export default {
         onPageChange(page) {
             this.currentPage = page;
         },
+        // Sortieren anhand von Kriterien
         sortByCriteria() {
             let sortFactor = 1;
-            if (this.sortDirection === 'desc') {
+            if (this.sortDirection === 'desc') { // Wenn die Sortierrichtung absteigend ist, wird der Sortierfaktor negativ gesetzt.
                 sortFactor = -1;
             }
-            switch (this.sortBy) {
+            switch (this.sortBy) { // Je nach ausgewähltem Sortierkriterium wird die Liste der Produkte sortiert.
                 case 'name':
-                    this.products.sort((a, b) => sortFactor * a.name.localeCompare(b.name));
+                    this.products.sort((a, b) => sortFactor * a.name.localeCompare(b.name)); // Sortiert die Produkte nach dem Namen.
                     break;
                 case 'deposit':
-                    this.products.sort((a, b) => sortFactor * (a.deposit - b.deposit));
+                    this.products.sort((a, b) => sortFactor * (a.deposit - b.deposit)); // Sortiert die Produkte nach der Kaution.
                     break;
                 case 'fee':
-                    this.products.sort((a, b) => sortFactor * (a.fee - b.fee));
+                    this.products.sort((a, b) => sortFactor * (a.fee - b.fee)); // Sortiert die Produkte nach der Gebühr.
                     break;
                 default:
-                    this.products.sort((a, b) => sortFactor * (new Date(b.date_added) - new Date(a.date_added)));
+                    this.products.sort((a, b) => sortFactor * (new Date(b.date_added) - new Date(a.date_added))); // Sortiert die Produkte nach dem Hinzufügungsdatum.
                     break;
             }
 
-            this.currentPage = 1
+            this.currentPage = 1 // Setzt die aktuelle Seite auf die erste Seite, wenn die Sortierung geändert wird.
+
         },
     },
     watch: {
         totalPages(newTotal, oldTotal) {
+            // Überprüft, ob es nur eine Seite gibt und die aktuelle Seite mehr als 1 ist
             if (newTotal === 1 && oldTotal > 1) {
                 this.currentPage = 1;
             } else if (this.currentPage > newTotal) {
@@ -119,12 +125,14 @@ export default {
         }
     },
     computed: {
+        // Berechnet die Gesamtzahl der Seiten
         totalPages() {
             return Math.ceil(this.products.length / this.itemsPerPage);
         },
         visibleProducts() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
             const end = start + this.itemsPerPage;
+            // Gibt eine neue Liste mit den sichtbaren Produkten zurück
             return this.products.slice(start, end);
         }
     }

@@ -29,19 +29,24 @@ export default {
         }
     },
     methods: {
+        // Gehe zur vorherigen Seite
         prevPage() {
             this.$emit('input', this.currentPage - 1);
         },
+        // Gehe zur nächsten Seite
         nextPage() {
             this.$emit('input', this.currentPage + 1);
         },
     },
     computed: {
+        // Berechnet die Anzahl von Seiten, die benötigt werden, um alle Elemente darzustellen
         pageCount() {
             return Math.ceil(this.totalItems / this.itemsPerPage);
         },
+        // Erstellt eine Liste von Seitennummern, die angezeigt werden sollen
         pages() {
             const pages = [];
+
             for (let i = 1; i <= this.pageCount; i++) {
                 pages.push(i);
             }

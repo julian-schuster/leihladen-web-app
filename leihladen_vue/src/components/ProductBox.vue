@@ -47,6 +47,7 @@ export default {
     }
   },
   methods: {
+    //Formatieren des Datums in deutsches Format
     formatDate(date) {
       return format(new Date(date), 'dd.MM.yyyy')
     }
@@ -55,6 +56,7 @@ export default {
 
   },
   computed: {
+    // Formatierung für Währungen im deutschen Format
     currencyFormatter() {
       return new Intl.NumberFormat('de-DE', {
         style: 'currency',

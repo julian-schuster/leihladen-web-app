@@ -79,26 +79,31 @@ export default {
         document.title = 'Wunschliste | Leihladen'
     },
     methods: {
+        // Artikel von Wunschliste entfernen
         removeFromWishlist(item) {
             this.wishlist.items = this.wishlist.items.filter(i => i.product.id !== item.product.id)
         }
     },
     computed: {
+        //Berechnet Anzahl der Artikel auf der Wunschliste
         wishlistTotalLength() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.quantity
             }, 0)
         },
+        //Berechnet Gesamtkaution
         totalDeposit() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.product.deposit * curVal.quantity
             }, 0)
         },
+        //Berechnet Gesamte Leihgebühr
         totalFee() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.product.fee * curVal.quantity
             }, 0)
         },
+        //Währung formatieren
         currencyFormatter() {
             return new Intl.NumberFormat('de-DE', {
                 style: 'currency',

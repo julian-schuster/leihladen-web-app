@@ -175,6 +175,7 @@ export default {
         this.getProducts()
     },
     computed: {
+        //Währung umformatieren
         currencyFormatter() {
             return new Intl.NumberFormat('de-DE', {
                 style: 'currency',
@@ -184,6 +185,7 @@ export default {
         },
     },
     methods: {
+        //Hilfsfunktion zum prüfen ob client ein Mobilgerät ist. Gibt 'rear' für rückenkamera und 'auto' für front zurück 
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 return 'rear'
@@ -191,6 +193,7 @@ export default {
                 return 'auto'
             }
         },
+        //Zweite Hilfsfunktion zum prüfen ob client ein Mobilgerät ist.
         checkIsMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 return 'true'
@@ -198,6 +201,7 @@ export default {
                 return 'false'
             }
         },
+        //Kamera wechseln
         switchCamera() {
             switch (this.camera) {
                 case 'front':
@@ -211,6 +215,7 @@ export default {
                     break
             }
         },
+        //Artikel holen
         getProduct(id) {
             axios
                 .get(`/api/v1/product/${id}`)
@@ -240,6 +245,7 @@ export default {
                     });
                 });
         },
+        //Wenn QRCode gescannt wurde den String überprüfen und Wunschliste bzw. Artikel Infos holen. Kamera wird resettet durch this.turnCameraOff() und this.turnCameraOn()
         onDecode(decodedString) {
             const client_id = decodedString
 
@@ -283,18 +289,22 @@ export default {
             }
 
         },
+        //Kamera anschalten
         turnCameraOn() {
             this.camera = this.isMobile()
         },
+        //Kamera pausieren bzw. ausmachen
         turnCameraOff() {
             this.show = false
             this.camera = 'pause'
         },
+        //Hilfsfunktion für timeout -> Delay bei an- und ausschalten von Kameras nötig!
         timeout(ms) {
             return new Promise(resolve => {
                 window.setTimeout(resolve, ms)
             })
         },
+        //Wenn Kamera initialisiert wird
         async onInit(promise) {
             this.$store.commit("setIsLoading", true);
             try {
@@ -303,7 +313,7 @@ export default {
                 const triedFrontCamera = this.camera === 'front'
                 const triedRearCamera = this.camera === 'rear'
                 const cameraMissingError = error.name === 'OverconstrainedError'
-
+                //Kameras die Verfügbar sind ermitteln
                 if (triedRearCamera && cameraMissingError) {
                     this.noRearCamera = true
                 }
@@ -311,6 +321,7 @@ export default {
                 if (triedFrontCamera && cameraMissingError) {
                     this.noFrontCamera = true
                 }
+                //Diverese error messages wenn was schiefgeht
                 if (error.name === 'NotAllowedError') {
                     this.error = "ERROR: Sie müssen der Kamera eine Zugriffsberechtigung erteilen"
                 } else if (error.name === 'NotFoundError') {
@@ -339,6 +350,7 @@ export default {
                 }
             }
         },
+        //Alle Artikel holen
         getProducts() {
             axios
                 .get(`/api/v1/products`)
@@ -349,14 +361,17 @@ export default {
                     console.log(error);
                 });
         },
+        //Ermittelt Verfügbarkeit eines Artikels
         getProductAvailable(productId) {
             const product = this.products.find(p => p.id === productId);
             return product ? product.available : '-';
         },
+        //Ermittelt Stückzahl eines Artikels
         getProductCount(productId) {
             const product = this.products.find(p => p.id === productId);
             return product ? product.quantity : '-';
         },
+        //Verfügbarkeiten ändern
         updateProductAvailability(id, value) {
             const product = this.products.find(p => p.id === id);
 
@@ -375,7 +390,7 @@ export default {
 
             const confirmationMessage = `Möchten Sie die Verfügbarkeit von "${product.name}" ${value > 0 ? 'erhöhen' : 'verringern'}?`;
             if (window.confirm(confirmationMessage)) {
-
+                // API aufruf um Verfügbarkeit eines Artikels zu ändern
                 axios.put(`/api/v1/product/${id}/availability/`, { value: value })
                     .then(response => {
 

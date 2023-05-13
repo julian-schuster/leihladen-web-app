@@ -192,7 +192,9 @@ export default {
         };
     },
     mounted() {
+        // Lade-Status false
         this.$store.commit("setIsLoading", true);
+        //Produkte und Kategorien aus API holen
         this.getProduct();
         this.getCategories();
     },
@@ -240,6 +242,7 @@ export default {
                 return;
             }
 
+            //formData erstellen
             const formData = new FormData();
             formData.append('id', this.product.id);
             formData.append('name', this.product.name);
@@ -253,6 +256,7 @@ export default {
             formData.append('deposit', this.product.deposit);
             formData.append('fee', this.product.fee);
 
+            //Überprüfen ob es nur 1 Bild gibt
             if (this.file1) {
                 formData.append('image', this.file1);
                 this.onlyOneImage = true
@@ -270,6 +274,7 @@ export default {
                 this.onlyOneImage = false
             }
 
+            //Wenn kein bild geändert wurde noImageChange an formData anfügen
             if (!this.file1 && !this.file2 && !this.file3 && !this.file4) {
                 formData.append('noImageChange', true)
             }
@@ -288,6 +293,7 @@ export default {
                         position: "bottom-right",
                     });
 
+                    // URLs generieren die die files repräsentieren
                     if (this.file1) {
                         this.product.get_images[0] = URL.createObjectURL(this.file1);
                     }
@@ -316,12 +322,13 @@ export default {
                         this.product.get_images[3] = null;
                     }
 
-
+                    //files zurücksetzen
                     this.file1 = null;
                     this.file2 = null;
                     this.file3 = null;
                     this.file4 = null;
 
+                    //Seite für den User aktualisieren -> besonders wichtig wenn Kategorie geändert wurde
                     this.$router.push(`${this.product.get_absolute_url}edit`);
 
                 })
@@ -338,9 +345,12 @@ export default {
                 });
         },
         handleFileUpload(event) {
+            // Alle files holen aus upload holen
             const files = event.target.files;
+            // Erlaubte dateiendungen
             const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
+            // initial alles zurücksetzen
             this.file1 = null;
             this.product.image1 = null;
             this.file2 = null;
@@ -350,6 +360,7 @@ export default {
             this.file4 = null;
             this.product.image4 = null;
 
+            //Für jedes file prüfen ob valide und URLs generieren
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 if (!allowedExtensions.exec(file.name)) {
@@ -373,6 +384,7 @@ export default {
                 }
             }
         },
+        // Hilfsmethode zum prüfen ob hochgeladene files valide sind
         validateImages() {
             if (this.file1 || this.file2 || this.file3 || this.file4) {
                 return true;

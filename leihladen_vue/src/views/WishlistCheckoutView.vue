@@ -74,7 +74,6 @@ export default {
         QRCode
     },
     data() {
-
         return {
             wishlist: {
                 items: []
@@ -85,23 +84,29 @@ export default {
     mounted() {
         document.title = 'Wunschliste Abschluss | Leihladen'
 
+        //ClientID und Wunschliste aus localstorage holen
         this.wishlist = this.$store.state.wishlist
         this.clientId = this.$store.state.clientId
 
+        //Wunschliste in JSON String formatieren
         const qrCodeText = JSON.stringify(this.wishlist)
 
+        //QR-Code und Wunschliste erzeugen
         this.createQRCode(this.clientId)
         this.createWishlist(qrCodeText)
     },
     methods: {
+        //Getter für Stückzahl des Artikels
         getItemQuantity(item) {
             return item.quantity
         },
+        //Funktion zum generieren eines QRCodes anhand des qrCodeText (client_id) generieren
         createQRCode(qrCodeText) {
             QRCode.toCanvas(this.$refs.qrcode, qrCodeText, function (error) {
                 if (error) console.error(error)
             })
         },
+        //API Route zum erzeugen und updaten einer Wunschliste
         createWishlist(qrCodeText) {
             axios.post('/api/v1/wishlist/', { qr_code_text: qrCodeText, client_id: this.clientId })
                 .then(response => {
@@ -191,16 +196,19 @@ export default {
 
     },
     computed: {
+        //Berechnet die Anzahl der Artikel auf der Wunschliste
         wishlistTotalLength() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.quantity
             }, 0)
         },
+        //Berechnet Gesamtkaution
         totalDeposit() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.product.deposit * curVal.quantity
             }, 0)
         },
+        //Berechnet Gestamte Leihgebühr
         totalFee() {
             return this.wishlist.items.reduce((acc, curVal) => {
                 return acc += curVal.product.fee * curVal.quantity
