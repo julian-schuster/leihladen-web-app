@@ -24,7 +24,7 @@ class Products(APIView):
 class LatestProductsList(APIView):
     # API-Endpunkt, um die neuesten 4 Produkte abzurufen.
     def get(self, request, format=None):
-        products = Product.objects.all()[0:4]
+        products = Product.objects.order_by('date_added').all()[0:4]
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

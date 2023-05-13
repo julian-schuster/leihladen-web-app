@@ -39,7 +39,7 @@ class Product(models.Model):
     available = models.IntegerField(default=1, validators=[MinValueValidator(0)])
 
     class Meta:
-        ordering = ('-date_added',)
+        ordering = ('id',)
 
     def __str__(self):
         return self.id

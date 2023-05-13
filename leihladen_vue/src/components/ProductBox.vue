@@ -14,7 +14,7 @@
           currencyFormatter.format(product.deposit) }}</div>
         <div class="subtitle is-6 has-text-centered" style="margin-bottom: 5%;">Leihgebühr: {{
           currencyFormatter.format(product.fee) }}</div>
-        <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ product.date_added }}
+        <div class="subtitle is-6 has-text-centered">Hinzugefügt am: {{ formatDate(product.date_added) }}
         </div>
         <div class="columns">
           <div class="column details has-text-centered">
@@ -33,6 +33,9 @@
 </template>
 
 <script>
+
+import { format } from 'date-fns'
+
 export default {
   name: "ProductBox",
   props: {
@@ -44,9 +47,12 @@ export default {
     }
   },
   methods: {
+    formatDate(date) {
+      return format(new Date(date), 'dd.MM.yyyy')
+    }
   },
   mounted() {
-    this.product.date_added = new Date(this.product.date_added).toLocaleDateString();
+
   },
   computed: {
     currencyFormatter() {

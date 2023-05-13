@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import date
+from datetime import datetime
 
 #JSON-File öffnen und als dictionary laden
 with open('json_daten_formatiert.json',  encoding='utf-8') as f:
@@ -34,7 +34,8 @@ try:
         images = json.dumps(product['bilder']) 
         quantity = 1
         available = 1
-        date_added = date.today()
+        now = datetime.now()
+        date_added = now.strftime("%Y-%m-%d %H:%M:%S")
 
         if smallPieces == 'ja':
             smallPieces = True
