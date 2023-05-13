@@ -2,6 +2,8 @@
 
 Entstanden im Rahmen meiner Masterthesis "Digitalisierungsprozesse in der Sharing Economy am Beispiel einer Leihladen Web-App".
 
+Live-Demo: https://leihladen.schuster-julian.de/
+
 # Installation Vue
 
 In leihladen_vue navigieren:
