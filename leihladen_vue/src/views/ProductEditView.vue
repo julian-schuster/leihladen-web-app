@@ -201,7 +201,7 @@ export default {
     methods: {
         async getCategories() {
             await axios
-                .get(`/api/v1/categories`)
+                .get(`/api/v1/categorieslight`)
                 .then((response) => {
                     this.categories = response.data;
                     this.$store.commit("setIsLoading", false);

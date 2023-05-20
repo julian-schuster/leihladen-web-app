@@ -185,7 +185,7 @@ export default {
         // Holt die Kategorien von der API
         async getCategories() {
             try {
-                const response = await axios.get(`/api/v1/categories`);
+                const response = await axios.get(`/api/v1/categorieslight`);
                 this.categories = response.data;
                 this.$store.commit("setIsLoading", false);
             } catch (error) {
