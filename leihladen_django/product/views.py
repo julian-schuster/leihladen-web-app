@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from .models import Product, Category, Wishlist
-from .serializers import ProductSerializer, CategorySerializer, WishlistSerializer
+from .serializers import ProductSerializer, CategorySerializer, CategorySerializerLight, WishlistSerializer
 import base64
 
 class Products(APIView):
@@ -72,12 +72,20 @@ def search(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetCategories(APIView):
-    #API-Endpunkt der alle Kategorien zurückgibt.
+    #API-Endpunkt der alle Kategorien zurückgibt. Endpunkt dauert länger weil in CategorySerializer jede Kategorie mit jedem Produkt in Beziehung gesetzt wird. 
+    #Wichtig für Kategorieansicht und laden aller Produkte in einer Kategorie
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    
+class GetCategoriesLight(APIView):
+    #API-Endpunkt der alle Kategorien zurückgibt. Schnelle Version die nur id, name und absolute_url zurückgibt ohne die Beziehung zu den Produkten.
+    #Wichtig für Performance an Stellen wo man nur die Kategorienamen braucht.
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializerLight(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class CategoryManagement(APIView):
     permission_classes = [IsAuthenticated]
@@ -98,7 +106,7 @@ class CategoryManagement(APIView):
         categoryNewName = request.data.get('newName')
         category = Category.objects.get(id=categoryId)
         category.name = categoryNewName
-        category.slug = slugify(categoryNewName)
+        category.slug = slugify(categoryNewName, allow_unicode=True)
         category.save()
         return Response(status=status.HTTP_200_OK)
 

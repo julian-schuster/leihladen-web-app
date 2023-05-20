@@ -208,7 +208,7 @@ export default {
     getCategories() {
       //API Route zum holen aller Kategorien
       axios
-        .get(`/api/v1/categories`)
+        .get(`/api/v1/categorieslight`)
         .then((response) => {
           this.categories = response.data;
         })

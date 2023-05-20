@@ -473,6 +473,10 @@ export default {
 
                     // Speichern der Anzahl verfügbarer Produkte
                     this.productsAvailable = response.data.available_count
+
+
+                    // Laden-Status auf false setzen
+                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -525,13 +529,10 @@ export default {
         },
         async getCategories() {
             await axios
-                .get(`/api/v1/categories`)
+                .get(`/api/v1/categorieslight`)
                 .then((response) => {
                     // Kategorien in Variable speichern
                     this.categories = response.data;
-
-                    // Laden-Status auf false setzen
-                    this.$store.commit("setIsLoading", false);
                 })
                 .catch((error) => {
                     console.log(error);

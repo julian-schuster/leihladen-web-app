@@ -35,6 +35,15 @@ class CategorySerializer(serializers.ModelSerializer):
             "products"
         )
 
+class CategorySerializerLight(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            "id",
+            "name",
+            "get_absolute_url",
+        )
+
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
