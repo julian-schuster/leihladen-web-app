@@ -11,7 +11,7 @@ from .serializers import ProductSerializer, CategorySerializer, CategorySerializ
 import base64
 
 class Products(APIView):
-    # API-Endpunkt, um alle Produkte abzurufen.
+    # API-Endpunkt, um alle Artikel abzurufen.
     def get(self, request, format=None):
         products = Product.objects.all()
         available_count = products.aggregate(total=Sum('available'))['total']
@@ -22,7 +22,7 @@ class Products(APIView):
 
 
 class LatestProductsList(APIView):
-    # API-Endpunkt, um die neuesten 4 Produkte abzurufen.
+    # API-Endpunkt, um die neuesten 4 Artikel abzurufen.
     def get(self, request, format=None):
         products = Product.objects.order_by('-date_added').all()[0:4]
         serializer = ProductSerializer(products, many=True)
@@ -31,14 +31,14 @@ class LatestProductsList(APIView):
 
 class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
-        # Hilfsfunktion, um das Produkt anhand der Kategorie-Slugs und des Produkt-Slugs zu finden.
+        # Hilfsfunktion, um das Artikel anhand der Kategorie-Slugs und des Artikel-Slugs zu finden.
         try: 
             return Product.objects.filter(categories__slug__in=category_slug).get(id=product_slug)
         except Product.DoesNotExist:
             raise Http404
 
     def get(self, request, category_slug, product_slug, format=None):
-        # GET-Request, um ein Produkt anhand der Kategorie-Slugs und des Produkt-Slugs abzurufen.
+        # GET-Request, um ein Artikel anhand der Kategorie-Slugs und des Artikel-Slugs abzurufen.
         category_slug = category_slug.split(',')
         product = self.get_object(category_slug, product_slug)
         serializer = ProductSerializer(product)
@@ -52,35 +52,37 @@ class CategoryDetail(APIView):
         except Category.DoesNotExist:
             raise Http404
 
-    #GET-Request Gibt eine bestimmte Kategorie mit zugehörigen Produkten zurück.
+    #GET-Request Gibt eine bestimmte Kategorie mit zugehörigen Artikeln zurück.
     def get(self, request, category_slug, format=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# Sucht nach Produkten anhand des Suchbegriffs im Namen oder der Beschreibung.
+# Sucht nach Artikeln aufgrund des Namens oder Kategorie
 @api_view(['POST'])
 def search(request):
     query = request.data.get('query', '')
 
     if query:
-        products = Product.objects.filter(Q(name__icontains=query))
+        products = Product.objects.filter(
+            Q(name__icontains=query) | Q(categories__name__icontains=query)
+        ).distinct() # distinct um dopplungen zu vermeiden
     else:
         products = Product.objects.all()
-    
+
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetCategories(APIView):
-    #API-Endpunkt der alle Kategorien zurückgibt. Endpunkt dauert länger weil in CategorySerializer jede Kategorie mit jedem Produkt in Beziehung gesetzt wird. 
-    #Wichtig für Kategorieansicht und laden aller Produkte in einer Kategorie
+    #API-Endpunkt der alle Kategorien zurückgibt. Endpunkt dauert länger weil in CategorySerializer jede Kategorie mit jedem Artikel in Beziehung gesetzt wird. 
+    #Wichtig für Kategorieansicht und laden aller Artikel in einer Kategorie
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 class GetCategoriesLight(APIView):
-    #API-Endpunkt der alle Kategorien zurückgibt. Schnelle Version die nur id, name und absolute_url zurückgibt ohne die Beziehung zu den Produkten.
+    #API-Endpunkt der alle Kategorien zurückgibt. Schnelle Version die nur id, name und absolute_url zurückgibt ohne die Beziehung zu den Artikeln.
     #Wichtig für Performance an Stellen wo man nur die Kategorienamen braucht.
     def get(self, request):
         categories = Category.objects.all()
@@ -178,7 +180,7 @@ class ProductAvailability(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, id):
-        # Produkt mit der gegebenen ID abrufen
+        # Artikel mit der gegebenen ID abrufen
         product = Product.objects.get(id=id)
 
         # Den neuen Verfügbarkeitswert aus den Anfragedaten abrufen
@@ -196,7 +198,7 @@ class ProductAvailability(APIView):
                 # Wenn die neue Verfügbarkeit ungültig ist, Fehlermeldung zurückgeben
                 return Response({'error': 'Die Verfügbarkeit darf nicht größer als der aktuelle Bestand sein.'}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                # Wenn die neue Verfügbarkeit gültig ist, Produkt aktualisieren und zurückgeben
+                # Wenn die neue Verfügbarkeit gültig ist, Artikel aktualisieren und zurückgeben
                 product.available = new_available
                 product.save()
                 serialized_product = ProductSerializer(product).data
