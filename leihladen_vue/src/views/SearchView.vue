@@ -18,7 +18,7 @@
                                 <option value="date_added">Hinzugefügt am</option>
                                 <option value="name">Name</option>
                                 <option value="deposit">Kaution</option>
-                                <option value="fee">Leigehbühr</option>
+                                <option value="fee">Leihgebühr</option>
                             </select>
                         </div>
                         <div class="select">
