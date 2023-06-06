@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from datetime import datetime
+import time
 
 #JSON-File öffnen und als dictionary laden
 with open('json_daten_formatiert.json',  encoding='utf-8') as f:
@@ -21,6 +22,8 @@ try:
     print("Tabelle product_product geleert")
     cursor.execute("DELETE FROM product_category")
     print("Tabelle product_category geleert")
+    cursor.execute("DELETE FROM product_product_categories")
+    print("Tabelle product_product_categories geleert")
 
     #Jeden Eintrag im File durchlaufen und variable zuordnen
     for product in data['data']:

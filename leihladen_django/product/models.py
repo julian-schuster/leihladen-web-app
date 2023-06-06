@@ -65,7 +65,7 @@ class Product(models.Model):
             return 'http://127.0.0.1:8000/media/uploads/' + self.images[0]
         return {}
 
-    #Gibt éin Array der Bildernamen des Artikels zurück
+    #Gibt ein Array der Bildernamen des Artikels zurück
     def get_images(self):
         images = []
         for image in self.images:
