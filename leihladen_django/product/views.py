@@ -116,7 +116,14 @@ class CategoryManagement(APIView):
     def delete(self, request, id):
         try:
             category = Category.objects.get(id=id)
+            
+            #Alle Produkte der Kategorie erhalten
+            products = category.products.all()
+            #Alle Produkte löschen
+            products.delete()
+            #Kategorie löschen
             category.delete()
+
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Product.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
