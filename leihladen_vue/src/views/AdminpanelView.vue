@@ -402,7 +402,7 @@ export default {
                     .then((response) => {
                         // Rufe die Methode 'getCategories' auf, um die Liste der Kategorien zu aktualisieren.
                         this.getCategories()
-
+                        this.getProducts();
                         // Erfolgsmeldung
                         toast({
                             message: `Kategorie '${category.name}' wurde entfernt.`,
