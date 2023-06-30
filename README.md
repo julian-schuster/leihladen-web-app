@@ -1,4 +1,4 @@
-# Sharing Economy Web-App
+# Leihladen Web-App
 
 Entstanden im Rahmen meiner Masterthesis "Digitalisierungsprozesse in der Sharing Economy am Beispiel einer Leihladen Web-App".
 
