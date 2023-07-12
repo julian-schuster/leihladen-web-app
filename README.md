@@ -1,33 +1,43 @@
 # Leihladen Web-App
 
-Entstanden im Rahmen meiner Masterthesis "Digitalisierungsprozesse in der Sharing Economy am Beispiel einer Leihladen Web-App".
+Entstanden im Rahmen meiner Masterarbeit mit dem Thema "Digitalisierungsprozesse in der Sharing Economy am Beispiel einer Leihladen Web-App".
+
+Die Progressive Web-App wurde entwickelt, um das in der Arbeit erarbeitete Konzept zur Digitalisierung des Ausleihprozesses eines Leihladens zu veranschaulichen. Die Web-App ermöglicht Benutzern einen einfachen Zugang zu Ressourcen, während das Personal von einer effizienten Verwaltungsoberfläche profitiert.
 
 Live-Demo: https://leihladen.schuster-julian.de/
 
+Logindaten für Adminpanel:
+
+```
 username: admin
-
 passwort: leihladen123
+```
 
-# Installation Vue
+## Technologie-Stack
+- Vue.js
+* Django
++ SQLite
 
-In leihladen_vue navigieren:
+## Setup für Vue.js
+
+1. Navigiere in das Verzeichnis "leihladen_vue":
 ```
 cd leihladen_vue
 ```
 
-Packages installieren:
+2. Installiere die erforderlichen Pakete:
 ```
 npm install
 ```
 
-Vue development Server starten:
+3. Starte den Vue Development Server:
 ```
 npm run serve
 ```
 
-# Installation Django
+## Setup für Django
 
-Virtuelle Umgebung erstellen:
+1. Erstelle eine virtuelle Umgebung:
 ```
 virtualenv environment_3_10_5 
 ```
@@ -37,22 +47,22 @@ Wenn virtualenv nicht installiert ist:
 pip install virtualenv
 ```
 
-Virtuelle Umgebung aktivieren (Linux):
+2. Aktiviere die virtuelle Umgebung (Linux):
 ```
 source environment_3_10_5/bin/activate
 ```
 
-Virtuelle Umgebung aktivieren (Windows):
+Aktiviere die virtuelle Umgebung (Windows):
 ```
 source environment_3_10_5/Scripts/activate
 ```
 
-Django requirements installieren:
+3. Installiere die Django-Abhängigkeiten:
 ```
 pip install -r req.txt
 ```
 
-SQLite Datenbank erstellen und migration ausführen:
+4. Erstelle die SQLite-Datenbank und führe die Migration durch:
 ```
 cd leihladen_django
 ```
@@ -63,17 +73,20 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-Admin Account erstellen:
+5. Erstelle einen Admin-Account:
 ```
 python manage.py createsuperuser
 ```
 
-(optional) Datenbank mit Daten füllen:
+6. (Optional) Fülle die Datenbank mit Beispieldaten:
 ```
 python loadIntoDB.py
 ```
 
-Django development Server starten:
+7. Starte den Django Development Server:
 ```
 python manage.py runserver
 ```
+
+## Kontakt
+Julian Schuster (Schuster.Julian@web.de)
