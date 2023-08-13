@@ -4,14 +4,7 @@ Entstanden im Rahmen meiner Masterarbeit mit dem Thema "Digitalisierungsprozesse
 
 Die Progressive Web-App wurde entwickelt, um das in der Arbeit erarbeitete Konzept zur Digitalisierung des Ausleihprozesses eines Leihladens zu veranschaulichen. Die Web-App ermöglicht Benutzern einen einfachen Zugang zu Ressourcen, während das Personal von einer effizienten Verwaltungsoberfläche profitiert.
 
-Live-Demo: https://leihladen.schuster-julian.de/
-
-Logindaten für Adminpanel:
-
-```
-username: admin
-passwort: leihladen123
-```
+Live-Demo: ~~https://leihladen.schuster-julian.de/~~
 
 ## Technologie-Stack
 - Vue.js
